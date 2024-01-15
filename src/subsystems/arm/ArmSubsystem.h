@@ -49,12 +49,12 @@ public:
   void setArmState(units::turn_t elbowPosition,
                    units::meter_t armExtensionPosition,
                    units::turn_t wristPosition);
-  void setArmState(const ArmState& state);
+  void setArmState(const ArmState &state);
 
   frc2::CommandPtr setArmStateCommand(units::turn_t elbowPosition,
                                       units::meter_t armExtensionPosition,
                                       units::turn_t wristPosition);
-  frc2::CommandPtr setArmStateCommand(const ArmState& state);
+  frc2::CommandPtr setArmStateCommand(const ArmState &state);
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be
