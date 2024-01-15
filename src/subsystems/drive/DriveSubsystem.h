@@ -25,7 +25,7 @@ public:
   void driveTeleop(const rmb::LogitechGamepad &gamepad);
   void driveTeleop(double x, double y, double twist);
 
-  frc2::CommandPtr driveTeleopCommand(const rmb::LogitechGamepad& gamepad);
+  frc2::CommandPtr driveTeleopCommand(const rmb::LogitechGamepad &gamepad);
   frc2::CommandPtr driveTeleopCommand(double x, double y, double twist);
 
   /**
