@@ -4,6 +4,13 @@
 
 #pragma once
 
+#include <units/velocity.h>
+
+#include <rmb/motorcontrol/Talon/TalonFXPositionController.h>
+#include <rmb/motorcontrol/Talon/TalonFXVelocityController.h>
+
+#include <frc/SerialPort.h>
+
 /**
  * The Constants header provides a convenient place for teams to hold robot-wide
  * numerical or boolean constants.  This should not be used for any other
@@ -14,8 +21,9 @@
  * they are needed.
  */
 
-namespace OperatorConstants {
+namespace constants {
 
 inline constexpr int kDriverControllerPort = 0;
 
-} // namespace OperatorConstants
+const frc::SerialPort::Port gyroPort = frc::SerialPort::Port::kMXP;
+} // namespace constants
