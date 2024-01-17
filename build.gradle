@@ -60,6 +60,7 @@ model {
             }
 
             sources.cpp {
+                lib project: ":", library: 'LibRmb', linkage: 'shared'
                 source {
                     srcDir 'src/'
                     include '**/*.cpp', '**/*.cc'
@@ -69,8 +70,37 @@ model {
                 }
             }
 
+
             // Set deploy task to deploy this component
             deployArtifact.component = it
+
+            // Enable run tasks for this component
+            wpi.cpp.enableExternalTasks(it)
+
+            // Enable simulation for this component
+            wpi.sim.enable(it)
+            // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
+            wpi.cpp.vendor.cpp(it)
+            wpi.cpp.deps.wpilib(it)
+        }
+
+        LibRmb(NativeLibrarySpec) {
+            targetPlatform wpi.platforms.roborio
+            if (includeDesktopSupport) {
+                targetPlatform wpi.platforms.desktop
+            }
+
+            sources {
+                cpp {
+                    source {
+                        srcDirs 'lib/src/'
+                        include '**/*.cpp'
+                    }
+                    exportedHeaders {
+                        srcDirs 'lib/src/'
+                    }
+                }
+            }
 
             // Enable run tasks for this component
             wpi.cpp.enableExternalTasks(it)
