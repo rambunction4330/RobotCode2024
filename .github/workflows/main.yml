@@ -9,6 +9,8 @@ jobs:
     needs: gradle
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: 'true'
       - uses: DoozyX/clang-format-lint-action@v0.13
         with:
           source: '.'
