@@ -60,7 +60,6 @@ model {
             }
 
             sources.cpp {
-                lib project: ":", library: 'LibRmb', linkage: 'shared'
                 source {
                     srcDir 'src/'
                     include '**/*.cpp', '**/*.cc'
@@ -68,6 +67,10 @@ model {
                 exportedHeaders {
                     srcDir 'src/'
                 }
+            }
+
+            binaries.all {
+                lib project: ":", library: 'LibRmb', linkage: 'shared'
             }
 
 
