@@ -38,7 +38,7 @@ private:
       std::make_shared<rmb::AHRSGyro>(constants::gyroPort);
   DriveSubsystem driveSubsystem;
 
-  rmb::LogitechGamepad gamepad { constants::driverControllerPort };
+  rmb::LogitechGamepad gamepad{constants::driverControllerPort};
 
   void ConfigureBindings();
 };
