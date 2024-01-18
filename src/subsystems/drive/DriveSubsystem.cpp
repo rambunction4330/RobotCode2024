@@ -92,3 +92,5 @@ frc2::CommandPtr DriveSubsystem::driveTeleopCommand(double x, double y,
 void DriveSubsystem::SimulationPeriodic() {
   // Implementation of subsystem simulation periodic method goes here.
 }
+
+void DriveSubsystem::stop() { drive->stop(); }
