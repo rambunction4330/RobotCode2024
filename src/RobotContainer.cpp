@@ -37,10 +37,10 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
 }
 
 void RobotContainer::setTeleopDefaults() {
-  //driveSubsystem.SetDefaultCommand(driveSubsystem.driveTeleopCommand(gamepad));
+  // driveSubsystem.SetDefaultCommand(driveSubsystem.driveTeleopCommand(gamepad));
 }
 
 void RobotContainer::setAutoDefaults() {
-  //driveSubsystem.SetDefaultCommand(
+  // driveSubsystem.SetDefaultCommand(
   //    frc2::RunCommand([this] { driveSubsystem.stop(); }).ToPtr());
 }

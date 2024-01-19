@@ -8,8 +8,8 @@
 #include <frc2/command/SubsystemBase.h>
 
 #include <frc/geometry/Transform3d.h>
-#include <photon/PhotonCamera.h>
 #include <iostream>
+#include <photon/PhotonCamera.h>
 
 class VisionSubsystem : public frc2::SubsystemBase {
 public:

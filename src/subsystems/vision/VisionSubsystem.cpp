@@ -12,25 +12,21 @@ VisionSubsystem::VisionSubsystem() // : m_PhotonCamera("TESTNAME")
   std::cout << "Vision Subsystem constructor" << std::endl;
 }
 
-frc2::CommandPtr VisionSubsystem::ExampleMethodCommand()
-{
+frc2::CommandPtr VisionSubsystem::ExampleMethodCommand() {
   // Inline construction of command goes here.
   // Subsystem::RunOnce implicitly requires `this` subsystem.
   return RunOnce([/* this */] { /* one-time action goes here */ });
 }
 
-bool VisionSubsystem::ExampleCondition()
-{
+bool VisionSubsystem::ExampleCondition() {
   // Query some boolean state, such as a digital sensor.
   return false;
 }
 
-void VisionSubsystem::Periodic()
-{
+void VisionSubsystem::Periodic() {
   photon::PhotonPipelineResult result = this->m_PhotonCamera->GetLatestResult();
-  if (!result.HasTargets())
-  {
-    //std::cout << "No AprilTag(s) found" << std::endl;
+  if (!result.HasTargets()) {
+    // std::cout << "No AprilTag(s) found" << std::endl;
     return;
   }
 
@@ -38,7 +34,6 @@ void VisionSubsystem::Periodic()
   std::cout << "ID: " << bestTarget.GetFiducialId() << std::endl;
 }
 
-void VisionSubsystem::SimulationPeriodic()
-{
+void VisionSubsystem::SimulationPeriodic() {
   // Implementation of subsystem simulation periodic method goes here.
 }
