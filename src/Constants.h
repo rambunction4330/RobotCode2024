@@ -23,7 +23,7 @@
 
 namespace constants {
 
-inline constexpr int kDriverControllerPort = 0;
+inline constexpr int driverControllerPort = 0;
 
 const frc::SerialPort::Port gyroPort = frc::SerialPort::Port::kMXP;
 } // namespace constants

@@ -70,7 +70,7 @@ model {
             }
 
             binaries.all {
-                lib project: ":", library: 'LibRmb', linkage: 'shared'
+                lib library: 'LibRmb', linkage: 'static'
             }
 
 

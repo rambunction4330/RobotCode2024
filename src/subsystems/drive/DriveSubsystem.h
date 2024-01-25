@@ -30,6 +30,8 @@ public:
   frc2::CommandPtr driveTeleopCommand(const rmb::LogitechGamepad &gamepad);
   frc2::CommandPtr driveTeleopCommand(double x, double y, double twist);
 
+  void stop();
+
   /**
    * Will be called periodically whenever the CommandScheduler runs during
    * simulation.

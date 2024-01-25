@@ -1,7 +1,7 @@
 #pragma once
 
-#include "lib/rmb/motorcontrol/feedforward/ArmFeedforward.h"
-#include "lib/rmb/motorcontrol/feedforward/Feedforward.h"
+#include "rmb/motorcontrol/feedforward/ArmFeedforward.h"
+#include "rmb/motorcontrol/feedforward/Feedforward.h"
 #include <optional>
 
 #include <rmb/motorcontrol/sparkmax/SparkMaxPositionController.h>

@@ -6,13 +6,15 @@
 
 #include <frc2/command/button/Trigger.h>
 
-#include "commands/ExampleCommand.h"
 #include "frc/Joystick.h"
 #include "frc2/cmd/"
 #include "subsystems/arm/ArmConstants.h"
 #include "subsystems/arm/IntakeSubsystem.h"
+#include "frc2/command/Commands.h"
+#include "frc2/command/RunCommand.h"
+#include "subsystems/drive/DriveSubsystem.h"
 
-RobotContainer::RobotContainer() {
+RobotContainer::RobotContainer() : driveSubsystem(gyro) {
   // Initialize all of your commands and subsystems here
 
   // Configure the button bindings
@@ -23,13 +25,13 @@ void RobotContainer::ConfigureBindings() {
   // Configure your trigger bindings here
 
   // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-  frc2::Trigger([this] {
-    return m_subsystem.ExampleCondition();
-  }).OnTrue(ExampleCommand(&m_subsystem).ToPtr());
+  // frc2::Trigger([this] {
+  //   return m_subsystem.ExampleCondition();
+  // }).OnTrue(ExampleCommand(&m_subsystem).ToPtr());
 
   // Schedule `ExampleMethodCommand` when the Xbox controller's B button is
   // pressed, cancelling on release.
-  m_driverController.B().WhileTrue(m_subsystem.ExampleMethodCommand());
+  // m_driverController.B().WhileTrue(m_subsystem.ExampleMethodCommand());
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
@@ -43,4 +45,13 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
         runIntake(m_controller, frontIntakeVelocityController,
                   backIntakeVelocityController);
       }, [this](){}, [](){}, IntakeSubsystem).ToPtr(); 
+}
+
+void RobotContainer::setTeleopDefaults() {
+  driveSubsystem.SetDefaultCommand(driveSubsystem.driveTeleopCommand(gamepad));
+}
+
+void RobotContainer::setAutoDefaults() {
+  driveSubsystem.SetDefaultCommand(
+      frc2::RunCommand([this] { driveSubsystem.stop(); }).ToPtr());
 }

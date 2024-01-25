@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "lib/rmb/motorcontrol/sparkmax/SparkMaxPositionController.h"
-#include "lib/rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h"
+#include "rmb/motorcontrol/sparkmax/SparkMaxPositionController.h"
+#include "rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h"
 #include "units/angular_velocity.h"
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>

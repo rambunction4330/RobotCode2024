@@ -33,11 +33,14 @@ void Robot::DisabledPeriodic() {}
  * RobotContainer} class.
  */
 void Robot::AutonomousInit() {
-  m_autonomousCommand = m_container.GetAutonomousCommand();
+  m_autonomousCommand = container.GetAutonomousCommand();
 
   if (m_autonomousCommand) {
     m_autonomousCommand->Schedule();
   }
+
+  // TODO: Check to see if we need to remove this
+  frc2::CommandScheduler::GetInstance().CancelAll();
 }
 
 void Robot::AutonomousPeriodic() {
@@ -51,6 +54,11 @@ void Robot::TeleopInit() {
   if (m_autonomousCommand) {
     m_autonomousCommand->Cancel();
   }
+
+  // TODO: Check to see if we need to remove this
+  frc2::CommandScheduler::GetInstance().CancelAll();
+
+  container.setTeleopDefaults();
 }
 
 /**

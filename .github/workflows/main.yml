@@ -1,5 +1,5 @@
 name: Run Gradle on PRs
-on: [pull_request, push]
+on: [push]
 jobs:
   format:
     runs-on: ubuntu-latest
@@ -23,7 +23,7 @@ jobs:
   gradle:
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4

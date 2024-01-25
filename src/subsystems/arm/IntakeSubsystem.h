@@ -9,7 +9,7 @@
 #include <frc2/command/SubsystemBase.h>
 
 #include <iterator>
-#include <lib/rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h>
+#include <rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h>
 
 class IntakeSubsystem : public frc2::SubsystemBase {
 public:
