@@ -37,6 +37,7 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   // An example command will be run in autonomous
   // return autos::ExampleAuto(&m_subsystem);
 
+<<<<<<< HEAD
   return frc2::FunctionalCommand(
       []() {},
       [this]() {
@@ -51,4 +52,15 @@ void RobotContainer::setTeleopDefaults() {
 void RobotContainer::setAutoDefaults() {
   driveSubsystem.SetDefaultCommand(
       frc2::RunCommand([this] { driveSubsystem.stop(); }).ToPtr());
+=======
+  return FunctionalCommand([]() {},
+                           [this](m_controller, frontIntakeVelocityController,
+                                  backIntakeVelocityController) {
+                             runIntake(m_controller,
+                                       frontIntakeVelocityController,
+                                       backIntakeVelocityController);
+                           },
+                           [this]() {}, []() {}, IntakeSubsystem)
+      .ToPtr();
+>>>>>>> e89bc0edfc75339329a04ac2fc4155d088db09a9
 }

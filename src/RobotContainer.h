@@ -42,8 +42,6 @@ private:
 
   rmb::LogitechGamepad gamepad{constants::driverControllerPort};
 
-   
-
   void ConfigureBindings();
   frc::Joystick controller{1};
   IntakeSubsystem intake; 

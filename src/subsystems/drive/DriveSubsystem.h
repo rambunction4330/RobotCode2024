@@ -20,7 +20,6 @@ public:
    * Will be called periodically whenever the CommandScheduler runs.
    */
 
-
   void Periodic() override;
 
   // TODO: support other types of joysticks
@@ -36,7 +35,6 @@ public:
    * Will be called periodically whenever the CommandScheduler runs during
    * simulation.
    */
-
 
   void SimulationPeriodic() override;
 
