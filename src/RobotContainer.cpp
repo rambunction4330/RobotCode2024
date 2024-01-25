@@ -6,8 +6,11 @@
 
 #include <frc2/command/button/Trigger.h>
 
-#include "commands/Autos.h"
 #include "commands/ExampleCommand.h"
+#include "frc/Joystick.h"
+#include "frc2/cmd/"
+#include "subsystems/arm/ArmConstants.h"
+#include "subsystems/arm/IntakeSubsystem.h"
 
 RobotContainer::RobotContainer() {
   // Initialize all of your commands and subsystems here
@@ -31,5 +34,13 @@ void RobotContainer::ConfigureBindings() {
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   // An example command will be run in autonomous
-  return autos::ExampleAuto(&m_subsystem);
+  // return autos::ExampleAuto(&m_subsystem);
+
+  return FunctionalCommand(
+      []() {},
+      [this](m_controller, frontIntakeVelocityController,
+             backIntakeVelocityController) {
+        runIntake(m_controller, frontIntakeVelocityController,
+                  backIntakeVelocityController);
+      }, [this](){}, [](){}, IntakeSubsystem).ToPtr(); 
 }

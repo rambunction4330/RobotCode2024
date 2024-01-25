@@ -2,9 +2,10 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include "commands/ExampleCommand.h"
+#include "ArmCommand.h"
+#include "subsystems/arm/ArmSubsystem.h"
 
-ExampleCommand::ExampleCommand(ExampleSubsystem *subsystem)
+ArmCommand::ArmCommand(ArmSubsystem *subsystem)
     : m_subsystem{subsystem} {
   // Register that this command requires the subsystem.
   AddRequirements(m_subsystem);

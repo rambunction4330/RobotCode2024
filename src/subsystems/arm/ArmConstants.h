@@ -1,7 +1,7 @@
 #pragma once
 
-#include "rmb/motorcontrol/feedforward/ArmFeedforward.h"
-#include "rmb/motorcontrol/feedforward/Feedforward.h"
+#include "lib/rmb/motorcontrol/feedforward/ArmFeedforward.h"
+#include "lib/rmb/motorcontrol/feedforward/Feedforward.h"
 #include <optional>
 
 #include <rmb/motorcontrol/sparkmax/SparkMaxPositionController.h>
@@ -44,7 +44,7 @@ const rmb::SparkMaxPositionController::CreateInfo
             },
         .feedbackConfig =
             {
-                1.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
+                9.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
                 rmb::SparkMaxPositionController::EncoderType::
                     HallSensor /* <- encoder */,
                 42 /* <- countPerRev */,
@@ -90,7 +90,7 @@ const rmb::SparkMaxPositionController::CreateInfo
             },
         .feedbackConfig =
             {
-                1.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
+                9.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
                 rmb::SparkMaxPositionController::EncoderType::
                     HallSensor /* <- encoder */,
                 42 /* <- countPerRev */,
@@ -135,7 +135,7 @@ const rmb::SparkMaxPositionController::CreateInfo
             },
         .feedbackConfig =
             {
-                1.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
+                9.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
                 rmb::SparkMaxPositionController::EncoderType::
                     HallSensor /* <- encoder */,
                 42 /* <- countPerRev */,
@@ -151,7 +151,7 @@ const rmb::SparkMaxVelocityController::CreateInfo
     intakeFrontVelocityControllerCreateInfo{
         .motorConfig =
             {
-                .id = 55,
+                .id = 1,
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
                 .inverted = false,
             },
@@ -177,7 +177,7 @@ const rmb::SparkMaxVelocityController::CreateInfo
             },
         .feedbackConfig =
             {
-                1.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
+                81.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
                 rmb::SparkMaxVelocityControllerHelper::EncoderType::
                     HallSensor /* <- encoder */,
                 42 /* <- countPerRev */,
@@ -193,7 +193,7 @@ const rmb::SparkMaxVelocityController::CreateInfo
     intakeBackVelocityControllerCreateInfo{
         .motorConfig =
             {
-                .id = 56,
+                .id = 21,
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
                 .inverted = false,
             },
@@ -219,7 +219,7 @@ const rmb::SparkMaxVelocityController::CreateInfo
             },
         .feedbackConfig =
             {
-                1.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
+                9.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
                 rmb::SparkMaxVelocityControllerHelper::EncoderType::
                     HallSensor /* <- encoder */,
                 42 /* <- countPerRev */,

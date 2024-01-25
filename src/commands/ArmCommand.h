@@ -7,7 +7,8 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
-#include "subsystems/ExampleSubsystem.h"
+#include "subsystems/arm/ArmSubsystem.h"
+#include "subsystems/arm/IntakeSubsystem.h"
 
 /**
  * An example command that uses an example subsystem.
@@ -16,16 +17,16 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class ExampleCommand
-    : public frc2::CommandHelper<frc2::Command, ExampleCommand> {
+class ArmCommand
+    : public frc2::CommandHelper<frc2::Command, ArmCommand> {
 public:
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  explicit ExampleCommand(ExampleSubsystem *subsystem);
+  explicit ArmCommand(ArmCommand *subsystem);
 
 private:
-  ExampleSubsystem *m_subsystem;
+  ArmCommand *m_subsystem;
 };

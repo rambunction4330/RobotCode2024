@@ -2,9 +2,10 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include "subsystems/arm/IntakeSubsystem.h"
+#include "IntakeSubsystem.h"
 
 #include "ArmConstants.h"
+#include <new>
 
 IntakeSubsystem::IntakeSubsystem()
     : frontIntakeVelocityController(
@@ -20,4 +21,13 @@ void IntakeSubsystem::Periodic() {
 
 void IntakeSubsystem::SimulationPeriodic() {
   // Implementation of subsystem simulation periodic method goes here.
+}
+
+void IntakeSubsystem::runIntake(frc::Joystick m_controller,
+                                frontIntakeVelocityController,
+                                backIntakeVelocityController) {
+  frontIntakeVelocityController.Set(
+      m_controller.GerThrottle());
+  backIntakeVelocityController.Set(
+      -m_controller.GetThrottle());
 }

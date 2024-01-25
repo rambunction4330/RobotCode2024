@@ -4,10 +4,12 @@
 
 #pragma once
 
+#include "ArmConstants.h"
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 
-#include <rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h>
+#include <iterator>
+#include <lib/rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h>
 
 class IntakeSubsystem : public frc2::SubsystemBase {
 public:
@@ -36,10 +38,16 @@ public:
     setBackPower(back);
   }
 
+  void runIntake(frc::Joystick m_controller, frontIntakeVelocityController, backIntakeVelocityController); 
+
+
+
 private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
 
   rmb::SparkMaxVelocityController frontIntakeVelocityController;
   rmb::SparkMaxVelocityController backIntakeVelocityController;
+
+  frc::Joystick m_controller; 
 };
