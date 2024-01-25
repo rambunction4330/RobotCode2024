@@ -7,10 +7,10 @@
 #include <frc2/command/button/Trigger.h>
 
 #include "frc/Joystick.h"
-#include "subsystems/arm/ArmConstants.h"
-#include "subsystems/arm/IntakeSubsystem.h"
 #include "frc2/command/Commands.h"
 #include "frc2/command/RunCommand.h"
+#include "subsystems/arm/ArmConstants.h"
+#include "subsystems/arm/IntakeSubsystem.h"
 #include "subsystems/drive/DriveSubsystem.h"
 
 RobotContainer::RobotContainer() : driveSubsystem(gyro) {
@@ -38,11 +38,10 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   // return autos::ExampleAuto(&m_subsystem);
 
 <<<<<<< HEAD
-  return frc2::FunctionalCommand(
-      []() {},
-      [this]() {
-        intake.runIntake(controller);
-      }, [](){}, [](){return false;}, {&intake}).ToPtr(); 
+  return frc2::FunctionalCommand([]() {},
+                                 [this]() { intake.runIntake(controller); },
+                                 []() {}, []() { return false; }, {&intake})
+      .ToPtr();
 }
 
 void RobotContainer::setTeleopDefaults() {

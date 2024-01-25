@@ -5,9 +5,9 @@
 #pragma once
 
 #include "ArmConstants.h"
+#include "frc/Joystick.h"
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
-#include "frc/Joystick.h"
 
 #include <iterator>
 #include <rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h>
@@ -40,7 +40,7 @@ public:
   }
 
 <<<<<<< HEAD
-  void runIntake(frc::Joystick & m_controller); 
+  void runIntake(frc::Joystick &m_controller); 
 
 
 =======
