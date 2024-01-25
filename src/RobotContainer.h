@@ -8,8 +8,10 @@
 #include <frc2/command/button/CommandXboxController.h>
 
 #include "Constants.h"
+#include "frc/Joystick.h"
 #include "rmb/controller/LogitechGamepad.h"
 #include "rmb/sensors/AHRS/AHRSGyro.h"
+#include "subsystems/arm/IntakeSubsystem.h"
 #include "subsystems/drive/DriveSubsystem.h"
 
 /**
@@ -43,4 +45,6 @@ private:
    
 
   void ConfigureBindings();
+  frc::Joystick controller{1};
+  IntakeSubsystem intake; 
 };

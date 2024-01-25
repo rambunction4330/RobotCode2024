@@ -5,8 +5,8 @@
 #include "ArmCommand.h"
 #include "subsystems/arm/ArmSubsystem.h"
 
-ArmCommand::ArmCommand(ArmSubsystem *subsystem)
-    : m_subsystem{subsystem} {
+ArmCommand::ArmCommand(ArmSubsystem &armSubsystem)
+    : armSubsystem(armSubsystem) {
   // Register that this command requires the subsystem.
-  AddRequirements(m_subsystem);
+  AddRequirements(&armSubsystem);
 }

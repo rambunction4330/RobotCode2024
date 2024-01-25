@@ -7,7 +7,6 @@
 #include <frc2/command/button/Trigger.h>
 
 #include "frc/Joystick.h"
-#include "frc2/cmd/"
 #include "subsystems/arm/ArmConstants.h"
 #include "subsystems/arm/IntakeSubsystem.h"
 #include "frc2/command/Commands.h"
@@ -38,13 +37,11 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   // An example command will be run in autonomous
   // return autos::ExampleAuto(&m_subsystem);
 
-  return FunctionalCommand(
+  return frc2::FunctionalCommand(
       []() {},
-      [this](m_controller, frontIntakeVelocityController,
-             backIntakeVelocityController) {
-        runIntake(m_controller, frontIntakeVelocityController,
-                  backIntakeVelocityController);
-      }, [this](){}, [](){}, IntakeSubsystem).ToPtr(); 
+      [this]() {
+        intake.runIntake(controller);
+      }, [](){}, [](){return false;}, {&intake}).ToPtr(); 
 }
 
 void RobotContainer::setTeleopDefaults() {

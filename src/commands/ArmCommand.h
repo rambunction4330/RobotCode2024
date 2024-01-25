@@ -23,10 +23,10 @@ public:
   /**
    * Creates a new ExampleCommand.
    *
-   * @param subsystem The subsystem used by this command.
+   * @param ArmSubsystem The subsystem used by this command.
    */
-  explicit ArmCommand(ArmCommand *subsystem);
+  explicit ArmCommand(ArmSubsystem &armSubsystem);
 
 private:
-  ArmCommand *m_subsystem;
+  ArmSubsystem &armSubsystem;
 };
