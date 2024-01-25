@@ -25,7 +25,9 @@ class RobotContainer {
 public:
   RobotContainer();
 
-  frc2::CommandPtr GetAutonomousCommand();
+  frc2::CommandPtr getAutonomousCommand();
+
+  frc2::CommandPtr getIntakeCommand();
 
   void setTeleopDefaults();
   void setAutoDefaults();
@@ -36,13 +38,14 @@ private:
   //     constants::driverControllerPort};
 
   // The robot's subsystems are defined here...
-  std::shared_ptr<rmb::AHRSGyro> gyro =
-      std::make_shared<rmb::AHRSGyro>(constants::gyroPort);
-  DriveSubsystem driveSubsystem;
+  // std::shared_ptr<rmb::AHRSGyro> gyro =
+  //     std::make_shared<rmb::AHRSGyro>(constants::gyroPort);
+  // DriveSubsystem driveSubsystem;
 
   rmb::LogitechGamepad gamepad{constants::driverControllerPort};
 
   void ConfigureBindings();
   frc::Joystick controller{1};
+
   IntakeSubsystem intake; 
 };

@@ -39,14 +39,8 @@ public:
     setBackPower(back);
   }
 
-<<<<<<< HEAD
-  void runIntake(frc::Joystick & m_controller); 
+  void runIntake(const frc::Joystick & m_controller); 
 
-
-=======
-  void runIntake(frc::Joystick m_controller, frontIntakeVelocityController,
-                 backIntakeVelocityController);
->>>>>>> e89bc0edfc75339329a04ac2fc4155d088db09a9
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be
@@ -54,10 +48,4 @@ private:
 
   rmb::SparkMaxVelocityController frontIntakeVelocityController;
   rmb::SparkMaxVelocityController backIntakeVelocityController;
-
-<<<<<<< HEAD
- 
-=======
-  frc::Joystick m_controller;
->>>>>>> e89bc0edfc75339329a04ac2fc4155d088db09a9
 };

@@ -4,6 +4,8 @@
 
 #include "IntakeSubsystem.h"
 
+#include <iostream>
+
 #include "ArmConstants.h"
 #include "frc/Joystick.h"
 #include <new>
@@ -24,14 +26,6 @@ void IntakeSubsystem::SimulationPeriodic() {
   // Implementation of subsystem simulation periodic method goes here.
 }
 
-<<<<<<< HEAD
-void IntakeSubsystem::runIntake(frc::Joystick &m_controller) {
-  setPower(m_controller.GetThrottle(), -m_controller.GetThrottle() );
-=======
-void IntakeSubsystem::runIntake(frc::Joystick m_controller,
-                                frontIntakeVelocityController,
-                                backIntakeVelocityController) {
-  frontIntakeVelocityController.Set(m_controller.GerThrottle());
-  backIntakeVelocityController.Set(-m_controller.GetThrottle());
->>>>>>> e89bc0edfc75339329a04ac2fc4155d088db09a9
+void IntakeSubsystem::runIntake(const frc::Joystick &controller) {
+  setPower(controller.GetThrottle(), -controller.GetThrottle() );
 }

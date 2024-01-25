@@ -33,14 +33,15 @@ void Robot::DisabledPeriodic() {}
  * RobotContainer} class.
  */
 void Robot::AutonomousInit() {
-  m_autonomousCommand = container.GetAutonomousCommand();
+  m_autonomousCommand = container.getAutonomousCommand();
+
+  // TODO: Check to see if we need to remove this
+  frc2::CommandScheduler::GetInstance().CancelAll();
 
   if (m_autonomousCommand) {
     m_autonomousCommand->Schedule();
   }
 
-  // TODO: Check to see if we need to remove this
-  frc2::CommandScheduler::GetInstance().CancelAll();
 }
 
 void Robot::AutonomousPeriodic() {}
@@ -63,7 +64,8 @@ void Robot::TeleopInit() {
 /**
  * This function is called periodically during operator control.
  */
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic() {
+}
 
 /**
  * This function is called periodically during test mode.

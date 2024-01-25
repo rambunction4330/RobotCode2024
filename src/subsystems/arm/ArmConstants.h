@@ -151,7 +151,7 @@ const rmb::SparkMaxVelocityController::CreateInfo
     intakeFrontVelocityControllerCreateInfo{
         .motorConfig =
             {
-                .id = 1,
+                .id = 59,
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
                 .inverted = false,
             },
@@ -193,7 +193,7 @@ const rmb::SparkMaxVelocityController::CreateInfo
     intakeBackVelocityControllerCreateInfo{
         .motorConfig =
             {
-                .id = 21,
+                .id = 58,
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
                 .inverted = false,
             },
