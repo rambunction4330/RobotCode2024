@@ -31,7 +31,5 @@ private:
   // The robot's subsystems are defined here...
   ExampleSubsystem m_subsystem;
 
-   
-
   void ConfigureBindings();
 };

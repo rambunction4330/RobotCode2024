@@ -36,11 +36,13 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   // An example command will be run in autonomous
   // return autos::ExampleAuto(&m_subsystem);
 
-  return FunctionalCommand(
-      []() {},
-      [this](m_controller, frontIntakeVelocityController,
-             backIntakeVelocityController) {
-        runIntake(m_controller, frontIntakeVelocityController,
-                  backIntakeVelocityController);
-      }, [this](){}, [](){}, IntakeSubsystem).ToPtr(); 
+  return FunctionalCommand([]() {},
+                           [this](m_controller, frontIntakeVelocityController,
+                                  backIntakeVelocityController) {
+                             runIntake(m_controller,
+                                       frontIntakeVelocityController,
+                                       backIntakeVelocityController);
+                           },
+                           [this]() {}, []() {}, IntakeSubsystem)
+      .ToPtr();
 }

@@ -17,8 +17,7 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class ArmCommand
-    : public frc2::CommandHelper<frc2::Command, ArmCommand> {
+class ArmCommand : public frc2::CommandHelper<frc2::Command, ArmCommand> {
 public:
   /**
    * Creates a new ExampleCommand.

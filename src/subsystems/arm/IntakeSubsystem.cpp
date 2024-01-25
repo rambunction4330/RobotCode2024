@@ -26,8 +26,6 @@ void IntakeSubsystem::SimulationPeriodic() {
 void IntakeSubsystem::runIntake(frc::Joystick m_controller,
                                 frontIntakeVelocityController,
                                 backIntakeVelocityController) {
-  frontIntakeVelocityController.Set(
-      m_controller.GerThrottle());
-  backIntakeVelocityController.Set(
-      -m_controller.GetThrottle());
+  frontIntakeVelocityController.Set(m_controller.GerThrottle());
+  backIntakeVelocityController.Set(-m_controller.GetThrottle());
 }
