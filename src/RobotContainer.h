@@ -47,5 +47,5 @@ private:
   void ConfigureBindings();
   frc::Joystick controller{1};
 
-  IntakeSubsystem intake; 
+  IntakeSubsystem intake;
 };

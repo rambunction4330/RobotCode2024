@@ -7,13 +7,13 @@
 #include <frc2/command/button/Trigger.h>
 
 #include "frc/Joystick.h"
-#include "subsystems/arm/ArmConstants.h"
-#include "subsystems/arm/IntakeSubsystem.h"
 #include "frc2/command/Commands.h"
 #include "frc2/command/RunCommand.h"
+#include "subsystems/arm/ArmConstants.h"
+#include "subsystems/arm/IntakeSubsystem.h"
 #include "subsystems/drive/DriveSubsystem.h"
 
-RobotContainer::RobotContainer() {//: driveSubsystem(gyro) {
+RobotContainer::RobotContainer() { //: driveSubsystem(gyro) {
   // Initialize all of your commands and subsystems here
 
   // Configure the button bindings
@@ -41,12 +41,14 @@ frc2::CommandPtr RobotContainer::getAutonomousCommand() {
 
 frc2::CommandPtr RobotContainer::getIntakeCommand() {
   // Joystick input is blocked during teleop
-  return frc2::FunctionalCommand(
-      []() {},
-      [this]() {
-      std::cout << "right here" << std::endl;
-        intake.runIntake(controller);
-      }, [](bool canceled){}, [](){return false;}, {&intake}).ToPtr(); 
+  return frc2::FunctionalCommand([]() {},
+                                 [this]() {
+                                   std::cout << "right here" << std::endl;
+                                   intake.runIntake(controller);
+                                 },
+                                 [](bool canceled) {}, []() { return false; },
+                                 {&intake})
+      .ToPtr();
 }
 
 void RobotContainer::setTeleopDefaults() {

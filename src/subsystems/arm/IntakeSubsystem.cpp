@@ -27,5 +27,5 @@ void IntakeSubsystem::SimulationPeriodic() {
 }
 
 void IntakeSubsystem::runIntake(const frc::Joystick &controller) {
-  setPower(controller.GetThrottle(), -controller.GetThrottle() );
+  setPower(controller.GetThrottle(), -controller.GetThrottle());
 }

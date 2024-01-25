@@ -5,9 +5,9 @@
 #pragma once
 
 #include "ArmConstants.h"
+#include "frc/Joystick.h"
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
-#include "frc/Joystick.h"
 
 #include <iterator>
 #include <rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h>
@@ -39,8 +39,7 @@ public:
     setBackPower(back);
   }
 
-  void runIntake(const frc::Joystick & m_controller); 
-
+  void runIntake(const frc::Joystick &m_controller);
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be
