@@ -23,7 +23,7 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
           std::make_unique<rmb::TalonFXPositionController>(
               constants::drive::positionControllerCreateInfo),
           frc::Translation2d(-constants::drive::robotDimX / 2.0,
-                             constants::drive::robotDimY),
+                             constants::drive::robotDimY / 2.0),
           true),
       rmb::SwerveModule(
           rmb::asLinear(std::make_unique<rmb::TalonFXVelocityController>(
@@ -31,8 +31,8 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
                         constants::drive::wheelCircumference / 1_tr),
           std::make_unique<rmb::TalonFXPositionController>(
               constants::drive::positionControllerCreateInfo1),
-          frc::Translation2d(constants::drive::robotDimX,
-                             constants::drive::robotDimY),
+          frc::Translation2d(constants::drive::robotDimX / 2.0,
+                             constants::drive::robotDimY / 2.0),
           true),
       rmb::SwerveModule(
           rmb::asLinear(std::make_unique<rmb::TalonFXVelocityController>(
@@ -40,8 +40,8 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
                         constants::drive::wheelCircumference / 1_tr),
           std::make_unique<rmb::TalonFXPositionController>(
               constants::drive::positionControllerCreateInfo2),
-          frc::Translation2d(constants::drive::robotDimX,
-                             -constants::drive::robotDimY),
+          frc::Translation2d(constants::drive::robotDimX / 2.0,
+                             -constants::drive::robotDimY / 2.0),
           true),
       rmb::SwerveModule(
           rmb::asLinear(std::make_unique<rmb::TalonFXVelocityController>(
@@ -49,8 +49,8 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
                         constants::drive::wheelCircumference / 1_tr),
           std::make_unique<rmb::TalonFXPositionController>(
               constants::drive::positionControllerCreateInfo3),
-          frc::Translation2d(-constants::drive::robotDimX,
-                             -constants::drive::robotDimY),
+          frc::Translation2d(-constants::drive::robotDimX / 2.0,
+                             -constants::drive::robotDimY / 2.0),
           true),
 
   };
@@ -74,13 +74,13 @@ void DriveSubsystem::Periodic() {
 
 void DriveSubsystem::driveTeleop(const rmb::LogitechGamepad &gamepad) {
   // TODO: add filters
-  drive->driveCartesian(gamepad.GetLeftX(), gamepad.GetLeftY(),
-                        gamepad.GetRightX(), true);
+  drive->driveCartesian(gamepad.GetLeftY(), gamepad.GetLeftX(),
+                        gamepad.GetRightY(), false);
 }
 
 frc2::CommandPtr
 DriveSubsystem::driveTeleopCommand(const rmb::LogitechGamepad &gamepad) {
-  return frc2::RunCommand([&] { driveTeleop(gamepad); }).ToPtr();
+  return frc2::RunCommand([&] { driveTeleop(gamepad); }, {this}).ToPtr();
 }
 
 frc2::CommandPtr DriveSubsystem::driveTeleopCommand(double x, double y,

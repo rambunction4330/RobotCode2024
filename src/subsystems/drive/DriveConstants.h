@@ -31,10 +31,10 @@ const rmb::TalonFXVelocityControllerHelper::PIDConfig velocityModulePIDConfig =
 const rmb::TalonFXPositionControllerHelper::PIDConfig positionModulePIDConfig =
     {.p = 2.5f, .i = 0.0000f, .d = 0.0f, .ff = 0.000};
 
-const units::turn_t module1MagnetOffset(-0.169778);
-const units::turn_t module2MagnetOffset(-0.190430);
-const units::turn_t module3MagnetOffset(-0.726318 + 0.5);
-const units::turn_t module4MagnetOffset(-0.37963 + 0.5);
+const units::turn_t module1MagnetOffset(-0.403564);
+const units::turn_t module2MagnetOffset(-0.223145);
+const units::turn_t module3MagnetOffset(-0.382812 - 0.5);
+const units::turn_t module4MagnetOffset(-0.948486);
 
 const units::meter_t wheelCircumference = 1.0_m; // TODO: CHANGE
 const units::meter_t robotDimX = 1.0_m;
