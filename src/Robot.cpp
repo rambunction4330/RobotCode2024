@@ -41,7 +41,6 @@ void Robot::AutonomousInit() {
   if (m_autonomousCommand) {
     m_autonomousCommand->Schedule();
   }
-
 }
 
 void Robot::AutonomousPeriodic() {}
@@ -64,8 +63,7 @@ void Robot::TeleopInit() {
 /**
  * This function is called periodically during operator control.
  */
-void Robot::TeleopPeriodic() {
-}
+void Robot::TeleopPeriodic() {}
 
 /**
  * This function is called periodically during test mode.
