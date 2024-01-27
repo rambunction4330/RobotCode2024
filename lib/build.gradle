@@ -1,0 +1,100 @@
+plugins {
+    id 'cpp'
+    id 'java'
+    id 'edu.wpi.first.wpilib.repositories.WPILibRepositoriesPlugin' version '2020.2'
+    id 'edu.wpi.first.NativeUtils' version '2024.7.0'
+    id 'edu.wpi.first.GradleJni' version '1.0.0'
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+repositories {
+    mavenCentral()
+}
+
+wpilibRepositories.addAllReleaseRepositories(project)
+// wpilibRepositories.addAllDevelopmentRepositories(project)
+
+// Apply C++ configuration
+apply from: 'config.gradle'
+
+// Apply Java configuration
+dependencies {
+}
+
+// Set up exports properly
+nativeUtils {
+    exportsConfigs {
+        LibRmb {
+          x64ExcludeSymbols = [
+              '_CT??_R0?AV_System_error',
+              '_CT??_R0?AVexception',
+              '_CT??_R0?AVfailure',
+              '_CT??_R0?AVruntime_error',
+              '_CT??_R0?AVsystem_error',
+              '_CTA5?AVfailure',
+              '_TI5?AVfailure',
+              '_CT??_R0?AVout_of_range',
+              '_CTA3?AVout_of_range',
+              '_TI3?AVout_of_range',
+              '_CT??_R0?AVbad_cast'
+          ]
+          x86ExcludeSymbols = [
+              '_CT??_R0?AV_System_error',
+              '_CT??_R0?AVexception',
+              '_CT??_R0?AVfailure',
+              '_CT??_R0?AVruntime_error',
+              '_CT??_R0?AVsystem_error',
+              '_CTA5?AVfailure',
+              '_TI5?AVfailure',
+              '_CT??_R0?AVout_of_range',
+              '_CTA3?AVout_of_range',
+              '_TI3?AVout_of_range',
+              '_CT??_R0?AVbad_cast'
+          ]
+      }
+  }
+}
+
+model {
+    components {
+        LibRmb(NativeLibrarySpec) {
+            sources {
+                cpp {
+                    source {
+                        srcDirs 'src/'
+                        include '**/*.cpp'
+                    }
+                    exportedHeaders {
+                        srcDirs 'src/'
+                    }
+                }
+            }
+            nativeUtils.useRequiredLibrary(it, 'wpilib_shared')
+        }
+    }
+}
+
+apply from: 'publish.gradle'
+
+wrapper {
+    gradleVersion '8.4'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task resolveAllDependencies {
+    description "Resolves all transitive dependencies so you can run using the --offline flag"
+        doLast {
+            try {
+                configurations.all {
+                    it.resolve()
+                }
+            } catch (Exception e) {
+                logger.quiet("dependency download exception: " + e.message);
+            }
+        }
+}
