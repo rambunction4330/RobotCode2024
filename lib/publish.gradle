@@ -1,0 +1,288 @@
+import groovy.json.JsonSlurper
+import java.util.ArrayList
+import javax.swing.filechooser.FileFilter
+
+apply plugin: 'maven-publish'
+
+ext.licenseFile = files("$rootDir/LICENSE")
+
+def year = '2024'
+def pubVersion = '2024.0.1'
+
+def outputsFolder = file("$buildDir/outputs")
+
+def vendordepJSONFile = file("$buildDir/LibRmb.json")
+
+def versionFile = file("$outputsFolder/version.txt")
+
+task outputVersions() {
+    description = 'Prints the versions of wpilib to a file for use by the downstream packaging project'
+    group = 'Build'
+    outputs.files(versionFile)
+
+    doFirst {
+        buildDir.mkdir()
+        outputsFolder.mkdir()
+    }
+
+    doLast {
+        versionFile.write pubVersion
+    }
+}
+
+task generateVendorJSON() {
+    description = "Generate the vendordep json file"
+    group = 'Build'
+    // outputs.files(vendordepJSONFile)
+
+    def uuid = "abcaeed8-c3ff-11ed-afa1-0242ac120002"
+    def repoUrl = "https://raw.githubusercontent.com/rambunction4330/librmb/maven-repo/repos/releases"
+    def jsonUrl = "https://raw.githubusercontent.com/rambunction4330/librmb/maven-repo/LibRmb.json"
+
+    def platforms = ["linuxathena", "windows", "osxuniversal"]
+
+    def vendordepUrls = new ArrayList<String>();
+    def vendordepUUIDs = new ArrayList<String>();
+    def depsStringBuilder = new StringBuilder();
+
+    def vendordepsFolder = new File("${rootDir}/vendordeps")
+
+    def vendorDeps = vendordepsFolder.listFiles({File dir, String name ->
+      name.endsWith(".json")
+    } as FilenameFilter);
+
+    for (File vendordep in vendorDeps) {
+      def slurper = new JsonSlurper()
+
+      def map = slurper.parse(new FileReader(vendordep))
+
+      if(map instanceof Map) {
+        if (map.containsKey('jsonUrl')) {
+          try {
+            def _url = new URI(map.jsonUrl)
+            vendordepUrls.add(map.jsonUrl);
+          } catch (def e) {}
+        }
+
+        if (map.containsKey('uuid')) {
+          vendordepUUIDs.add(map.uuid);
+        }
+      }
+    }
+    
+    for (int i = 0; i < vendordepUrls.size(); i++) {
+      depsStringBuilder.append(
+""",
+        {
+            \"uuid\": \"${vendordepUUIDs[i]}\",
+            \"errorMessage\": \"\",
+            \"onlineUrl\": \"${vendordepUrls[i]}\"
+        }""")
+    }
+
+    depsStringBuilder.deleteCharAt(0);
+    depsStringBuilder.deleteCharAt(0);
+    
+    String vendordepJSON =
+"""{
+    \"fileName\": \"LibRmb.json\",
+    \"name\": \"LibRmb\",
+    \"version\": \"${pubVersion}\",
+    \"frcYear\": \"${year}\",
+    \"uuid\": \"${uuid}\",
+    \"mavenUrls\": [
+        \"${repoUrl}\"
+    ],
+    \"requirements\": [
+${depsStringBuilder.toString()}
+    ],
+    \"jsonUrl\": \"${jsonUrl}\",
+    \"javaDependencies\": [],
+    \"jniDependencies\": [],
+    \"cppDependencies\": [
+        {
+            \"groupId\": \"com.rambunction4330.lib\",
+            \"artifactId\": \"LibRmb-cpp\",
+            \"version\": \"${pubVersion}\",
+            \"libName\": \"LibRmb\",
+            \"headerClassifier\": \"headers\",
+            \"sharedLibrary\": true,
+            \"skipInvalidPlatforms\": true,
+            \"binaryPlatforms\": [
+                \"linuxathena\",
+                \"windows\",
+                \"osxuniversal\"
+            ]
+        }
+    ]
+}
+"""
+
+    doLast {
+        vendordepJSONFile.write vendordepJSON
+   }
+}
+
+
+task libraryBuild() {}
+
+build.dependsOn outputVersions
+build.dependsOn generateVendorJSON
+
+task copyAllOutputs(type: Copy) {
+    destinationDir file("$buildDir/allOutputs")
+    from versionFile
+    dependsOn outputVersions
+}
+
+build.dependsOn copyAllOutputs
+copyAllOutputs.dependsOn outputVersions
+
+ext.addTaskToCopyAllOutputs = { task ->
+    copyAllOutputs.dependsOn task
+    copyAllOutputs.inputs.file task.archivePath
+    copyAllOutputs.from task.archivePath
+}
+
+def artifactGroupId = 'com.rambunction4330.lib'
+def baseArtifactId = 'LibRmb'
+def zipBaseName = "_GROUP_com_librmb_lib_ID_${baseArtifactId}-cpp_CLS"
+def javaBaseName = "_GROUP_com_librmb_lib_ID_${baseArtifactId}-java_CLS"
+
+task cppHeadersZip(type: Zip) {
+    destinationDirectory = outputsFolder
+    archiveBaseName = zipBaseName
+    archiveClassifier = "headers"
+
+    from(licenseFile) {
+        into '/'
+    }
+
+    from('src/') {
+        include "**/*.h"
+        into '/'
+    }
+
+    from('src/') {
+      include "**/*.inc"
+      into '/'
+    }
+
+    from('src/') {
+      include "**/*.inl"
+      into '/'
+    }
+}
+
+task cppSourceZip(type: Zip) {
+    destinationDirectory = outputsFolder
+    archiveBaseName = zipBaseName
+    archiveClassifier = "source"
+
+    from(licenseFile) {
+        into '/'
+    }
+
+    from('src/') {
+        include "**/*.cpp"
+        into '/'
+    }
+}
+
+build.dependsOn cppHeadersZip
+addTaskToCopyAllOutputs(cppHeadersZip)
+build.dependsOn cppSourceZip
+addTaskToCopyAllOutputs(cppSourceZip)
+
+libraryBuild.dependsOn build
+
+def releasesRepoUrl = "$buildDir/repos/releases"
+
+publishing {
+    repositories {
+        maven {
+
+            url = releasesRepoUrl
+        }
+    }
+}
+
+task cleanReleaseRepo(type: Delete) {
+    delete releasesRepoUrl
+}
+
+def ArrayList<String> getVendorDepUUIDs() {
+  def list = new ArrayList<String>();
+
+  def vendordepsFolder = new File("${rootDir}/vendordeps")
+
+  def vendorDeps = vendordepsFolder.listFiles({File dir, String name ->
+    name.endsWith(".json")
+  } as FilenameFilter);
+
+  for (File vendordep in vendorDeps) {
+    def slurper = new JsonSlurper()
+
+    def map = slurper.parse(new FileReader(vendordep))
+
+    if(map instanceof Map) {
+      if (map.containsKey('uuid') && map.uuid.length() != 0) {
+        list.add(map.uuid);
+      }
+    }
+  }
+
+  return list
+}
+
+def ArrayList<String> getVendorDepURLs() {
+  def list = new ArrayList<String>();
+
+  def vendordepsFolder = new File("${rootDir}/vendordeps")
+
+  def vendorDeps = vendordepsFolder.listFiles({File dir, String name ->
+    name.endsWith(".json")
+  } as FilenameFilter);
+
+  for (File vendordep in vendorDeps) {
+    def slurper = new JsonSlurper()
+
+    def map = slurper.parse(new FileReader(vendordep))
+
+    if(map instanceof Map) {
+      if (map.containsKey('jsonUrl') && map.jsonUrl.length() != 0) {
+        try {
+          def _url = new URI(map.jsonUrl)
+          list.add(map.jsonUrl);
+        } catch (def e) {}
+      }
+    }
+  }
+
+  return list
+}
+
+publish.dependsOn generateVendorJSON
+
+tasks.matching {it != cleanReleaseRepo}.all {it.dependsOn cleanReleaseRepo}
+
+model {
+    publishing {
+        def taskList = createComponentZipTasks($.components, ['LibRmb'], zipBaseName, Zip, project, includeStandardZipFormat)
+
+        publications {
+            cpp(MavenPublication) {
+                taskList.each {
+                    artifact it
+                }
+                artifact cppHeadersZip
+                artifact cppSourceZip
+
+                artifactId = "${baseArtifactId}-cpp"
+                groupId artifactGroupId
+                version pubVersion
+            }
+
+        }
+    }
+}
