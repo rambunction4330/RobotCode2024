@@ -18,7 +18,7 @@ namespace rmb {
 namespace TalonFXPositionControllerHelper {
 struct MotorConfig {
   int id;
-  bool inverted = false;
+  bool inverted = false; /*< false for counterclockwise positive*/
   bool brake = false;
   double minOutput = -1.0,
          maxOutput = 1.0; /*< Applies to both open and closed loop*/

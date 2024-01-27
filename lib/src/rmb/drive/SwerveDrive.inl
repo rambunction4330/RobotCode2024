@@ -4,61 +4,52 @@
 #include "pathplanner/lib/path/PathConstraints.h"
 #include "pathplanner/lib/path/PathPlannerPath.h"
 #include "pathplanner/lib/util/HolonomicPathFollowerConfig.h"
-#include "pathplanner/lib/util/PIDConstants.h"
 #include "pathplanner/lib/util/ReplanningConfig.h"
-#include "rmb/drive/BaseDrive.h"
-#include "units/acceleration.h"
 #include "units/angle.h"
-#include "units/angular_velocity.h"
 #include "units/base.h"
 #include "units/length.h"
-#include "units/math.h"
-#include "units/time.h"
 #include "units/velocity.h"
 
 #include "frc/controller/HolonomicDriveController.h"
 #include "frc/estimator/SwerveDrivePoseEstimator.h"
 #include "frc/geometry/Rotation2d.h"
-#include "frc/interfaces/Gyro.h"
+#include "frc/geometry/Translation2d.h"
 #include "frc/kinematics/ChassisSpeeds.h"
 #include "frc/kinematics/SwerveDriveKinematics.h"
 #include "frc/kinematics/SwerveModulePosition.h"
 #include "frc/kinematics/SwerveModuleState.h"
 
-#include "frc/geometry/Translation2d.h"
-
 #include "frc2/command//SwerveControllerCommand.h"
 #include "frc2/command/CommandPtr.h"
 #include "frc2/command/Commands.h"
 #include "frc2/command/Subsystem.h"
+
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableInstance.h"
+
 #include "rmb/drive/SwerveDrive.h"
 #include "rmb/drive/SwerveModule.h"
-#include "rmb/motorcontrol/feedforward/Feedforward.h"
+
 #include "units/angle.h"
-#include "units/angular_velocity.h"
 #include "units/length.h"
-#include "units/math.h"
 #include "units/velocity.h"
+
 #include "wpi/array.h"
-#include "wpi/sendable/SendableRegistry.h"
 
 #include <array>
 #include <cstddef>
-#include <functional>
 #include <initializer_list>
-#include <iostream>
 
 #include <Eigen/Core>
+
 #include <memory>
+#include <mutex>
 
 #include "pathplanner/lib/commands/FollowPathHolonomic.h"
 #include "pathplanner/lib/commands/PathfindHolonomic.h"
 #include "pathplanner/lib/path/PathConstraints.h"
 #include "pathplanner/lib/util/HolonomicPathFollowerConfig.h"
 #include "pathplanner/lib/util/ReplanningConfig.h"
-#include <mutex>
 
 namespace rmb {
 
@@ -183,7 +174,10 @@ void SwerveDrive<NumModules>::driveCartesian(double xSpeed, double ySpeed,
         robotRelativeVXY.y() +
         zRotation * -module.getModuleTranslation().X() / largestModuleDistance;
 
-    frc::Rotation2d moduleRotation{output_x, output_y};
+    // Enforce a forward-facing 0_deg that increases in the counterclockwise
+    // direction
+    frc::Rotation2d moduleRotation =
+        -1.0 * frc::Rotation2d(output_x, output_y).Radians();
     double modulePower = std::sqrt(output_x * output_x + output_y * output_y);
 
     powers[i] = SwerveModulePower{modulePower, moduleRotation};
