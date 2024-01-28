@@ -1,8 +1,12 @@
 #include "TalonFXPositionController.h"
+#include "ctre/phoenix6/StatusSignal.hpp"
 #include "ctre/phoenix6/configs/Configs.hpp"
 #include "ctre/phoenix6/core/CoreCANcoder.hpp"
 #include "ctre/phoenix6/core/CoreTalonFX.hpp"
+#include "frc/Watchdog.h"
+#include "frc2/command/CommandScheduler.h"
 #include "units/angle.h"
+#include "units/angular_velocity.h"
 
 #include <iostream>
 
@@ -124,8 +128,20 @@ void TalonFXPositionController::setPosition(units::radian_t position) {
   motorcontroller.SetControl(request);
 }
 
+ctre::phoenix6::StatusSignal<double> &
+TalonFXPositionController::getTargetPositionStatusSignal() const {
+  thread_local auto signal = ctre::phoenix6::StatusSignal<double>(
+      motorcontroller.GetClosedLoopReference());
+
+  return signal;
+}
+
 units::radian_t TalonFXPositionController::getTargetPosition() const {
-  return units::turn_t(motorcontroller.GetClosedLoopReference().GetValue());
+  auto signal = getTargetPositionStatusSignal();
+
+  signal.Refresh();
+
+  return units::turn_t(signal.GetValue());
 }
 
 units::radian_t TalonFXPositionController::getMinPosition() const {
@@ -140,20 +156,50 @@ void TalonFXPositionController::disable() { motorcontroller.Disable(); }
 
 void TalonFXPositionController::stop() { motorcontroller.StopMotor(); }
 
-units::radians_per_second_t TalonFXPositionController::getVelocity() const {
+ctre::phoenix6::StatusSignal<units::turns_per_second_t> &
+TalonFXPositionController::getVelocityStatusSignal() const {
   if (usingCANCoder) {
-    return canCoder->GetVelocity().GetValue();
+    thread_local auto signal =
+        ctre::phoenix6::StatusSignal(canCoder->GetVelocity());
+
+    return signal;
   } else {
-    return motorcontroller.GetVelocity().GetValue();
+    thread_local auto signal =
+        ctre::phoenix6::StatusSignal(motorcontroller.GetVelocity());
+
+    return signal;
+  }
+}
+
+units::radians_per_second_t TalonFXPositionController::getVelocity() const {
+  auto signal = getVelocityStatusSignal();
+
+  signal.Refresh();
+
+  return signal.GetValue();
+}
+
+ctre::phoenix6::StatusSignal<units::turn_t> &
+TalonFXPositionController::getPositionStatusSignal() const {
+  if (usingCANCoder) {
+    thread_local auto signal =
+        ctre::phoenix6::StatusSignal(canCoder->GetPosition());
+
+    return signal;
+  } else {
+    thread_local auto signal =
+        ctre::phoenix6::StatusSignal(motorcontroller.GetPosition());
+
+    return signal;
   }
 }
 
 units::radian_t TalonFXPositionController::getPosition() const {
-  if (usingCANCoder) {
-    return canCoder->GetPosition().GetValue();
-  } else {
-    return motorcontroller.GetPosition().GetValue();
-  }
+  auto signal = getPositionStatusSignal();
+
+  signal.Refresh();
+
+  return signal.GetValue();
 }
 
 void TalonFXPositionController::setEncoderPosition(units::radian_t position) {

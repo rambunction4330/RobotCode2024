@@ -294,7 +294,7 @@ private:
   /**
    * Mutex to protect position estimations between vision threads.
    */
-  mutable std::mutex visionThreadMutex;
+  // mutable std::mutex visionThreadMutex;
 
   units::meters_per_second_t maxModuleSpeed;
 

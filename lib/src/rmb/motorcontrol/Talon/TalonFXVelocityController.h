@@ -58,6 +58,7 @@ public:
    */
   void setVelocity(units::radians_per_second_t velocity) override;
 
+  ctre::phoenix6::StatusSignal<double> &getTargetVelocityStatusSignal() const;
   /**
    * Gets the target angular velocity.
    *
@@ -88,6 +89,9 @@ public:
   //---------------------------------------
   // Methods Inherited from AngularEncoder
   //---------------------------------------
+  //
+  ctre::phoenix6::StatusSignal<units::turns_per_second_t> &
+  getVelocityStatusSignal() const;
 
   /**
    * Gets the angular velocity of the motor.
@@ -95,6 +99,8 @@ public:
    * @return The velocity of the motor in radians per second.
    */
   units::radians_per_second_t getVelocity() const override;
+
+  ctre::phoenix6::StatusSignal<units::turn_t> &getPositionStatusSignal() const;
 
   /**
    * Gets the angular position of an motor.
