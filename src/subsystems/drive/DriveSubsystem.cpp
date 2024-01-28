@@ -5,6 +5,8 @@
 #include "subsystems/drive/DriveSubsystem.h"
 
 #include "Constants.h"
+#include "frc/TimedRobot.h"
+#include "frc/geometry/Pose2d.h"
 #include "subsystems/drive/DriveConstants.h"
 
 #include "frc2/command/CommandPtr.h"
@@ -12,6 +14,8 @@
 
 #include "rmb/sensors/gyro.h"
 #include <memory>
+#include <mutex>
+#include <thread>
 
 DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
   // Implementation of subsystem constructor goes here.
@@ -65,11 +69,28 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
               frc::TrapezoidProfile<units::radian>::Constraints(
                   6.28_rad_per_s, 3.14_rad_per_s / 1_s))),
       constants::drive::maxModuleSpeed);
+
+  odometryThread = std::thread(&DriveSubsystem::odometryThreadMain, this);
+}
+
+void DriveSubsystem::odometryThreadMain() {
+  while (true) {
+    frc::Pose2d newPose = drive->updatePose();
+    {
+      std::lock_guard<std::mutex> lock(currentPoseContainer.mutex);
+      currentPoseContainer._pose = newPose;
+    }
+    std::this_thread::yield();
+  }
+}
+
+frc::Pose2d DriveSubsystem::getPoseEstimation() {
+  std::lock_guard<std::mutex> lock(currentPoseContainer.mutex);
+  return currentPoseContainer._pose;
 }
 
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
-  drive->updatePose();
 }
 
 void DriveSubsystem::driveTeleop(const rmb::LogitechGamepad &gamepad) {
