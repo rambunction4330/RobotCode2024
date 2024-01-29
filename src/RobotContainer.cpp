@@ -11,8 +11,8 @@
 
 #include "frc2/command/Commands.h"
 #include "frc2/command/RunCommand.h"
-#include "pathplanner/lib/path/PathPlannerPath.h"
 #include "pathplanner/lib/auto/NamedCommands.h"
+#include "pathplanner/lib/path/PathPlannerPath.h"
 #include "subsystems/drive/DriveSubsystem.h"
 
 RobotContainer::RobotContainer() : driveSubsystem(gyro) {
