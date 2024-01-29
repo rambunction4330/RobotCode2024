@@ -5,8 +5,11 @@
 #include "subsystems/drive/DriveSubsystem.h"
 
 #include "Constants.h"
+#include "frc/DriverStation.h"
+#include "frc/RobotBase.h"
 #include "frc/TimedRobot.h"
 #include "frc/geometry/Pose2d.h"
+#include "pathplanner/lib/auto/AutoBuilder.h"
 #include "subsystems/drive/DriveConstants.h"
 
 #include "frc2/command/CommandPtr.h"
@@ -71,22 +74,62 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
       constants::drive::maxModuleSpeed);
 
   odometryThread = std::thread(&DriveSubsystem::odometryThreadMain, this);
+
+  pathplanner::AutoBuilder::configureHolonomic(
+      [this]() { return getPoseEstimation(); },
+      [this](frc::Pose2d pose) { setPoseEstimation(pose); },
+      [this]() { return getChassisSpeedsEstimation(); },
+      [this](frc::ChassisSpeeds speeds) { // should be robot relative
+        drive->driveChassisSpeeds(speeds);
+      },
+      pathplanner::HolonomicPathFollowerConfig{
+          constants::drive::pathTranslationalConstants,
+          constants::drive::pathRotationalConstants,
+          constants::drive::maxModuleSpeed, drive->getMaxDriveRadius(),
+          pathplanner::ReplanningConfig(), constants::robotLoopTime},
+      []() {
+        // Plan all autos on the blue side
+        auto alliance = frc::DriverStation::GetAlliance();
+        if (alliance) {
+          return alliance.value() == frc::DriverStation::Alliance::kRed;
+        }
+        return false;
+      },
+      this);
 }
 
 void DriveSubsystem::odometryThreadMain() {
   while (true) {
     frc::Pose2d newPose = drive->updatePose();
+    frc::ChassisSpeeds newChassisSpeeds = drive->getChassisSpeeds();
     {
-      std::lock_guard<std::mutex> lock(currentPoseContainer.mutex);
+      std::lock_guard<std::mutex> lock(currentPoseContainer.poseMutex);
       currentPoseContainer._pose = newPose;
+    }
+
+    {
+
+      std::lock_guard<std::mutex> lock(currentPoseContainer.chassisSpeedsMutex);
+      currentPoseContainer._chassisSpeeds = newChassisSpeeds;
     }
     std::this_thread::yield();
   }
 }
 
+frc::ChassisSpeeds DriveSubsystem::getChassisSpeedsEstimation() {
+  std::lock_guard<std::mutex> lock(currentPoseContainer.chassisSpeedsMutex);
+  return currentPoseContainer._chassisSpeeds;
+}
+
 frc::Pose2d DriveSubsystem::getPoseEstimation() {
-  std::lock_guard<std::mutex> lock(currentPoseContainer.mutex);
+  std::lock_guard<std::mutex> lock(currentPoseContainer.poseMutex);
   return currentPoseContainer._pose;
+}
+
+void DriveSubsystem::setPoseEstimation(frc::Pose2d pose) {
+  std::lock_guard<std::mutex> lock(currentPoseContainer.poseMutex);
+  drive->resetPose(pose);
+  currentPoseContainer._pose = pose;
 }
 
 void DriveSubsystem::Periodic() {

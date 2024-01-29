@@ -6,8 +6,13 @@
 
 #include <frc2/command/button/Trigger.h>
 
+#include <filesystem>
+#include <frc/Filesystem.h>
+
 #include "frc2/command/Commands.h"
 #include "frc2/command/RunCommand.h"
+#include "pathplanner/lib/path/PathPlannerPath.h"
+#include "pathplanner/lib/auto/NamedCommands.h"
 #include "subsystems/drive/DriveSubsystem.h"
 
 RobotContainer::RobotContainer() : driveSubsystem(gyro) {
@@ -28,6 +33,22 @@ void RobotContainer::ConfigureBindings() {
   // Schedule `ExampleMethodCommand` when the Xbox controller's B button is
   // pressed, cancelling on release.
   // m_driverController.B().WhileTrue(m_subsystem.ExampleMethodCommand());
+}
+
+void RobotContainer::loadPPPaths() {
+  std::string pathDir =
+      frc::filesystem::GetDeployDirectory() + "/pathplanner/paths/";
+
+  for (const auto &entry : std::filesystem::directory_iterator(pathDir)) {
+    if (entry.is_regular_file() && entry.path().extension() == ".path") {
+      paths[entry.path().stem()] =
+          pathplanner::PathPlannerPath::fromPathFile(entry.path().stem());
+    }
+  }
+
+  // Register named commands here
+  // with
+  // pathplanner::NamedCommands::registerCommand()
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

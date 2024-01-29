@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "pathplanner/lib/util/PIDConstants.h"
 #include <units/velocity.h>
 
 #include <rmb/motorcontrol/Talon/TalonFXPositionController.h>
@@ -23,6 +24,9 @@
 
 namespace constants {
 namespace drive {
+
+const pathplanner::PIDConstants pathTranslationalConstants(5.0, 0.0, 0.0, 1.0);
+const pathplanner::PIDConstants pathRotationalConstants(5.0, 0.0, 0.0, 1.0);
 
 using rmb::TalonFXPositionControllerHelper::CANCoderConfig;
 

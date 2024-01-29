@@ -5,6 +5,7 @@
 #pragma once
 
 #include "frc/geometry/Pose2d.h"
+#include "frc/kinematics/ChassisSpeeds.h"
 #include "rmb/sensors/gyro.h"
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
@@ -31,6 +32,9 @@ public:
   frc2::CommandPtr driveTeleopCommand(double x, double y, double twist);
 
   frc::Pose2d getPoseEstimation();
+  void setPoseEstimation(frc::Pose2d pose);
+
+  frc::ChassisSpeeds getChassisSpeedsEstimation();
 
   void stop();
 
@@ -49,6 +53,9 @@ private:
 
   struct {
     frc::Pose2d _pose;
-    std::mutex mutex;
+    std::mutex poseMutex;
+
+    frc::ChassisSpeeds _chassisSpeeds;
+    std::mutex chassisSpeedsMutex;
   } currentPoseContainer;
 };

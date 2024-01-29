@@ -227,6 +227,8 @@ public:
       frc::Pose2d targetPose, pathplanner::PathConstraints constraints,
       std::initializer_list<frc2::Subsystem *> driveRequirements);
 
+  inline units::meter_t getMaxDriveRadius() { return largestModuleDistance; }
+
   void updateNTDebugInfo(bool openLoopVelocity = false);
 
   void stop();

@@ -12,6 +12,8 @@
 #include "rmb/sensors/AHRS/AHRSGyro.h"
 #include "subsystems/drive/DriveSubsystem.h"
 
+#include <unordered_map>
+
 /**
  * This class is where the bulk of the robot should be declared.  Since
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -28,6 +30,8 @@ public:
   void setTeleopDefaults();
   void setAutoDefaults();
 
+  void loadPPPaths();
+
 private:
   // Replace with CommandPS4Controller or CommandJoystick if needed
   // frc2::CommandXboxController m_driverController{
@@ -41,4 +45,7 @@ private:
   rmb::LogitechGamepad gamepad{constants::driverControllerPort};
 
   void ConfigureBindings();
+
+  std::unordered_map<std::string, std::shared_ptr<pathplanner::PathPlannerPath>>
+      paths;
 };

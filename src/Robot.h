@@ -9,11 +9,12 @@
 #include <frc/TimedRobot.h>
 #include <frc2/command/CommandPtr.h>
 
+#include "Constants.h"
 #include "RobotContainer.h"
 
 class Robot : public frc::TimedRobot {
 public:
-  Robot() : frc::TimedRobot(40_ms) {}
+  Robot() : frc::TimedRobot(constants::robotLoopTime) {}
   void RobotInit() override;
   void RobotPeriodic() override;
   void DisabledInit() override;
