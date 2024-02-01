@@ -7,6 +7,8 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/button/CommandXboxController.h>
 
+#include <frc/smartdashboard/SendableChooser.h>
+
 #include "Constants.h"
 #include "rmb/controller/LogitechGamepad.h"
 #include "rmb/sensors/AHRS/AHRSGyro.h"
@@ -25,12 +27,12 @@ class RobotContainer {
 public:
   RobotContainer();
 
-  frc2::CommandPtr GetAutonomousCommand();
+  frc2::CommandPtr& GetAutonomousCommand();
 
   void setTeleopDefaults();
   void setAutoDefaults();
 
-  void loadPPPaths();
+  void loadPPAutos();
 
 private:
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -46,6 +48,8 @@ private:
 
   void ConfigureBindings();
 
-  std::unordered_map<std::string, std::shared_ptr<pathplanner::PathPlannerPath>>
-      paths;
+  std::unordered_map<std::string, frc2::CommandPtr>
+      autoCommands;
+
+  frc::SendableChooser<std::string> autonomousChooser;
 };
