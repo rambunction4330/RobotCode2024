@@ -153,11 +153,12 @@ void SwerveDrive<NumModules>::driveCartesian(double xSpeed, double ySpeed,
    * from the center
    *
    * And we define our perpendicular functions as
-   * perpendicular(x, y) => (y, -x)
+   * perpendicular(x, y) => (-y, x)
+   * to enforce a counterclockwise positive angle
    *
    * so,
-   * output_x = vx * 1 + vy * 0 + w * y
-   * output_y = vx * 0 + vy * 1 + w * -x
+   * output_x = vx * 1 + vy * 0 + w * -y
+   * output_y = vx * 0 + vy * 1 + w * x
    */
 
   std::array<SwerveModulePower, NumModules> powers;
@@ -168,16 +169,14 @@ void SwerveDrive<NumModules>::driveCartesian(double xSpeed, double ySpeed,
 
     double output_x =
         robotRelativeVXY.x() +
-        zRotation * module.getModuleTranslation().Y() / largestModuleDistance;
+        zRotation * -(module.getModuleTranslation().Y() / largestModuleDistance);
 
     double output_y =
         robotRelativeVXY.y() +
-        zRotation * -module.getModuleTranslation().X() / largestModuleDistance;
+        zRotation * module.getModuleTranslation().X() / largestModuleDistance;
 
-    // Enforce a forward-facing 0_deg that increases in the counterclockwise
-    // direction
     frc::Rotation2d moduleRotation =
-        -1.0 * frc::Rotation2d(output_x, output_y).Radians();
+        frc::Rotation2d(output_x, output_y).Radians();
     double modulePower = std::sqrt(output_x * output_x + output_y * output_y);
 
     powers[i] = SwerveModulePower{modulePower, moduleRotation};
