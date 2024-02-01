@@ -5,6 +5,7 @@
 #include "Robot.h"
 
 #include <frc2/command/CommandScheduler.h>
+#include <optional>
 
 void Robot::RobotInit() {}
 
@@ -32,10 +33,10 @@ void Robot::DisabledPeriodic() {}
  * RobotContainer} class.
  */
 void Robot::AutonomousInit() {
-  m_autonomousCommand = container.GetAutonomousCommand();
+  m_autonomousCommand = &container.GetAutonomousCommand();
 
   if (m_autonomousCommand) {
-    m_autonomousCommand->Schedule();
+    m_autonomousCommand.value()->Schedule();
   }
 
   // TODO: Check to see if we need to remove this
@@ -50,7 +51,7 @@ void Robot::TeleopInit() {
   // continue until interrupted by another command, remove
   // this line or comment it out.
   if (m_autonomousCommand) {
-    m_autonomousCommand->Cancel();
+    m_autonomousCommand.value()->Cancel();
   }
 
   // TODO: Check to see if we need to remove this
