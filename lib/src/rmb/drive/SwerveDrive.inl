@@ -168,8 +168,8 @@ void SwerveDrive<NumModules>::driveCartesian(double xSpeed, double ySpeed,
     SwerveModule &module = modules[i];
 
     double output_x =
-        robotRelativeVXY.x() +
-        zRotation * -(module.getModuleTranslation().Y() / largestModuleDistance);
+        robotRelativeVXY.x() + zRotation * -(module.getModuleTranslation().Y() /
+                                             largestModuleDistance);
 
     double output_y =
         robotRelativeVXY.y() +

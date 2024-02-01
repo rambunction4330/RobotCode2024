@@ -27,7 +27,7 @@ class RobotContainer {
 public:
   RobotContainer();
 
-  frc2::CommandPtr& GetAutonomousCommand();
+  frc2::CommandPtr &GetAutonomousCommand();
 
   void setTeleopDefaults();
   void setAutoDefaults();
@@ -48,8 +48,7 @@ private:
 
   void ConfigureBindings();
 
-  std::unordered_map<std::string, frc2::CommandPtr>
-      autoCommands;
+  std::unordered_map<std::string, frc2::CommandPtr> autoCommands;
 
   frc::SendableChooser<std::string> autonomousChooser;
 };
