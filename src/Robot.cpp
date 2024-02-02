@@ -32,16 +32,7 @@ void Robot::DisabledPeriodic() {}
  * This autonomous runs the autonomous command selected by your {@link
  * RobotContainer} class.
  */
-void Robot::AutonomousInit() {
-  m_autonomousCommand = &container.GetAutonomousCommand();
-
-  if (m_autonomousCommand) {
-    m_autonomousCommand.value()->Schedule();
-  }
-
-  // TODO: Check to see if we need to remove this
-  frc2::CommandScheduler::GetInstance().CancelAll();
-}
+void Robot::AutonomousInit() { container.RunAutonomousCommand(); }
 
 void Robot::AutonomousPeriodic() {}
 

@@ -4,6 +4,7 @@
 
 #include "RobotContainer.h"
 
+#include <exception>
 #include <frc2/command/button/Trigger.h>
 
 #include <filesystem>
@@ -44,8 +45,9 @@ void RobotContainer::loadPPAutos() {
   for (const auto &entry : std::filesystem::directory_iterator(pathDir)) {
     if (entry.is_regular_file() &&
         entry.path().extension().string() == ".auto") {
-      autoCommands[entry.path().stem().string()] =
-          pathplanner::PathPlannerAuto(entry.path().stem().string()).ToPtr();
+      autoCommands.insert(
+          {entry.path().stem().string(),
+           pathplanner::PathPlannerAuto(entry.path().stem().string()).ToPtr()});
     }
   }
 
@@ -58,16 +60,16 @@ void RobotContainer::loadPPAutos() {
   // pathplanner::NamedCommands::registerCommand()
 }
 
-frc2::CommandPtr &RobotContainer::GetAutonomousCommand() {
-  // An example command will be run in autonomous
-  // return autos::ExampleAuto(&m_subsystem);
-  //
-  static auto noCommand = frc2::cmd::None();
+void RobotContainer::RunAutonomousCommand() {
 
   if (!autonomousChooser.GetSelected().empty()) {
-    return autoCommands[autonomousChooser.GetSelected()];
+    try {
+      autoCommands.at(autonomousChooser.GetSelected()).Schedule();
+    } catch (const std::exception &_e) {
+      std::cout << "Error: no such command \""
+                << autonomousChooser.GetSelected() << "\"" << std::endl;
+    }
   }
-  return noCommand;
 }
 
 void RobotContainer::setTeleopDefaults() {
