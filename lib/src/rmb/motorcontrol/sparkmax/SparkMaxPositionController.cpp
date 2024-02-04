@@ -74,8 +74,8 @@ SparkMaxPositionController::SparkMaxPositionController(
         sparkMax.GetAlternateEncoder(createInfo.feedbackConfig.countPerRev));
     break;
   case EncoderType::Absolute:
-    encoder = std::make_unique<rev::SparkAbsoluteEncoder>(
-        sparkMax.GetAbsoluteEncoder(
+    encoder =
+        std::make_unique<rev::SparkAbsoluteEncoder>(sparkMax.GetAbsoluteEncoder(
             rev::SparkAbsoluteEncoder::Type::kDutyCycle));
     break;
   }
@@ -86,36 +86,30 @@ SparkMaxPositionController::SparkMaxPositionController(
 
   switch (createInfo.feedbackConfig.forwardSwitch) {
   case LimitSwitchConfig::Disabled:
-    sparkMax
-        .GetForwardLimitSwitch(rev::SparkLimitSwitch::Type::kNormallyOpen)
+    sparkMax.GetForwardLimitSwitch(rev::SparkLimitSwitch::Type::kNormallyOpen)
         .EnableLimitSwitch(false);
     break;
   case LimitSwitchConfig::NormalyOpen:
-    sparkMax
-        .GetForwardLimitSwitch(rev::SparkLimitSwitch::Type::kNormallyOpen)
+    sparkMax.GetForwardLimitSwitch(rev::SparkLimitSwitch::Type::kNormallyOpen)
         .EnableLimitSwitch(true);
     break;
   case LimitSwitchConfig::NormalyClosed:
-    sparkMax
-        .GetForwardLimitSwitch(rev::SparkLimitSwitch::Type::kNormallyClosed)
+    sparkMax.GetForwardLimitSwitch(rev::SparkLimitSwitch::Type::kNormallyClosed)
         .EnableLimitSwitch(true);
     break;
   }
 
   switch (createInfo.feedbackConfig.reverseSwitch) {
   case LimitSwitchConfig::Disabled:
-    sparkMax
-        .GetReverseLimitSwitch(rev::SparkLimitSwitch::Type::kNormallyOpen)
+    sparkMax.GetReverseLimitSwitch(rev::SparkLimitSwitch::Type::kNormallyOpen)
         .EnableLimitSwitch(false);
     break;
   case LimitSwitchConfig::NormalyOpen:
-    sparkMax
-        .GetReverseLimitSwitch(rev::SparkLimitSwitch::Type::kNormallyOpen)
+    sparkMax.GetReverseLimitSwitch(rev::SparkLimitSwitch::Type::kNormallyOpen)
         .EnableLimitSwitch(true);
     break;
   case LimitSwitchConfig::NormalyClosed:
-    sparkMax
-        .GetReverseLimitSwitch(rev::SparkLimitSwitch::Type::kNormallyClosed)
+    sparkMax.GetReverseLimitSwitch(rev::SparkLimitSwitch::Type::kNormallyClosed)
         .EnableLimitSwitch(true);
     break;
   }

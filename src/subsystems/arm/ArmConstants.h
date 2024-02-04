@@ -36,7 +36,8 @@ const rmb::SparkMaxPositionController::CreateInfo
         //.range // TODO: just in case?
         .profileConfig =
             {
-                false /* <- useSmartMotion */, 0.0_rpm /* <- maxVelocity */,
+                false /* <- useSmartMotion */,
+                0.0_rpm /* <- maxVelocity */,
                 0.0_rad_per_s /* <- minVelocity */,
                 0.0_rad_per_s_sq /* <- maxAcceleration */,
             },
@@ -80,7 +81,8 @@ const rmb::SparkMaxPositionController::CreateInfo
         // cos(theta) .range // TODO: just in case?
         .profileConfig =
             {
-                false /* <- useSmartMotion */, 0.0_rpm /* <- maxVelocity */,
+                false /* <- useSmartMotion */,
+                0.0_rpm /* <- maxVelocity */,
                 0.0_rad_per_s /* <- minVelocity */,
                 0.0_rad_per_s_sq /* <- maxAcceleration */,
             },
@@ -123,7 +125,8 @@ const rmb::SparkMaxPositionController::CreateInfo
         // mechanics FRQ lmao .range // TODO: just in case?
         .profileConfig =
             {
-                false /* <- useSmartMotion */, 0.0_rpm /* <- maxVelocity */,
+                false /* <- useSmartMotion */,
+                0.0_rpm /* <- maxVelocity */,
                 0.0_rad_per_s /* <- minVelocity */,
                 0.0_rad_per_s_sq /* <- maxAcceleration */,
             },
@@ -163,7 +166,8 @@ const rmb::SparkMaxVelocityController::CreateInfo
         // mechanics FRQ lmao .range // TODO: just in case?
         .profileConfig =
             {
-                false /* <- useSmartMotion */, 0.0_rpm /* <- maxVelocity */,
+                false /* <- useSmartMotion */,
+                0.0_rpm /* <- maxVelocity */,
                 0.0_rad_per_s /* <- minVelocity */,
                 0.0_rad_per_s_sq /* <- maxAcceleration */,
             },
@@ -203,7 +207,8 @@ const rmb::SparkMaxVelocityController::CreateInfo
         // mechanics FRQ lmao .range // TODO: just in case?
         .profileConfig =
             {
-                false /* <- useSmartMotion */, 0.0_rpm /* <- maxVelocity */,
+                false /* <- useSmartMotion */,
+                0.0_rpm /* <- maxVelocity */,
                 0.0_rad_per_s /* <- minVelocity */,
                 0.0_rad_per_s_sq /* <- maxAcceleration */,
             },
