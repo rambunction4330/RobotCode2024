@@ -37,8 +37,6 @@ struct ProfileConfig {
   units::radians_per_second_t maxVelocity = 0.0_rad_per_s,
                               minVelocity = 0.0_rad_per_s;
   units::radians_per_second_squared_t maxAcceleration = 0.0_rad_per_s_sq;
-  rev::SparkMaxPIDController::AccelStrategy accelStrategy =
-      rev::SparkMaxPIDController::AccelStrategy::kTrapezoidal;
 
   units::second_t closedLoopRampRate = 0.5_s;
 };
@@ -82,7 +80,7 @@ public:
 
   rev::CANSparkMax &getMotor();
 
-  rev::SparkMaxPIDController &getPIDCOntroller();
+  rev::SparkPIDController &getPIDCOntroller();
 
   std::unique_ptr<rev::MotorFeedbackSensor> &getFeedbackSensor();
 
@@ -164,7 +162,7 @@ private:
   std::vector<std::unique_ptr<rev::CANSparkMax>> followers;
   rev::CANSparkMax::ControlType controlType;
 
-  rev::SparkMaxPIDController pidController;
+  rev::SparkPIDController pidController;
   units::radians_per_second_t targetVelocity = 0.0_rpm;
   units::radians_per_second_t tolerance;
 

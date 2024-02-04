@@ -39,8 +39,6 @@ const rmb::SparkMaxPositionController::CreateInfo
                 false /* <- useSmartMotion */, 0.0_rpm /* <- maxVelocity */,
                 0.0_rad_per_s /* <- minVelocity */,
                 0.0_rad_per_s_sq /* <- maxAcceleration */,
-                rev::SparkMaxPIDController::AccelStrategy::
-                    kTrapezoidal /* <- accelStrat */
             },
         .feedbackConfig =
             {
@@ -85,8 +83,6 @@ const rmb::SparkMaxPositionController::CreateInfo
                 false /* <- useSmartMotion */, 0.0_rpm /* <- maxVelocity */,
                 0.0_rad_per_s /* <- minVelocity */,
                 0.0_rad_per_s_sq /* <- maxAcceleration */,
-                rev::SparkMaxPIDController::AccelStrategy::
-                    kTrapezoidal /* <- accelStrat */
             },
         .feedbackConfig =
             {
@@ -130,8 +126,6 @@ const rmb::SparkMaxPositionController::CreateInfo
                 false /* <- useSmartMotion */, 0.0_rpm /* <- maxVelocity */,
                 0.0_rad_per_s /* <- minVelocity */,
                 0.0_rad_per_s_sq /* <- maxAcceleration */,
-                rev::SparkMaxPIDController::AccelStrategy::
-                    kTrapezoidal /* <- accelStrat */
             },
         .feedbackConfig =
             {
@@ -172,8 +166,6 @@ const rmb::SparkMaxVelocityController::CreateInfo
                 false /* <- useSmartMotion */, 0.0_rpm /* <- maxVelocity */,
                 0.0_rad_per_s /* <- minVelocity */,
                 0.0_rad_per_s_sq /* <- maxAcceleration */,
-                rev::SparkMaxPIDController::AccelStrategy::
-                    kTrapezoidal /* <- accelStrat */
             },
         .feedbackConfig =
             {
@@ -214,8 +206,6 @@ const rmb::SparkMaxVelocityController::CreateInfo
                 false /* <- useSmartMotion */, 0.0_rpm /* <- maxVelocity */,
                 0.0_rad_per_s /* <- minVelocity */,
                 0.0_rad_per_s_sq /* <- maxAcceleration */,
-                rev::SparkMaxPIDController::AccelStrategy::
-                    kTrapezoidal /* <- accelStrat */
             },
         .feedbackConfig =
             {
