@@ -25,7 +25,9 @@ void ArmSubsystem::Periodic() {
 }
 
 void ArmSubsystem::setElbowPosition(units::turn_t position) {
-  elbowPositionController.setPosition(position, constants::arm::arm_kG * std::cos(((units::radian_t)getElbowPosition()).value()));
+  elbowPositionController.setPosition(
+      position, constants::arm::arm_kG *
+                    std::cos(((units::radian_t)getElbowPosition()).value()));
 }
 
 units::turn_t ArmSubsystem::getElbowPosition() const {
@@ -38,7 +40,10 @@ units::turn_t ArmSubsystem::getTargetElbowPosition() const {
 
 void ArmSubsystem::setArmExtensionPosition(units::meter_t position) {
   armExtensionPositionController.setPosition(
-      position / constants::arm::extensionAfterGRLinearToAngularRatio, constants::arm::extension_kS+(constants::arm::extension_kG * std::sin(((units::radian_t)getElbowPosition()).value())));
+      position / constants::arm::extensionAfterGRLinearToAngularRatio,
+      constants::arm::extension_kS +
+          (constants::arm::extension_kG *
+           std::sin(((units::radian_t)getElbowPosition()).value())));
 }
 
 units::meter_t ArmSubsystem::getArmExtensionPosition() const {
@@ -52,7 +57,11 @@ units::meter_t ArmSubsystem::getTargetArmExtensionPosition() const {
 }
 
 void ArmSubsystem::setWristPosition(units::turn_t position) {
-  wristPositionController.setPosition(position, constants::arm::wrist_kG + std::cos(((units::radian_t)getWristPosition()+getElbowPosition()).value()));
+  wristPositionController.setPosition(
+      position,
+      constants::arm::wrist_kG +
+          std::cos(((units::radian_t)getWristPosition() + getElbowPosition())
+                       .value()));
 }
 
 units::turn_t ArmSubsystem::getWristPosition() const {

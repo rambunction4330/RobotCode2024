@@ -8,7 +8,7 @@
 #include <rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h>
 
 namespace constants::arm {
-double arm_kG = 1.0; 
+double arm_kG = 1.0;
 const rmb::SparkMaxPositionController::CreateInfo
     elbowPositionControllerCreateInfo{
         .motorConfig =
@@ -60,8 +60,8 @@ const rmb::SparkMaxPositionController::CreateInfo
             .inverted = false}}};
 
 const auto extensionAfterGRLinearToAngularRatio = 1.0_m / 1.0_tr;
-double extension_kS = 1.0; 
-double extension_kG = 1.0; 
+double extension_kS = 1.0;
+double extension_kG = 1.0;
 const rmb::SparkMaxPositionController::CreateInfo
     armExtensionPositionControllerCreateInfo{
         .motorConfig =
@@ -106,7 +106,7 @@ const rmb::SparkMaxPositionController::CreateInfo
             .id = 53,
             .motorType = rev::CANSparkMax::MotorType::kBrushless,
             .inverted = false}}};
-double wrist_kG = 1.0; 
+double wrist_kG = 1.0;
 const rmb::SparkMaxPositionController::CreateInfo
     wristPositionControllerCreateInfo{
         .motorConfig =

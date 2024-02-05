@@ -139,13 +139,14 @@ void SparkMaxPositionController::setPosition(units::radian_t position) {
       feedforward->calculateStatic(0.0_rpm, position).to<double>());
 }
 
-void SparkMaxPositionController::setPosition(units::radian_t position, double ff) {
+void SparkMaxPositionController::setPosition(units::radian_t position,
+                                             double ff) {
   targetPosition = pidController.GetPositionPIDWrappingEnabled()
                        ? position
                        : std::clamp(position, minPose, maxPose);
-  pidController.SetReference(
-      units::turn_t(targetPosition).to<double>() * gearRatio, controlType, 0,
-      ff);
+  pidController.SetReference(units::turn_t(targetPosition).to<double>() *
+                                 gearRatio,
+                             controlType, 0, ff);
 }
 
 units::radian_t SparkMaxPositionController::getTargetPosition() const {

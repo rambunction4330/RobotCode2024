@@ -51,8 +51,6 @@ public:
                    units::turn_t wristPosition);
   void setArmState(const ArmState &state);
 
-  
-
   frc2::CommandPtr setArmStateCommand(units::turn_t elbowPosition,
                                       units::meter_t armExtensionPosition,
                                       units::turn_t wristPosition);
