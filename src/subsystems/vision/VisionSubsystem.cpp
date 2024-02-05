@@ -4,36 +4,50 @@
 
 #include "subsystems/vision/VisionSubsystem.h"
 
-VisionSubsystem::VisionSubsystem() // : m_PhotonCamera("TESTNAME")
+VisionSubsystem::VisionSubsystem()
 {
 
-  const std::string_view cameraName = "TESTNAME";
-  this->m_PhotonCamera = new photon::PhotonCamera{cameraName};
-  std::cout << "Vision Subsystem constructor" << std::endl;
+  // TODO: Apply camera transormations relative to robot centre.
+  frc::Transform3d robotToCam =
+      frc::Transform3d(frc::Translation3d(0_m, 0_m, 0_m),
+                       frc::Rotation3d(0_rad, 0_rad, 0_rad));
+
+  frc::AprilTagFieldLayout aprilTags = frc::LoadAprilTagLayoutField(frc::AprilTagField::k2024Crescendo);
+  this->m_PoseEstimator = new photon::PhotonPoseEstimator(aprilTags,
+                                                          photon::MULTI_TAG_PNP_ON_COPROCESSOR,
+                                                          photon::PhotonCamera("TESTCAMERA"),
+                                                          robotToCam);
+
 }
 
-frc2::CommandPtr VisionSubsystem::ExampleMethodCommand() {
-  // Inline construction of command goes here.
-  // Subsystem::RunOnce implicitly requires `this` subsystem.
-  return RunOnce([/* this */] { /* one-time action goes here */ });
+VisionSubsystem::~VisionSubsystem() {
+  delete this->m_PoseEstimator;
 }
 
-bool VisionSubsystem::ExampleCondition() {
-  // Query some boolean state, such as a digital sensor.
-  return false;
-}
-
-void VisionSubsystem::Periodic() {
-  photon::PhotonPipelineResult result = this->m_PhotonCamera->GetLatestResult();
-  if (!result.HasTargets()) {
-    // std::cout << "No AprilTag(s) found" << std::endl;
-    return;
+std::pair<frc::Pose3d, units::millisecond_t> VisionSubsystem::getEstimatedGlobalPose(
+    frc::Pose3d prevEstimatedRobotPose)
+{
+  this->m_PoseEstimator->SetReferencePose(prevEstimatedRobotPose);
+  units::millisecond_t currentTime = frc::Timer::GetFPGATimestamp();
+  std::optional<photon::EstimatedRobotPose> result = this->m_PoseEstimator->Update();
+  if (result.has_value())
+  {
+    return std::make_pair<>(result->estimatedPose,
+                            currentTime - result->timestamp);
   }
-
-  photon::PhotonTrackedTarget bestTarget = result.GetBestTarget();
-  std::cout << "ID: " << bestTarget.GetFiducialId() << std::endl;
+  else
+  {
+    return std::make_pair(frc::Pose3d(), 0_ms);
+  }
 }
 
-void VisionSubsystem::SimulationPeriodic() {
-  // Implementation of subsystem simulation periodic method goes here.
+void VisionSubsystem::Periodic()
+{
+  // I know these are errors, they are placeholders.
+  std::pair<frc::Pose3d, units::millisecond_t> result = getEstimatedGlobalPose(drivesubsystem->getestimatedglobalpose);
+  if (result.second != 0_ms)
+  {
+    printf("%.3f, %.3f, %.3f", result.first.X().value(), result.first.Y().value(), result.first.Z().value());
+    drivesubsystem->appendglobalpose(result.first)
+  }
 }

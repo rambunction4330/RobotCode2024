@@ -6,39 +6,24 @@
 
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
-
-#include <frc/geometry/Transform3d.h>
-#include <iostream>
+#include <frc/estimator/SwerveDrivePoseEstimator.h>
+#include <frc/ComputerVisionUtil.h>
+#include <frc/apriltag/AprilTagFields.h>
+#include <frc/Timer.h>
 #include <photon/PhotonCamera.h>
-
-class VisionSubsystem : public frc2::SubsystemBase {
+#include <photon/PhotonPoseEstimator.h>
+#include <memory>
+#include <iostream>
+#include "../drive/DriveSubsystem.h"
+class VisionSubsystem : public frc2::SubsystemBase
+{
 public:
   VisionSubsystem();
+  ~VisionSubsystem();
 
-  /**
-   * Example command factory method.
-   */
-  frc2::CommandPtr ExampleMethodCommand();
-
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a
-   * digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  bool ExampleCondition();
-
-  /**
-   * Will be called periodically whenever the CommandScheduler runs.
-   */
   void Periodic() override;
 
-  /**
-   * Will be called periodically whenever the CommandScheduler runs during
-   * simulation.
-   */
-  void SimulationPeriodic() override;
-
 private:
-  photon::PhotonCamera *m_PhotonCamera;
+  std::pair<frc::Pose3d, units::millisecond_t> getEstimatedGlobalPose(frc::Pose3d prevEstimatedRobotPose);
+  photon::PhotonPoseEstimator *m_PoseEstimator;
 };
