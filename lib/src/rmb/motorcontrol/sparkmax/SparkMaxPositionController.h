@@ -100,6 +100,8 @@ public:
    */
   void setPosition(units::radian_t position) override;
 
+  void setPosition(units::radian_t position, double ff);
+
   /**
    * Gets the target position.
    *

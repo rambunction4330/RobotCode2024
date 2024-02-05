@@ -62,12 +62,12 @@ SparkMaxPositionController::SparkMaxPositionController(
 
   switch (encoderType) {
   case EncoderType::HallSensor:
-    encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(
+    encoder = std::make_unique<rev::SparkRelativeEncoder>(
         sparkMax.GetEncoder(rev::SparkMaxRelativeEncoder::Type::kHallSensor,
                             createInfo.feedbackConfig.countPerRev));
     break;
   case EncoderType::Quadrature:
-    encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(
+    encoder = std::make_unique<rev::SparkRelativeEncoder>(
         sparkMax.GetEncoder(rev::SparkMaxRelativeEncoder::Type::kQuadrature,
                             createInfo.feedbackConfig.countPerRev));
     break;
@@ -139,6 +139,15 @@ void SparkMaxPositionController::setPosition(units::radian_t position) {
       feedforward->calculateStatic(0.0_rpm, position).to<double>());
 }
 
+void SparkMaxPositionController::setPosition(units::radian_t position, double ff) {
+  targetPosition = pidController.GetPositionPIDWrappingEnabled()
+                       ? position
+                       : std::clamp(position, minPose, maxPose);
+  pidController.SetReference(
+      units::turn_t(targetPosition).to<double>() * gearRatio, controlType, 0,
+      ff);
+}
+
 units::radian_t SparkMaxPositionController::getTargetPosition() const {
   return targetPosition;
 }
@@ -167,8 +176,8 @@ units::radians_per_second_t SparkMaxPositionController::getVelocity() const {
   switch (encoderType) {
   case EncoderType::HallSensor:
   case EncoderType::Quadrature: {
-    rev::SparkMaxRelativeEncoder *rel =
-        static_cast<rev::SparkMaxRelativeEncoder *>(encoder.get());
+    rev::SparkRelativeEncoder *rel =
+        static_cast<rev::SparkRelativeEncoder *>(encoder.get());
     return units::revolutions_per_minute_t(rel->GetVelocity() / gearRatio);
   }
   case EncoderType::Alternate: {

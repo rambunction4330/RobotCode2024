@@ -27,5 +27,19 @@ void IntakeSubsystem::SimulationPeriodic() {
 }
 
 void IntakeSubsystem::runIntake(const frc::Joystick &controller) {
-  setPower(controller.GetThrottle(), -controller.GetThrottle());
+  double backPower;
+  double frontPower; 
+  if (controller.GetRawButton(3) == 1){
+    frontPower = 1*controller.GetThrottle();
+  }
+  if (controller.GetRawButton(6) == 1){
+    backPower = 1*controller.GetThrottle();
+  }
+  if (controller.GetRawButton(5) == 1){
+    frontPower = -1*controller.GetThrottle();
+  }
+  if (controller.GetRawButton(4) == 1){
+    backPower = -1*controller.GetThrottle();
+  }
+  setPower(frontPower, backPower);
 }

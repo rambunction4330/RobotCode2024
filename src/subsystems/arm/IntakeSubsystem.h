@@ -6,6 +6,7 @@
 
 #include "ArmConstants.h"
 #include "frc/Joystick.h"
+#include "rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h"
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 
