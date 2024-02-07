@@ -183,8 +183,8 @@ void SwerveDrive<NumModules>::driveCartesian(double xSpeed, double ySpeed,
     frc::Rotation2d moduleRotation =
         units::radian_t(std::atan2(output_y, output_x));
 
-    //std::cout << "(" << robotRelativeVXY.x() << ", " << robotRelativeVXY.y()
-     //         << ")" << moduleRotation.Degrees()() << ", ";
+    // std::cout << "(" << robotRelativeVXY.x() << ", " << robotRelativeVXY.y()
+    //         << ")" << moduleRotation.Degrees()() << ", ";
 
     // std::cout << "moduleRotation[" << i << "] = " <<
     // moduleRotation.Degrees()()
