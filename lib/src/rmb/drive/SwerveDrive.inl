@@ -165,30 +165,33 @@ void SwerveDrive<NumModules>::driveCartesian(double xSpeed, double ySpeed,
   std::array<SwerveModulePower, NumModules> powers;
   double largestPower = 1.0;
 
-  std::cout << "rotation: [";
+  // std::cout << "rotation: [";
   for (size_t i = 0; i < modules.size(); i++) {
     SwerveModule &module = modules[i];
 
     double output_x =
-        robotRelativeVXY.x() + zRotation * (module.getModuleTranslation().Y() /
-                                             largestModuleDistance);
+        robotRelativeVXY.x() +
+        zRotation * (module.getModuleTranslation().Y() / largestModuleDistance);
     // -1 * 1
 
-    double output_y =
-        robotRelativeVXY.y() +
-        zRotation * -1 * module.getModuleTranslation().X() / largestModuleDistance;
+    double output_y = robotRelativeVXY.y() +
+                      zRotation * -1 * module.getModuleTranslation().X() /
+                          largestModuleDistance;
 
     // -1 * -1
 
     frc::Rotation2d moduleRotation =
         units::radian_t(std::atan2(output_y, output_x));
 
-    std::cout << moduleRotation.Degrees()() << ", ";
+    //std::cout << "(" << robotRelativeVXY.x() << ", " << robotRelativeVXY.y()
+     //         << ")" << moduleRotation.Degrees()() << ", ";
 
-    // std::cout << "moduleRotation[" << i << "] = " << moduleRotation.Degrees()()
+    // std::cout << "moduleRotation[" << i << "] = " <<
+    // moduleRotation.Degrees()()
     //           << std::endl;
 
-    // std::cout << "output[" << i << "] = " << output_x << " " << output_y << std::endl;
+    // std::cout << "output[" << i << "] = " << output_x << " " << output_y <<
+    // std::endl;
     double modulePower = std::sqrt(output_x * output_x + output_y * output_y);
 
     powers[i] = SwerveModulePower{modulePower, moduleRotation};
@@ -198,7 +201,7 @@ void SwerveDrive<NumModules>::driveCartesian(double xSpeed, double ySpeed,
     }
   }
 
-  std::cout << "]" << std::endl;
+  // std::cout << "]" << std::endl;
 
   // Normalize
   for (SwerveModulePower &power : powers) {
