@@ -42,6 +42,7 @@
 
 #include <Eigen/Core>
 
+#include <iostream>
 #include <memory>
 #include <mutex>
 
@@ -164,37 +165,50 @@ void SwerveDrive<NumModules>::driveCartesian(double xSpeed, double ySpeed,
   std::array<SwerveModulePower, NumModules> powers;
   double largestPower = 1.0;
 
+  std::cout << "rotation: [";
   for (size_t i = 0; i < modules.size(); i++) {
     SwerveModule &module = modules[i];
 
     double output_x =
-        robotRelativeVXY.x() + zRotation * -(module.getModuleTranslation().Y() /
+        robotRelativeVXY.x() + zRotation * (module.getModuleTranslation().Y() /
                                              largestModuleDistance);
+    // -1 * 1
 
     double output_y =
         robotRelativeVXY.y() +
-        zRotation * module.getModuleTranslation().X() / largestModuleDistance;
+        zRotation * -1 * module.getModuleTranslation().X() / largestModuleDistance;
+
+    // -1 * -1
 
     frc::Rotation2d moduleRotation =
-        frc::Rotation2d(output_x, output_y).Radians();
+        units::radian_t(std::atan2(output_y, output_x));
+
+    std::cout << moduleRotation.Degrees()() << ", ";
+
+    // std::cout << "moduleRotation[" << i << "] = " << moduleRotation.Degrees()()
+    //           << std::endl;
+
+    // std::cout << "output[" << i << "] = " << output_x << " " << output_y << std::endl;
     double modulePower = std::sqrt(output_x * output_x + output_y * output_y);
 
     powers[i] = SwerveModulePower{modulePower, moduleRotation};
 
-    if (modulePower > largestPower) {
-      largestPower = modulePower;
+    if (std::abs(modulePower) > std::abs(largestPower)) {
+      largestPower = std::abs(modulePower);
     }
   }
 
+  std::cout << "]" << std::endl;
+
   // Normalize
   for (SwerveModulePower &power : powers) {
-    power.power /= largestPower;
+    power.power /= std::abs(largestPower);
   }
 
   // Optimize
   for (size_t i = 0; i < modules.size(); i++) {
-    powers[i] =
-        SwerveModulePower::Optimize(powers[i], modules[i].getState().angle);
+    // powers[i] =
+    //     SwerveModulePower::Optimize(powers[i], modules[i].getState().angle);
   }
 
   driveModulePowers(powers);
@@ -300,7 +314,7 @@ void SwerveDrive<NumModules>::updateNTDebugInfo(bool openLoopVelocity) {
 
     std::array<double, NumModules> positions;
     for (size_t i = 0; i < NumModules; i++) {
-      units::turn_t position = modules[i].getState().angle.Degrees();
+      units::degree_t position = modules[i].getState().angle.Degrees();
 
       positions[i] = position();
     }

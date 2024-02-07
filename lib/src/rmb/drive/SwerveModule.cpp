@@ -103,6 +103,7 @@ void SwerveModule::setPower(double power, const frc::Rotation2d &angle) {
 void SwerveModule::setPower(const SwerveModulePower &power) {
   velocityController->setPower(power.power);
   angularController->setPosition(power.angle.Radians());
+  std::cout << "position: " << power.angle.Degrees()() << std::endl;
 }
 
 SwerveModulePower SwerveModule::getPower() {

@@ -38,8 +38,8 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
                         constants::drive::wheelCircumference / 1_tr),
           std::make_unique<rmb::TalonFXPositionController>(
               constants::drive::positionControllerCreateInfo1),
-          frc::Translation2d(constants::drive::robotDimX / 2.0,
-                             constants::drive::robotDimY / 2.0),
+          frc::Translation2d(-constants::drive::robotDimX / 2.0,
+                             -constants::drive::robotDimY / 2.0),
           true),
       rmb::SwerveModule(
           rmb::asLinear(std::make_unique<rmb::TalonFXVelocityController>(
@@ -56,8 +56,8 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
                         constants::drive::wheelCircumference / 1_tr),
           std::make_unique<rmb::TalonFXPositionController>(
               constants::drive::positionControllerCreateInfo3),
-          frc::Translation2d(-constants::drive::robotDimX / 2.0,
-                             -constants::drive::robotDimY / 2.0),
+          frc::Translation2d(constants::drive::robotDimX / 2.0,
+                             constants::drive::robotDimY / 2.0),
           true),
 
   };
@@ -101,6 +101,7 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
 void DriveSubsystem::odometryThreadMain() {
   while (true) {
     frc::Pose2d newPose = drive->updatePose();
+    drive->updateNTDebugInfo(true);
     frc::ChassisSpeeds newChassisSpeeds = drive->getChassisSpeeds();
     {
       std::lock_guard<std::mutex> lock(currentPoseContainer.poseMutex);
@@ -138,8 +139,8 @@ void DriveSubsystem::Periodic() {
 
 void DriveSubsystem::driveTeleop(const rmb::LogitechGamepad &gamepad) {
   // TODO: add filters
-  drive->driveCartesian(gamepad.GetLeftY(), gamepad.GetLeftX(),
-                        gamepad.GetRightY(), false);
+  drive->driveCartesian(-gamepad.GetLeftY(), gamepad.GetLeftX(),
+                        -gamepad.GetRightY(), false);
 }
 
 frc2::CommandPtr
@@ -149,7 +150,8 @@ DriveSubsystem::driveTeleopCommand(const rmb::LogitechGamepad &gamepad) {
 
 frc2::CommandPtr DriveSubsystem::driveTeleopCommand(double x, double y,
                                                     double twist) {
-  return frc2::RunCommand([&] { drive->driveCartesian(x, y, twist, true); })
+  return frc2::RunCommand([&] { drive->driveCartesian(x, y, twist, true); },
+                          {this})
       .ToPtr();
 }
 
