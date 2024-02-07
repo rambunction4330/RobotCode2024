@@ -170,13 +170,13 @@ void SwerveDrive<NumModules>::driveCartesian(double xSpeed, double ySpeed,
     SwerveModule &module = modules[i];
 
     double output_x =
-        robotRelativeVXY.x() + zRotation * (module.getModuleTranslation().Y() /
-                                             largestModuleDistance);
+        robotRelativeVXY.x() +
+        zRotation * (module.getModuleTranslation().Y() / largestModuleDistance);
     // -1 * 1
 
-    double output_y =
-        robotRelativeVXY.y() +
-        zRotation * -1 * module.getModuleTranslation().X() / largestModuleDistance;
+    double output_y = robotRelativeVXY.y() +
+                      zRotation * -1 * module.getModuleTranslation().X() /
+                          largestModuleDistance;
 
     // -1 * -1
 
@@ -185,10 +185,12 @@ void SwerveDrive<NumModules>::driveCartesian(double xSpeed, double ySpeed,
 
     std::cout << moduleRotation.Degrees()() << ", ";
 
-    // std::cout << "moduleRotation[" << i << "] = " << moduleRotation.Degrees()()
+    // std::cout << "moduleRotation[" << i << "] = " <<
+    // moduleRotation.Degrees()()
     //           << std::endl;
 
-    // std::cout << "output[" << i << "] = " << output_x << " " << output_y << std::endl;
+    // std::cout << "output[" << i << "] = " << output_x << " " << output_y <<
+    // std::endl;
     double modulePower = std::sqrt(output_x * output_x + output_y * output_y);
 
     powers[i] = SwerveModulePower{modulePower, moduleRotation};
