@@ -28,18 +28,20 @@ void IntakeSubsystem::SimulationPeriodic() {
 
 void IntakeSubsystem::runIntake(const frc::Joystick &controller) {
   double backPower;
-  double frontPower;
-  if (controller.GetRawButton(3) == 1) {
-    frontPower = 1 * controller.GetThrottle();
+  double frontPower; 
+  double adjustablePower = (controller.GetThrottle()+1)/2; 
+  
+  if (controller.GetRawButton(3) == 1){
+    frontPower = 1*adjustablePower;
   }
-  if (controller.GetRawButton(6) == 1) {
-    backPower = 1 * controller.GetThrottle();
+  if (controller.GetRawButton(6) == 1){
+    backPower = 1*adjustablePower;
   }
-  if (controller.GetRawButton(5) == 1) {
-    frontPower = -1 * controller.GetThrottle();
+  if (controller.GetRawButton(5) == 1){
+    frontPower = -1*adjustablePower;
   }
-  if (controller.GetRawButton(4) == 1) {
-    backPower = -1 * controller.GetThrottle();
+  if (controller.GetRawButton(4) == 1){
+    backPower = -1*adjustablePower;
   }
   setPower(frontPower, backPower);
 }
