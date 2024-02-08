@@ -186,7 +186,8 @@ void SwerveDrive<NumModules>::driveCartesian(double xSpeed, double ySpeed,
     // std::cout << "(" << robotRelativeVXY.x() << ", " << robotRelativeVXY.y()
     //           << ")" << moduleRotation.Degrees()() << ", ";
     //
-    // std::cout << "moduleRotation[" << i << "] = " << moduleRotation.Degrees()()
+    // std::cout << "moduleRotation[" << i << "] = " <<
+    // moduleRotation.Degrees()()
     //           << std::endl;
 
     // std::cout << "output[" << i << "] = " << output_x << " " << output_y <<
