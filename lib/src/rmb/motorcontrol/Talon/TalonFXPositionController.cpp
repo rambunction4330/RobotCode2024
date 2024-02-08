@@ -84,7 +84,8 @@ TalonFXPositionController::TalonFXPositionController(
                 CounterClockwise_Positive);
     canCoderConfig.MagnetSensor.AbsoluteSensorRange =
         ctre::phoenix6::signals::AbsoluteSensorRangeValue(
-            ctre::phoenix6::signals::AbsoluteSensorRangeValue::Unsigned_0To1);
+            ctre::phoenix6::signals::AbsoluteSensorRangeValue::
+                Signed_PlusMinusHalf);
 
     canCoderConfig.MagnetSensor.MagnetOffset =
         units::turn_t(createInfo.canCoderConfig.value().magnetOffset)();
@@ -130,10 +131,22 @@ void TalonFXPositionController::setPosition(units::radian_t position) {
 
 ctre::phoenix6::StatusSignal<double> &
 TalonFXPositionController::getTargetPositionStatusSignal() const {
-  thread_local auto signal = ctre::phoenix6::StatusSignal<double>(
-      motorcontroller.GetClosedLoopReference());
+  static thread_local auto signalMap =
+      std::map<const TalonFXPositionController *,
+               ctre::phoenix6::StatusSignal<double>>();
 
-  return signal;
+  auto it = signalMap.find(this);
+
+  if (it == signalMap.end()) {
+    std::cout << "not initialized: " << this << std::endl;
+    it = signalMap
+             .insert(std::make_pair(
+                 this, ctre::phoenix6::StatusSignal<double>(
+                           motorcontroller.GetClosedLoopReference())))
+             .first;
+  }
+
+  return (*it).second;
 }
 
 units::radian_t TalonFXPositionController::getTargetPosition() const {
@@ -159,15 +172,39 @@ void TalonFXPositionController::stop() { motorcontroller.StopMotor(); }
 ctre::phoenix6::StatusSignal<units::turns_per_second_t> &
 TalonFXPositionController::getVelocityStatusSignal() const {
   if (usingCANCoder) {
-    thread_local auto signal =
-        ctre::phoenix6::StatusSignal(canCoder->GetVelocity());
+    static thread_local auto signalMap =
+        std::map<const TalonFXPositionController *,
+                 ctre::phoenix6::StatusSignal<units::turns_per_second_t>>();
 
-    return signal;
+    auto it = signalMap.find(this);
+
+    if (it == signalMap.end()) {
+      it =
+          signalMap
+              .insert(std::make_pair(
+                  this, ctre::phoenix6::StatusSignal<units::turns_per_second_t>(
+                            canCoder->GetVelocity())))
+              .first;
+    }
+
+    return (*it).second;
   } else {
-    thread_local auto signal =
-        ctre::phoenix6::StatusSignal(motorcontroller.GetVelocity());
+    static thread_local auto signalMap =
+        std::map<const TalonFXPositionController *,
+                 ctre::phoenix6::StatusSignal<units::turns_per_second_t>>();
 
-    return signal;
+    auto it = signalMap.find(this);
+
+    if (it == signalMap.end()) {
+      it =
+          signalMap
+              .insert(std::make_pair(
+                  this, ctre::phoenix6::StatusSignal<units::turns_per_second_t>(
+                            motorcontroller.GetVelocity())))
+              .first;
+    }
+
+    return (*it).second;
   }
 }
 
@@ -182,15 +219,37 @@ units::radians_per_second_t TalonFXPositionController::getVelocity() const {
 ctre::phoenix6::StatusSignal<units::turn_t> &
 TalonFXPositionController::getPositionStatusSignal() const {
   if (usingCANCoder) {
-    thread_local auto signal =
-        ctre::phoenix6::StatusSignal(canCoder->GetPosition());
+    static thread_local auto signalMap =
+        std::map<const TalonFXPositionController *,
+                 ctre::phoenix6::StatusSignal<units::turn_t>>();
 
-    return signal;
+    auto it = signalMap.find(this);
+
+    if (it == signalMap.end()) {
+      it = signalMap
+               .insert(std::make_pair(
+                   this, ctre::phoenix6::StatusSignal<units::turn_t>(
+                             canCoder->GetPosition())))
+               .first;
+    }
+
+    return (*it).second;
   } else {
-    thread_local auto signal =
-        ctre::phoenix6::StatusSignal(motorcontroller.GetPosition());
+    static thread_local auto signalMap =
+        std::map<const TalonFXPositionController *,
+                 ctre::phoenix6::StatusSignal<units::turn_t>>();
 
-    return signal;
+    auto it = signalMap.find(this);
+
+    if (it == signalMap.end()) {
+      it = signalMap
+               .insert(std::make_pair(
+                   this, ctre::phoenix6::StatusSignal<units::turn_t>(
+                             motorcontroller.GetPosition())))
+               .first;
+    }
+
+    return (*it).second;
   }
 }
 
