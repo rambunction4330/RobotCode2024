@@ -56,7 +56,7 @@ frc2::CommandPtr IntakeSubsystem::revFrontIntakeToShoot() {
 }
 
 frc2::CommandPtr IntakeSubsystem::shoot() {
-  return IntakeSubsystem::setBackandFront(); 
+  return IntakeSubsystem::setBackandFront();
 }
 
 frc2::CommandPtr IntakeSubsystem::setBackandFront() {
@@ -65,4 +65,3 @@ frc2::CommandPtr IntakeSubsystem::setBackandFront() {
              [](bool interrupted) {}, []() { return false; }, {this})
       .ToPtr();
 }
-

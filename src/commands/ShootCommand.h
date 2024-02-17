@@ -5,22 +5,20 @@
 #pragma once
 
 #include <frc2/command/CommandHelper.h>
-#include <frc2/command/SequentialCommandGroup.h>
 #include <frc2/command/CommandPtr.h>
+#include <frc2/command/SequentialCommandGroup.h>
 
 #include "subsystems/arm/ArmSubsystem.h"
 #include "subsystems/arm/IntakeSubsystem.h"
 
-
 class ShootCommand
-    : public frc2::CommandHelper<frc2::SequentialCommandGroup,
-                                 ShootCommand> {
- public:
+    : public frc2::CommandHelper<frc2::SequentialCommandGroup, ShootCommand> {
+public:
   ShootCommand(ArmSubsystem &armSubsystem, IntakeSubsystem &intakeSubsystem);
-  frc2::CommandPtr PositionAndRunBack(ArmSubsystem &armSubsystem, IntakeSubsystem &intakeSubsystem); 
-  frc2::CommandPtr ShootandKeepPosition(ArmSubsystem &armSubsystem, IntakeSubsystem &intakeSubsystem); 
-private:
-  
-   
-};
+  frc2::CommandPtr PositionAndRunBack(ArmSubsystem &armSubsystem,
+                                      IntakeSubsystem &intakeSubsystem);
+  frc2::CommandPtr ShootandKeepPosition(ArmSubsystem &armSubsystem,
+                                        IntakeSubsystem &intakeSubsystem);
 
+private:
+};
