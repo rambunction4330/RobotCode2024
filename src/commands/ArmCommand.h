@@ -25,6 +25,7 @@ public:
    * @param ArmSubsystem The subsystem used by this command.
    */
   explicit ArmCommand(ArmSubsystem &armSubsystem);
+  
 
 private:
   ArmSubsystem &armSubsystem;

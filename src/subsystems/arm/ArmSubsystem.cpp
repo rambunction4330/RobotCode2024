@@ -4,10 +4,12 @@
 
 #include "ArmSubsystem.h"
 #include "ArmConstants.h"
+#include "IntakeSubsystem.h"
 
 #include "frc2/command/CommandPtr.h"
 #include "frc2/command/FunctionalCommand.h"
 #include "units/angle.h"
+#include "units/length.h"
 #include <cmath>
 
 ArmSubsystem::ArmSubsystem()
@@ -143,3 +145,11 @@ frc2::CommandPtr ArmSubsystem::setArmStateCommand(const ArmState &state) {
                                  [&]() { return atTarget(); }, {this})
       .ToPtr();
 }
+
+frc2::CommandPtr ArmSubsystem::setArmToSpeaker(){
+  units::radian_t elbowPosAngle = 0.0_rad; 
+  units::radian_t wristPosAngle = 0.0_rad; 
+  units::meter_t armExtensionLength = 0.0_m; 
+  return ArmSubsystem::setArmStateCommand(elbowPosAngle, armExtensionLength, wristPosAngle); 
+}
+

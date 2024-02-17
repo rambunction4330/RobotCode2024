@@ -41,6 +41,10 @@ public:
   }
 
   void runIntake(const frc::Joystick &m_controller);
+  frc2::CommandPtr revFrontIntakeToShoot();
+  frc2::CommandPtr shoot();
+
+  frc2::CommandPtr setBackandFront(); 
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be

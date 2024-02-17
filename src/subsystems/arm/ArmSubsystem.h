@@ -9,6 +9,7 @@
 #include "units/angular_velocity.h"
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
+#include "IntakeSubsystem.h"
 
 class ArmSubsystem : public frc2::SubsystemBase {
 public:
@@ -55,6 +56,9 @@ public:
                                       units::meter_t armExtensionPosition,
                                       units::turn_t wristPosition);
   frc2::CommandPtr setArmStateCommand(const ArmState &state);
+
+  frc2::CommandPtr setArmToSpeaker(); 
+
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be

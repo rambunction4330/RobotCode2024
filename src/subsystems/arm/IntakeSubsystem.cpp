@@ -8,6 +8,8 @@
 
 #include "ArmConstants.h"
 #include "frc/Joystick.h"
+#include "frc2/command/CommandPtr.h"
+#include "frc2/command/FunctionalCommand.h"
 #include <new>
 
 IntakeSubsystem::IntakeSubsystem()
@@ -45,3 +47,22 @@ void IntakeSubsystem::runIntake(const frc::Joystick &controller) {
   }
   setPower(frontPower, backPower);
 }
+
+frc2::CommandPtr IntakeSubsystem::revFrontIntakeToShoot() {
+  return frc2::FunctionalCommand(
+             []() {}, [this]() { IntakeSubsystem::setFrontPower(1.0); },
+             [](bool interrupted) {}, []() { return false; }, {this})
+      .ToPtr();
+}
+
+frc2::CommandPtr IntakeSubsystem::shoot() {
+  return IntakeSubsystem::setBackandFront(); 
+}
+
+frc2::CommandPtr IntakeSubsystem::setBackandFront() {
+  return frc2::FunctionalCommand(
+             []() {}, [this]() { IntakeSubsystem::setPower(1.0, 1.0); },
+             [](bool interrupted) {}, []() { return false; }, {this})
+      .ToPtr();
+}
+
