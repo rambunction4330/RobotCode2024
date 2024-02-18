@@ -125,11 +125,12 @@ const rmb::SparkMaxPositionController::CreateInfo
 
         //.feedforward // TODO: consider? This would be an interesting physics
         // mechanics FRQ lmao .range // TODO: just in case?
-        .range =  {
-            .minPosition = 0.0_tr,
-            .maxPosition = 3.25_tr,
-            .isContinuous = false,
-        },
+        .range =
+            {
+                .minPosition = 0.0_tr,
+                .maxPosition = 3.25_tr,
+                .isContinuous = false,
+            },
         .profileConfig =
             {
                 false /* <- useSmartMotion */,

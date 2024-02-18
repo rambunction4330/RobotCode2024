@@ -64,11 +64,10 @@ public:
 
   frc2::CommandPtr setArmToSpeaker();
 
-  frc2::CommandPtr setWristCOmmand(frc2::CommandJoystick& joystick); 
-  frc2::CommandPtr getSpoolCommand(frc::Joystick &controller); 
+  frc2::CommandPtr setWristCOmmand(frc2::CommandJoystick &joystick);
+  frc2::CommandPtr getSpoolCommand(frc::Joystick &controller);
   frc2::CommandPtr spinElbowCommand(frc::Joystick &controller);
-  frc2::CommandPtr extensionToSetPoint(units::meter_t pos); 
-
+  frc2::CommandPtr extensionToSetPoint(units::meter_t pos);
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be

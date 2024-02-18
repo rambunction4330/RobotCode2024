@@ -4,9 +4,9 @@
 
 #pragma once
 
+#include "frc2/command/button/CommandJoystick.h"
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/button/CommandXboxController.h>
-#include "frc2/command/button/CommandJoystick.h"
 
 #include <frc/smartdashboard/SendableChooser.h>
 
@@ -56,7 +56,6 @@ private:
   void ConfigureBindings();
   frc2::CommandJoystick controller{1};
   frc2::Trigger xButton = controller.Button(11);
-  
 
   IntakeSubsystem intake;
   ArmSubsystem arm;
