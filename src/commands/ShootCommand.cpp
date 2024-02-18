@@ -7,8 +7,10 @@
 #include "frc2/command/CommandPtr.h"
 #include "frc2/command/ParallelDeadlineGroup.h"
 #include "frc2/command/SequentialCommandGroup.h"
+#include "frc2/command/Subsystem.h"
 #include "subsystems/arm/ArmSubsystem.h"
 #include "subsystems/arm/IntakeSubsystem.h"
+#include <initializer_list>
 #include <memory>
 #include <type_traits>
 #include <vector>
@@ -25,9 +27,7 @@ ShootCommand::ShootCommand(ArmSubsystem &armSubsystem, IntakeSubsystem &intakeSu
   commands.push_back(ShootCommand::PositionAndRunBack(armSubsystem, intakeSubsystem).Unwrap());
   commands.push_back(ShootCommand::ShootandKeepPosition(armSubsystem, intakeSubsystem).Unwrap()); 
   AddCommands(std::move(commands));
- 
-  
-  // AddRequirements(armSubsystem, intakeSubsystem); 
+  AddRequirements({&armSubsystem, &intakeSubsystem}); 
 }
 
 frc2::CommandPtr ShootCommand::PositionAndRunBack(ArmSubsystem &armSubsystem, IntakeSubsystem &intakeSubsystem){
