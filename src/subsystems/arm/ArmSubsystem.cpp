@@ -60,9 +60,10 @@ units::turn_t ArmSubsystem::getTargetElbowPosition() const {
 }
 
 void ArmSubsystem::setArmExtensionPosition(units::meter_t position) {
+  std::cout << "setpoint: " << (position / constants::arm::extensionAfterGRLinearToAngularRatio).value() << std::endl;
   armExtensionPositionController.setPosition(
       position / constants::arm::extensionAfterGRLinearToAngularRatio,
-      constants::arm::extension_kS -
+      0 * constants::arm::extension_kS -
           (constants::arm::extension_kG *
            std::sin(((units::radian_t)getElbowPosition()).value())));
 }
@@ -222,7 +223,7 @@ frc2::CommandPtr ArmSubsystem::spinElbowCommand(frc::Joystick &controller) {
 
 frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
                                                 rmb::LogitechGamepad &gamepad) {
-  resetArmExtensionPosition(constants::arm::maxExtension);
+  resetArmExtensionPosition(0_cm);
   resetElbowPosition();
   resetWristPosition();
   return frc2::RunCommand(
@@ -235,34 +236,34 @@ frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
 
                // calculate extension position
                static double targetPercentageExtended = 1.0;
-               targetPercentageExtended = std::clamp(
-                   targetPercentageExtended - joystick.GetRawButton(3) / 50.0 +
-                       joystick.GetRawButton(5) / 50.0,
-                   0.0, 1.0);
+              //  targetPercentageExtended = std::clamp(
+              //      targetPercentageExtended - joystick.GetThrottle() / 50.0 +
+              //          joystick.GetThrottle() / 50.0,
+              //      0.0, 1.0);
+              targetPercentageExtended = (-joystick.GetThrottle() + 1.0) / 2.0;
 
-               units::turn_t targetWristPosition =
-                   1_tr * (joystick.GetThrottle() + 1.0) / 4.0;
+              //  units::turn_t targetWristPosition =
+              //      1_tr * (joystick.GetThrottle() + 1.0) / 4.0;
 
                // elbowPositionController.setPosition(targetElbowPosition);
-               // armExtensionPositionController.setPosition(
-               //     targetPercentageExtended * constants::arm::maxTurns);
+              
                // wristPositionController.setPosition(targetWristPosition);
-               setElbowPosition(targetWristPosition / 2.0);
-               // setArmExtensionPosition(targetPercentageExtended *
-               //                         constants::arm::maxExtension);
-               // setWristPosition(targetWristPosition);
+              //  setElbowPosition(targetWristPosition / 2.0);
+               setArmExtensionPosition(targetPercentageExtended *
+                                       constants::arm::maxExtension);
+              // armExtensionPositionController.setPosition(0.5_tr);
+              //  setWristPosition(targetWristPosition);
 
-               printf("elbow{target=%f, position=%f}\n", targetElbowPosition(),
-                      elbowPositionController.getPosition()
-                          .convert<units::turns>()());
-               // printf("extender{target=%f%%, position=%f}\n",
-               //        100.0 * targetPercentageExtended,
-               //        (armExtensionPositionController.getPosition() /
-               //         constants::arm::maxTurns)
-               //            .value());
-               printf("wrist{target=%f, position=%f}\n", targetWristPosition(),
-                      wristPositionController.getPosition()
-                          .convert<units::turns>()());
+              //  printf("elbow{target=%f, position=%f}\n", targetElbowPosition(),
+              //         elbowPositionController.getPosition()
+              //             .convert<units::turns>()());
+               printf("extender{target=%f%%, position=%f}\n",
+                      100.0 * targetPercentageExtended,
+                      ((units::turn_t)armExtensionPositionController.getPosition())
+                          .value());
+              //  printf("wrist{target=%f, position=%f}\n", targetWristPosition(),
+              //         wristPositionController.getPosition()
+              //             .convert<units::turns>()());
              },
              {this})
       .ToPtr();

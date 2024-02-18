@@ -59,8 +59,8 @@ const rmb::SparkMaxPositionController::CreateInfo
             .motorType = rev::CANSparkMax::MotorType::kBrushless,
             .inverted = true}}};
 
-const units::meter_t maxExtension = 29_cm;
-const units::turn_t maxTurns = 3.25_tr;
+const units::meter_t maxExtension = 27_cm;
+const units::turn_t maxTurns = 3_tr;
 const auto extensionAfterGRLinearToAngularRatio = maxExtension / maxTurns;
 double const extension_kS = 0.1;
 double const extension_kG = 0.1;
