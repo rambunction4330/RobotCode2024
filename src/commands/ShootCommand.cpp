@@ -31,7 +31,7 @@ ShootCommand::ShootCommand(ArmSubsystem &armSubsystem,
       ShootCommand::ShootandKeepPosition(armSubsystem, intakeSubsystem)
           .Unwrap());
   AddCommands(std::move(commands));
-  AddRequirements({&armSubsystem, &intakeSubsystem}); 
+  AddRequirements({&armSubsystem, &intakeSubsystem});
 }
 
 frc2::CommandPtr
