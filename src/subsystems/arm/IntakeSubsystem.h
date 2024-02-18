@@ -44,7 +44,7 @@ public:
   frc2::CommandPtr revFrontIntakeToShoot();
   frc2::CommandPtr shoot();
 
-  frc2::CommandPtr setBackandFront(); 
+  frc2::CommandPtr setBackandFront();
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be

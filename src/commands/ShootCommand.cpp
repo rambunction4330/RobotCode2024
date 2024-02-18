@@ -18,28 +18,40 @@
 // NOTE:  Consider using this command inline, rather than writing a subclass.
 // For more information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-ShootCommand::ShootCommand(ArmSubsystem &armSubsystem, IntakeSubsystem &intakeSubsystem) {
+ShootCommand::ShootCommand(ArmSubsystem &armSubsystem,
+                           IntakeSubsystem &intakeSubsystem) {
   // Add your commands here, e.g.
   // AddCommands(FooCommand{}, BarCommand{});
   // initialize commands
   // add commands
-  std::vector<std::unique_ptr<frc2::Command>> commands; 
-  commands.push_back(ShootCommand::PositionAndRunBack(armSubsystem, intakeSubsystem).Unwrap());
-  commands.push_back(ShootCommand::ShootandKeepPosition(armSubsystem, intakeSubsystem).Unwrap()); 
+  std::vector<std::unique_ptr<frc2::Command>> commands;
+  commands.push_back(
+      ShootCommand::PositionAndRunBack(armSubsystem, intakeSubsystem).Unwrap());
+  commands.push_back(
+      ShootCommand::ShootandKeepPosition(armSubsystem, intakeSubsystem)
+          .Unwrap());
   AddCommands(std::move(commands));
   AddRequirements({&armSubsystem, &intakeSubsystem}); 
 }
 
-frc2::CommandPtr ShootCommand::PositionAndRunBack(ArmSubsystem &armSubsystem, IntakeSubsystem &intakeSubsystem){
-  std::vector<std::unique_ptr<frc2::Command>> commands; 
+frc2::CommandPtr
+ShootCommand::PositionAndRunBack(ArmSubsystem &armSubsystem,
+                                 IntakeSubsystem &intakeSubsystem) {
+  std::vector<std::unique_ptr<frc2::Command>> commands;
   commands.push_back(armSubsystem.setArmToSpeaker().Unwrap());
-  commands.push_back(intakeSubsystem.revFrontIntakeToShoot().Unwrap()); 
-  return frc2::ParallelDeadlineGroup(armSubsystem.setArmToSpeaker().Unwrap(), std::move(commands)).ToPtr(); 
+  commands.push_back(intakeSubsystem.revFrontIntakeToShoot().Unwrap());
+  return frc2::ParallelDeadlineGroup(armSubsystem.setArmToSpeaker().Unwrap(),
+                                     std::move(commands))
+      .ToPtr();
 }
 
-frc2::CommandPtr ShootCommand::ShootandKeepPosition(ArmSubsystem &armSubsystem, IntakeSubsystem &intakeSubsystem){
-  std::vector<std::unique_ptr<frc2::Command>> commands; 
+frc2::CommandPtr
+ShootCommand::ShootandKeepPosition(ArmSubsystem &armSubsystem,
+                                   IntakeSubsystem &intakeSubsystem) {
+  std::vector<std::unique_ptr<frc2::Command>> commands;
   commands.push_back(armSubsystem.setArmToSpeaker().Unwrap());
-  commands.push_back(intakeSubsystem.shoot().Unwrap());  
-  return frc2::ParallelDeadlineGroup(intakeSubsystem.shoot().Unwrap(), std::move(commands)).ToPtr(); 
+  commands.push_back(intakeSubsystem.shoot().Unwrap());
+  return frc2::ParallelDeadlineGroup(intakeSubsystem.shoot().Unwrap(),
+                                     std::move(commands))
+      .ToPtr();
 }

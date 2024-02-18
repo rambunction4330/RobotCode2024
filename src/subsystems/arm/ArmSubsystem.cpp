@@ -146,10 +146,10 @@ frc2::CommandPtr ArmSubsystem::setArmStateCommand(const ArmState &state) {
       .ToPtr();
 }
 
-frc2::CommandPtr ArmSubsystem::setArmToSpeaker(){
-  units::radian_t elbowPosAngle = 0.0_rad; 
-  units::radian_t wristPosAngle = 0.0_rad; 
-  units::meter_t armExtensionLength = 0.0_m; 
-  return ArmSubsystem::setArmStateCommand(elbowPosAngle, armExtensionLength, wristPosAngle); 
+frc2::CommandPtr ArmSubsystem::setArmToSpeaker() {
+  units::radian_t elbowPosAngle = 0.0_rad;
+  units::radian_t wristPosAngle = 0.0_rad;
+  units::meter_t armExtensionLength = 0.0_m;
+  return ArmSubsystem::setArmStateCommand(elbowPosAngle, armExtensionLength,
+                                          wristPosAngle);
 }
-
