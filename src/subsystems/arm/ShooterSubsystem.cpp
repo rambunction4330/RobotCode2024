@@ -20,10 +20,10 @@ void ShooterSubsystem::Periodic() {}
 frc2::CommandPtr ShooterSubsystem::runShooter(rmb::LogitechGamepad &gamepad) {
   return frc2::RunCommand(
              [&]() {
-               if (gamepad.GetRightBumperPressed()) {
-                 setShooterPower(0.5, -0.5);
-               } else if (gamepad.GetLeftBumperPressed()) {
-                 setShooterPower(-0.5, 0.5);
+               if (gamepad.GetRightBumper()) {
+                 setShooterPower(1, 1);
+               } else if (gamepad.GetLeftBumper()) {
+                 setShooterPower(-1, -1);
                } else {
                  setShooterPower(0, 0);
                }

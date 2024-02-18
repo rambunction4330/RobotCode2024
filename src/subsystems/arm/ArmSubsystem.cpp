@@ -172,12 +172,19 @@ frc2::CommandPtr ArmSubsystem::setArmToSpeaker() {
 
 frc2::CommandPtr
 ArmSubsystem::setWristCOmmand(frc2::CommandJoystick &joystick) {
-
+  resetWristPosition();
   return frc2::RunCommand(
              [&]() {
                //  wristPositionController.setPower(0.2);
-               setWristPosition(0.3_tr);
-
+               if (joystick.GetRawButton(9)){
+               setWristPosition(0.8_tr);
+               }
+               else if (joystick.GetRawButton(10)){
+                setWristPosition(0.0_tr);
+               }
+              //  else{
+              //   wristPositionController.setPower(0.0);
+              //  }
                //  setWristPosition(
                //      ((units::turn_t)(joystick.GetThrottle() + 1) / 4));
                //  std::cout
@@ -187,7 +194,7 @@ ArmSubsystem::setWristCOmmand(frc2::CommandJoystick &joystick) {
                //      << std::endl;
                // std::cout << "power:" <<  wristPositionController.getPower()
                // << std::endl;
-               std::cout << "position"
+               std::cout << "position: "
                          << ((units::turn_t)(
                                  wristPositionController.getPosition()))
                                 .value()
@@ -198,37 +205,40 @@ ArmSubsystem::setWristCOmmand(frc2::CommandJoystick &joystick) {
   // setWristPosition(pos); std::cout << "right damn here" << std::endl;
 }
 
-frc2::CommandPtr ArmSubsystem::getSpoolCommand(rmb::LogitechGamepad &gamepad) {
+frc2::CommandPtr ArmSubsystem::getSpoolCommand(frc::Joystick &controller) {
   return frc2::RunCommand(
              [&]() {
-               // std::cout
-               // <<((units::turn_t)armExtensionPositionController.getPosition()).value()
-               //            << std::endl;
-               if (gamepad.GetA()) {
-                 armExtensionPositionController.setPower(0.3);
+               std::cout<< ((units::turn_t)armExtensionPositionController.getPosition()).value() << std::endl;
+               if (controller.GetRawButton(3)) {
+                 armExtensionPositionController.setPosition(0.5_tr);
                  std::cout << "forward" << std::endl;
-               } else if (gamepad.GetY()) {
-                 armExtensionPositionController.setPower(-0.3);
-                 std::cout << "backward" << std::endl;
-               } else {
-                 armExtensionPositionController.setPower(0.0);
-                 std::cout << "stop" << std::endl;
-               }
+               } else if (controller.GetRawButton(4)) {
+                 armExtensionPositionController.setPosition(0.0_tr);
+                 std::cout << "backward" << std::endl;}
+              //  } else {
+              //    armExtensionPositionController.setPower(0.0);
+              //    std::cout << "stop" << std::endl;
+              //  }
+
              },
              {this})
       .ToPtr();
 }
 
 frc2::CommandPtr ArmSubsystem::spinElbowCommand(frc::Joystick &controller) {
+  resetElbowPosition();
   return frc2::RunCommand(
              [&]() {
+              std::cout<< ((units::turn_t)elbowPositionController.getPosition()).value() <<std::endl; 
                if (controller.GetRawButton(7)) {
-                 elbowPositionController.setPower(0.5);
+                 elbowPositionController.setPosition(0.0_tr);
                } else if (controller.GetRawButton(8)) {
-                 elbowPositionController.setPower(-0.5);
-               } else {
-                 elbowPositionController.setPower(0);
+                 elbowPositionController.setPosition(0.8_tr);
+               } 
+               else{
+                elbowPositionController.setPosition(((units::turn_t)elbowPositionController.getPosition()));
                }
+               
              },
              {this})
       .ToPtr();

@@ -31,7 +31,7 @@ public:
 
   void setElbowPosition(units::turn_t position);
   void resetElbowPosition(units::turn_t position = 0_tr);
-  void setElbowPower(double power) { elbowPositionController.setPower(power); }
+  inline void setElbowPower(double power) { elbowPositionController.setPower(power); }
   units::turn_t getElbowPosition() const;
   units::turn_t getTargetElbowPosition() const;
 
@@ -42,6 +42,7 @@ public:
   void setWristPosition(units::turn_t position);
   units::turn_t getWristPosition() const;
   units::turn_t getTargetWristPosition() const;
+  inline void resetWristPosition(units::turn_t position = 0.0_tr) { wristPositionController.setEncoderPosition(position); }
 
   bool atTarget() const;
   //
@@ -68,7 +69,7 @@ public:
   frc2::CommandPtr setArmToSpeaker();
 
   frc2::CommandPtr setWristCOmmand(frc2::CommandJoystick &joystick);
-  frc2::CommandPtr getSpoolCommand(rmb::LogitechGamepad &gamepad);
+  frc2::CommandPtr getSpoolCommand(frc::Joystick &controller);
   frc2::CommandPtr spinElbowCommand(frc::Joystick &controller);
   frc2::CommandPtr extensionToSetPoint(units::meter_t pos);
 

@@ -98,7 +98,8 @@ void RobotContainer::setTeleopDefaults() {
   // + 2) / 4));
   // armCommand.Schedule();
   controller.Button(11).WhileTrue(arm.spinElbowCommand(controller));
-  arm.SetDefaultCommand(arm.getSpoolCommand(gamepad));
+  controller.Button(12).WhileTrue(arm.setWristCOmmand(controller));
+  arm.SetDefaultCommand(arm.getSpoolCommand(controller));
   shooter.SetDefaultCommand(shooter.runShooter(gamepad));
 }
 

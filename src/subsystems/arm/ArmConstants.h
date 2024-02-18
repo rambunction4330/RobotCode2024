@@ -43,7 +43,7 @@ const rmb::SparkMaxPositionController::CreateInfo
             },
         .feedbackConfig =
             {
-                9.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
+                230.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
                 rmb::SparkMaxPositionController::EncoderType::
                     HallSensor /* <- encoder */,
                 42 /* <- countPerRev */,
@@ -67,7 +67,7 @@ const rmb::SparkMaxPositionController::CreateInfo
             {
                 .id = 58,
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
-                .inverted = true,
+                .inverted = false,
             },
         .pidConfig = {.p = 1.0,
                       .i = 0.0,
@@ -103,9 +103,9 @@ const rmb::SparkMaxPositionController::CreateInfo
         .followers = {rmb::SparkMaxPositionController::MotorConfig{
             .id = 51,
             .motorType = rev::CANSparkMax::MotorType::kBrushless,
-            .inverted = false}}};
+            .inverted = true}}};
 
-double const wrist_kG = 0.25;
+double const wrist_kG = 0.01;
 const rmb::SparkMaxPositionController::CreateInfo
     wristPositionControllerCreateInfo{
         .motorConfig =
@@ -114,7 +114,7 @@ const rmb::SparkMaxPositionController::CreateInfo
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
                 .inverted = false,
             },
-        .pidConfig = {.p = 0.0,
+        .pidConfig = {.p = 0.01,
                       .i = 0.0,
                       .d = 0.0,
                       .ff = 0.0,
@@ -141,7 +141,7 @@ const rmb::SparkMaxPositionController::CreateInfo
             },
         .feedbackConfig =
             {
-                9.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
+                36.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
                 rmb::SparkMaxPositionController::EncoderType::
                     HallSensor /* <- encoder */,
                 42 /* <- countPerRev */,
