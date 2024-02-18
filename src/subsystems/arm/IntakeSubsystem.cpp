@@ -14,9 +14,7 @@
 
 IntakeSubsystem::IntakeSubsystem()
     : frontIntakeVelocityController(
-          constants::arm::intakeFrontVelocityControllerCreateInfo),
-      backIntakeVelocityController(
-          constants::arm::intakeBackVelocityControllerCreateInfo) {
+          constants::arm::intakeFrontVelocityControllerCreateInfo) {
   // Implementation of subsystem constructor goes here.
 }
 
@@ -29,23 +27,17 @@ void IntakeSubsystem::SimulationPeriodic() {
 }
 
 void IntakeSubsystem::runIntake(const frc::Joystick &controller) {
-  double backPower;
   double frontPower;
   double adjustablePower = (controller.GetThrottle() + 1) / 2;
 
   if (controller.GetRawButton(3) == 1) {
     frontPower = 1 * adjustablePower;
   }
-  if (controller.GetRawButton(6) == 1) {
-    backPower = 1 * adjustablePower;
-  }
   if (controller.GetRawButton(5) == 1) {
     frontPower = -1 * adjustablePower;
   }
-  if (controller.GetRawButton(4) == 1) {
-    backPower = -1 * adjustablePower;
-  }
-  setPower(frontPower, backPower);
+
+setFrontPower(frontPower);
 }
 
 frc2::CommandPtr IntakeSubsystem::revFrontIntakeToShoot() {
@@ -55,13 +47,13 @@ frc2::CommandPtr IntakeSubsystem::revFrontIntakeToShoot() {
       .ToPtr();
 }
 
-frc2::CommandPtr IntakeSubsystem::shoot() {
-  return IntakeSubsystem::setBackandFront();
-}
+// frc2::CommandPtr IntakeSubsystem::shoot() {
+//   return IntakeSubsystem::setBackandFront();
+// }
 
-frc2::CommandPtr IntakeSubsystem::setBackandFront() {
-  return frc2::FunctionalCommand(
-             []() {}, [this]() { IntakeSubsystem::setPower(1.0, 1.0); },
-             [](bool interrupted) {}, []() { return false; }, {this})
-      .ToPtr();
-}
+// frc2::CommandPtr IntakeSubsystem::setBackandFront() {
+//   return frc2::FunctionalCommand(
+//              []() {}, [this]() { IntakeSubsystem::setPower(1.0, 1.0); },
+//              [](bool interrupted) {}, []() { return false; }, {this})
+//       .ToPtr();
+// }

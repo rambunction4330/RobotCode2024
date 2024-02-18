@@ -94,10 +94,10 @@ void RobotContainer::setTeleopDefaults() {
   // arm.getWristPosition()() << std::endl; });
   // driveSubsystem.SetDefaultCommand(driveSubsystem.driveTeleopCommand(gamepad));
   intake.SetDefaultCommand(getIntakeCommand());
-  // controller.Button(11).OnTrue(arm.setWristCOmmand((units::turn_t)(controller.GetThrottle()
+  controller.Button(11).WhileTrue(arm.setWristCOmmand(controller));
   // + 2) / 4));
   // armCommand.Schedule();
-  gamepad.Y().WhileTrue(arm.setWristCOmmand(controller));
+  // gamepad.Y().WhileTrue(arm.setWristCOmmand(controller));
   arm.SetDefaultCommand(arm.getSpoolCommand(controller));
 }
 

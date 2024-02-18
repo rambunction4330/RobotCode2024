@@ -31,25 +31,25 @@ public:
   inline void setFrontPower(double power) {
     frontIntakeVelocityController.setPower(power);
   }
-  inline void setBackPower(double power) {
-    backIntakeVelocityController.setPower(power);
-  };
+  // inline void setBackPower(double power) {
+  //   backIntakeVelocityController.setPower(power);
+  // };
 
   inline void setPower(double front, double back) {
     setFrontPower(front);
-    setBackPower(back);
+    // setBackPower(back);
   }
 
   void runIntake(const frc::Joystick &m_controller);
   frc2::CommandPtr revFrontIntakeToShoot();
   frc2::CommandPtr shoot();
 
-  frc2::CommandPtr setBackandFront();
+  // frc2::CommandPtr setBackandFront();
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
 
   rmb::SparkMaxVelocityController frontIntakeVelocityController;
-  rmb::SparkMaxVelocityController backIntakeVelocityController;
+  // rmb::SparkMaxVelocityController backIntakeVelocityController;
 };

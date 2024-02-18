@@ -170,8 +170,11 @@ ArmSubsystem::setWristCOmmand(frc2::CommandJoystick &joystick) {
 
   return frc2::RunCommand(
              [&]() {
-               setWristPosition(
-                   ((units::turn_t)(joystick.GetThrottle() + 1) / 4));
+              wristPositionController.setPower(0.2);
+              setWristPosition(0.5_tr);
+              
+              //  setWristPosition(
+              //      ((units::turn_t)(joystick.GetThrottle() + 1) / 4));
                std::cout
                    << "throttle: "
                    << ((units::turn_t)(joystick.GetThrottle() + 2) / 4).value()
