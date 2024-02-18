@@ -9,7 +9,7 @@
 #include <rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h>
 
 namespace constants::arm {
-double const arm_kG = 0.05;
+double const arm_kG = 0.07;
 const rmb::SparkMaxPositionController::CreateInfo
     elbowPositionControllerCreateInfo{
         .motorConfig =
