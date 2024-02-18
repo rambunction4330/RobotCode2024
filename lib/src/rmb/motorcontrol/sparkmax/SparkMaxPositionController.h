@@ -9,6 +9,7 @@
 
 #include <rev/CANSparkMax.h>
 
+#include "rev/SparkPIDController.h"
 #include "rmb/motorcontrol/AngularPositionController.h"
 #include "rmb/motorcontrol/feedforward/SimpleFeedforward.h"
 
@@ -187,6 +188,7 @@ private:
   units::radian_t tolerance;
 
   const std::shared_ptr<Feedforward<units::radians>> feedforward;
+  rev::SparkMaxPIDController::ArbFFUnits FeedforwardUnits = rev::SparkMaxPIDController::ArbFFUnits::kPercentOut; 
 
   units::radian_t minPose;
   units::radian_t maxPose;

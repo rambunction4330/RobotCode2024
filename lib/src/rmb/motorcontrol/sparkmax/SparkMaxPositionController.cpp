@@ -1,4 +1,6 @@
 #include "rmb/motorcontrol/sparkmax/SparkMaxPositionController.h"
+#include "rev/CANSparkMax.h"
+#include "rev/SparkPIDController.h"
 
 #include <algorithm>
 
@@ -138,7 +140,7 @@ void SparkMaxPositionController::setPosition(units::radian_t position,
                        : std::clamp(position, minPose, maxPose);
   pidController.SetReference(units::turn_t(targetPosition).to<double>() *
                                  gearRatio,
-                             controlType, 0, ff);
+                             controlType, 0, ff, FeedforwardUnits);
 }
 
 units::radian_t SparkMaxPositionController::getTargetPosition() const {
