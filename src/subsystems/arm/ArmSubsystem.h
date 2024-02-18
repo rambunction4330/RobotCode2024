@@ -5,9 +5,14 @@
 #pragma once
 
 #include "IntakeSubsystem.h"
+#include "frc/Joystick.h"
+#include "frc2/command/button/CommandJoystick.h"
+#include "rmb/motorcontrol/LinearPositionController.h"
 #include "rmb/motorcontrol/sparkmax/SparkMaxPositionController.h"
 #include "rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h"
+#include "units/angle.h"
 #include "units/angular_velocity.h"
+#include "units/length.h"
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 
@@ -58,6 +63,12 @@ public:
   frc2::CommandPtr setArmStateCommand(const ArmState &state);
 
   frc2::CommandPtr setArmToSpeaker();
+
+  frc2::CommandPtr setWristCOmmand(frc2::CommandJoystick& joystick); 
+  frc2::CommandPtr getSpoolCommand(frc::Joystick &controller); 
+  frc2::CommandPtr spinElbowCommand(frc::Joystick &controller);
+  frc2::CommandPtr extensionToSetPoint(units::meter_t pos); 
+
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be

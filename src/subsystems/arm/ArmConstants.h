@@ -13,7 +13,7 @@ const rmb::SparkMaxPositionController::CreateInfo
     elbowPositionControllerCreateInfo{
         .motorConfig =
             {
-                .id = 50,
+                .id = 52,
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
                 .inverted = false,
             },
@@ -25,7 +25,7 @@ const rmb::SparkMaxPositionController::CreateInfo
                       .iZone = 0.0,
                       .iMaxAccumulator = 0.0,
                       .maxOutput = 1.0,
-                      .minOutput = 0.0},
+                      .minOutput = -1.0},
         .feedforward = std::make_shared<rmb::ArmFeedforward>(
             rmb::ArmFeedforward::Ks_t{0.0} /* <- Ks */,
             rmb::ArmFeedforward::Ks_t{0.5} /* <- Kcos */,
@@ -54,18 +54,18 @@ const rmb::SparkMaxPositionController::CreateInfo
             },
 
         .followers = {rmb::SparkMaxPositionController::MotorConfig{
-            .id = 51,
+            .id = 53,
             .motorType = rev::CANSparkMax::MotorType::kBrushless,
-            .inverted = false}}};
+            .inverted = true}}};
 
-const auto extensionAfterGRLinearToAngularRatio = 1.0_m / 1.0_tr;
+const auto extensionAfterGRLinearToAngularRatio = 29_cm / 3.25_tr;
 double const extension_kS = 1.0;
 double const extension_kG = 1.0;
 const rmb::SparkMaxPositionController::CreateInfo
     armExtensionPositionControllerCreateInfo{
         .motorConfig =
             {
-                .id = 52,
+                .id = 50,
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
                 .inverted = false,
             },
@@ -77,7 +77,7 @@ const rmb::SparkMaxPositionController::CreateInfo
                       .iZone = 0.0,
                       .iMaxAccumulator = 0.0,
                       .maxOutput = 1.0,
-                      .minOutput = 0.0},
+                      .minOutput = -1.0},
 
         //.feedforward // TODO: Consider? Should probably be variant on 1 -
         // cos(theta) .range // TODO: just in case?
@@ -101,10 +101,10 @@ const rmb::SparkMaxPositionController::CreateInfo
             },
 
         .followers = {rmb::SparkMaxPositionController::MotorConfig{
-            .id = 53,
+            .id = 51,
             .motorType = rev::CANSparkMax::MotorType::kBrushless,
-            .inverted = false}}};
-double const wrist_kG = 1.0;
+            .inverted = true}}};
+double const wrist_kG = 40.0;
 const rmb::SparkMaxPositionController::CreateInfo
     wristPositionControllerCreateInfo{
         .motorConfig =
@@ -113,7 +113,7 @@ const rmb::SparkMaxPositionController::CreateInfo
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
                 .inverted = false,
             },
-        .pidConfig = {.p = 1.0,
+        .pidConfig = {.p = 0.0,
                       .i = 0.0,
                       .d = 0.0,
                       .ff = 0.0,
@@ -121,16 +121,21 @@ const rmb::SparkMaxPositionController::CreateInfo
                       .iZone = 0.0,
                       .iMaxAccumulator = 0.0,
                       .maxOutput = 1.0,
-                      .minOutput = 0.0},
+                      .minOutput = -1.0},
 
         //.feedforward // TODO: consider? This would be an interesting physics
         // mechanics FRQ lmao .range // TODO: just in case?
+        .range =  {
+            .minPosition = 0.0_tr,
+            .maxPosition = 3.25_tr,
+            .isContinuous = false,
+        },
         .profileConfig =
             {
                 false /* <- useSmartMotion */,
-                0.0_rpm /* <- maxVelocity */,
+                100.0_rpm /* <- maxVelocity */,
                 0.0_rad_per_s /* <- minVelocity */,
-                0.0_rad_per_s_sq /* <- maxAcceleration */,
+                100.0_rad_per_s_sq /* <- maxAcceleration */,
             },
         .feedbackConfig =
             {
@@ -162,7 +167,7 @@ const rmb::SparkMaxVelocityController::CreateInfo
                       .iZone = 0.0,
                       .iMaxAccumulator = 0.0,
                       .maxOutput = 1.0,
-                      .minOutput = 0.0},
+                      .minOutput = -1.0},
 
         //.feedforward // TODO: consider? This would be an interesting physics
         // mechanics FRQ lmao .range // TODO: just in case?
@@ -203,7 +208,7 @@ const rmb::SparkMaxVelocityController::CreateInfo
                       .iZone = 0.0,
                       .iMaxAccumulator = 0.0,
                       .maxOutput = 1.0,
-                      .minOutput = 0.0},
+                      .minOutput = -1.0},
 
         //.feedforward // TODO: consider? This would be an interesting physics
         // mechanics FRQ lmao .range // TODO: just in case?

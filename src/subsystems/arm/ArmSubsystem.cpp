@@ -5,21 +5,32 @@
 #include "ArmSubsystem.h"
 #include "ArmConstants.h"
 #include "IntakeSubsystem.h"
+#include <iostream>
 
+#include "frc/Joystick.h"
 #include "frc2/command/CommandPtr.h"
 #include "frc2/command/FunctionalCommand.h"
+#include "frc2/command/RunCommand.h"
+#include "frc2/command/button/CommandJoystick.h"
+#include "rmb/motorcontrol/AngularPositionController.h"
+#include "rmb/motorcontrol/AngularVelocityController.h"
+#include "rmb/motorcontrol/sparkmax/SparkMaxPositionController.h"
 #include "units/angle.h"
 #include "units/length.h"
 #include <cmath>
+#include <memory>
+#include <type_traits>
 
 ArmSubsystem::ArmSubsystem()
     : elbowPositionController(
           constants::arm::elbowPositionControllerCreateInfo),
       armExtensionPositionController(
-          constants::arm::armExtensionPositionControllerCreateInfo),
+        
+                    constants::arm::armExtensionPositionControllerCreateInfo),
       wristPositionController(
           constants::arm::wristPositionControllerCreateInfo) {
   // Implementation of subsystem constructor goes here.
+  wristPositionController.setEncoderPosition(0.0_tr);
 }
 
 void ArmSubsystem::Periodic() {
@@ -61,8 +72,8 @@ units::meter_t ArmSubsystem::getTargetArmExtensionPosition() const {
 void ArmSubsystem::setWristPosition(units::turn_t position) {
   wristPositionController.setPosition(
       position,
-      constants::arm::wrist_kG +
-          std::cos(((units::radian_t)getWristPosition() + getElbowPosition())
+      constants::arm::wrist_kG *
+          std::cos(((units::radian_t)getWristPosition() + 0 * getElbowPosition())
                        .value()));
 }
 
@@ -152,4 +163,79 @@ frc2::CommandPtr ArmSubsystem::setArmToSpeaker() {
   units::meter_t armExtensionLength = 0.0_m;
   return ArmSubsystem::setArmStateCommand(elbowPosAngle, armExtensionLength,
                                           wristPosAngle);
+}
+
+frc2::CommandPtr
+ArmSubsystem::setWristCOmmand(frc2::CommandJoystick &joystick) {
+
+  return frc2::RunCommand(
+             [&]() {
+               setWristPosition(
+                   ((units::turn_t)(joystick.GetThrottle() + 1) / 4));
+               std::cout
+                   << "throttle: " << ((units::turn_t)(joystick.GetThrottle() + 2) / 4).value()
+                   << std::endl;
+               //std::cout << "power:" <<  wristPositionController.getPower() << std::endl;
+               std::cout << "position" << ((units::degree_t)(
+                                 wristPositionController.getPosition()))
+                                .value()
+                         << std::endl;
+             },
+             {this})
+      .ToPtr();
+  // setWristPosition(pos); std::cout << "right damn here" << std::endl;
+}
+
+frc2::CommandPtr ArmSubsystem::getSpoolCommand(frc::Joystick &controller) {
+  return frc2::RunCommand(
+             [&]() {
+              // std::cout <<((units::turn_t)armExtensionPositionController.getPosition()).value()
+              //            << std::endl;
+               if (controller.GetRawButton(11)) {
+                 armExtensionPositionController.setPower(0.3);
+               } else if (controller.GetRawButton(12)) {
+                 armExtensionPositionController.setPower(-0.3);
+               } else {
+                 armExtensionPositionController.setPower(0.0);
+               }
+             },
+             {this})
+      .ToPtr();
+}
+
+frc2::CommandPtr ArmSubsystem::spinElbowCommand(frc::Joystick &controller) {
+  return frc2::RunCommand(
+             [&]() {
+               if (controller.GetRawButton(7)) {
+                 elbowPositionController.setPower(0.5);
+               } else if (controller.GetRawButton(8)) {
+                 elbowPositionController.setPower(-0.5);
+               } else {
+                 elbowPositionController.setPower(0);
+               }
+             },
+             {this})
+      .ToPtr();
+}
+
+frc2::CommandPtr ArmSubsystem::extensionToSetPoint(units::meter_t pos) {
+  return frc2::FunctionalCommand(
+             [this](){
+              armExtensionPositionController.setEncoderPosition(0.0_rad);
+             }, [&]() {
+               // set the conversion
+               
+               // print out the possiton before converting
+               //std::cout <<((units::turn_t)armExtensionPositionController.getPosition()).value()
+               //          << std::endl;
+               // convert the controller ??
+
+               // print out the position after the conversion
+               
+               // set the postion after conversion with feet or meters
+               // armExtensionPositionController.setPosition(pos / constants::arm::extensionAfterGRLinearToAngularRatio);
+             },
+             [](bool interrupted ){}, [](){return  false;}, 
+             {this})
+      .ToPtr();
 }

@@ -6,13 +6,16 @@
 
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/button/CommandXboxController.h>
+#include "frc2/command/button/CommandJoystick.h"
 
 #include <frc/smartdashboard/SendableChooser.h>
 
 #include "Constants.h"
 #include "frc/Joystick.h"
+#include "frc2/command/button/Trigger.h"
 #include "rmb/controller/LogitechGamepad.h"
 #include "rmb/sensors/AHRS/AHRSGyro.h"
+#include "subsystems/arm/ArmSubsystem.h"
 #include "subsystems/arm/IntakeSubsystem.h"
 #include "subsystems/drive/DriveSubsystem.h"
 
@@ -30,6 +33,7 @@ public:
   RobotContainer();
 
   frc2::CommandPtr getIntakeCommand();
+
   void RunAutonomousCommand();
 
   void setTeleopDefaults();
@@ -45,14 +49,17 @@ private:
   // The robot's subsystems are defined here...
   std::shared_ptr<rmb::AHRSGyro> gyro =
       std::make_shared<rmb::AHRSGyro>(constants::gyroPort);
-  DriveSubsystem driveSubsystem;
+  // DriveSubsystem driveSubsystem;
 
   rmb::LogitechGamepad gamepad{constants::driverControllerPort, 0.05};
 
   void ConfigureBindings();
-  frc::Joystick controller{1};
+  frc2::CommandJoystick controller{1};
+  frc2::Trigger xButton = controller.Button(11);
+  
 
   IntakeSubsystem intake;
+  ArmSubsystem arm;
 
   std::unordered_map<std::string, frc2::CommandPtr> autoCommands;
 

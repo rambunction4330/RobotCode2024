@@ -10,6 +10,7 @@
 #include "frc/Joystick.h"
 #include "frc2/command/Commands.h"
 #include "frc2/command/RunCommand.h"
+#include "rmb/controller/LogitechGamepad.h"
 #include "subsystems/arm/ArmConstants.h"
 #include "subsystems/arm/IntakeSubsystem.h"
 #include <filesystem>
@@ -22,8 +23,11 @@
 #include "pathplanner/lib/commands/PathPlannerAuto.h"
 #include "pathplanner/lib/path/PathPlannerPath.h"
 #include "subsystems/drive/DriveSubsystem.h"
+#include "units/angle.h"
 
-RobotContainer::RobotContainer() : driveSubsystem(gyro) {
+#include <frc2/command/button/JoystickButton.h>
+
+RobotContainer::RobotContainer() {//: driveSubsystem(gyro) {
   // Initialize all of your commands and subsystems here
 
   // Configure the button bindings
@@ -81,7 +85,6 @@ frc2::CommandPtr RobotContainer::getIntakeCommand() {
   // Joystick input is blocked during teleop
   return frc2::FunctionalCommand([]() {},
                                  [this]() {
-                                   std::cout << "right here" << std::endl;
                                    intake.runIntake(controller);
                                  },
                                  [](bool canceled) {}, []() { return false; },
@@ -90,11 +93,19 @@ frc2::CommandPtr RobotContainer::getIntakeCommand() {
 }
 
 void RobotContainer::setTeleopDefaults() {
-  driveSubsystem.SetDefaultCommand(driveSubsystem.driveTeleopCommand(gamepad));
+  //static auto armCommand = frc2::RunCommand([this]() { std::cout << arm.getWristPosition()() << std::endl; });
+  // driveSubsystem.SetDefaultCommand(driveSubsystem.driveTeleopCommand(gamepad));
   intake.SetDefaultCommand(getIntakeCommand());
+  // controller.Button(11).OnTrue(arm.setWristCOmmand((units::turn_t)(controller.GetThrottle() + 2) / 4));
+  //armCommand.Schedule();
+  gamepad.Y().WhileTrue(arm.setWristCOmmand(controller));
+  arm.SetDefaultCommand(arm.getSpoolCommand(controller));
+  
 }
 
 void RobotContainer::setAutoDefaults() {
-  driveSubsystem.SetDefaultCommand(
-      frc2::RunCommand([this] { driveSubsystem.stop(); }).ToPtr());
+  
+  //driveSubsystem.SetDefaultCommand(
+  //    frc2::RunCommand([this] { driveSubsystem.stop(); }).ToPtr());
+      
 }

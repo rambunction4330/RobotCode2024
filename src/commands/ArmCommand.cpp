@@ -5,6 +5,10 @@
 #include "ArmCommand.h"
 #include "subsystems/arm/ArmSubsystem.h"
 
+// -2.65342_tr
+// 0.60
+// 29cm
+
 ArmCommand::ArmCommand(ArmSubsystem &armSubsystem)
     : armSubsystem(armSubsystem) {
   // Register that this command requires the subsystem.
