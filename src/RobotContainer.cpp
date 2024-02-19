@@ -96,5 +96,5 @@ void RobotContainer::setTeleopDefaults() {
 
 void RobotContainer::setAutoDefaults() {
   driveSubsystem.SetDefaultCommand(
-       frc2::RunCommand([this] { driveSubsystem.stop(); }).ToPtr());
+      frc2::RunCommand([this] { driveSubsystem.stop(); }).ToPtr());
 }
