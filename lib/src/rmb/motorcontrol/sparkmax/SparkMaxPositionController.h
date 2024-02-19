@@ -44,8 +44,6 @@ struct ProfileConfig {
   units::radians_per_second_t maxVelocity = 0.0_rad_per_s,
                               minVelocity = 0.0_rad_per_s;
   units::radians_per_second_squared_t maxAcceleration = 0.0_rad_per_s_sq;
-  rev::SparkMaxPIDController::AccelStrategy accelStrategy =
-      rev::SparkMaxPIDController::AccelStrategy::kTrapezoidal;
 };
 
 enum EncoderType { HallSensor, Quadrature, Alternate, Absolute };
@@ -184,7 +182,7 @@ private:
   std::vector<std::unique_ptr<rev::CANSparkMax>> followers;
   rev::CANSparkMax::ControlType controlType;
 
-  rev::SparkMaxPIDController pidController;
+  rev::SparkPIDController pidController;
   units::radian_t targetPosition;
   units::radian_t tolerance;
 

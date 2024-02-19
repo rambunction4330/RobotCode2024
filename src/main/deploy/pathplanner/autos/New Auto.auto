@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Move to ring"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Pick Up Ring"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Roundabout amp"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

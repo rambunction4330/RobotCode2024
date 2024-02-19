@@ -18,7 +18,7 @@ namespace rmb {
 namespace TalonFXPositionControllerHelper {
 struct MotorConfig {
   int id;
-  bool inverted = false;
+  bool inverted = false; /*< false for counterclockwise positive*/
   bool brake = false;
   double minOutput = -1.0,
          maxOutput = 1.0; /*< Applies to both open and closed loop*/
@@ -180,6 +180,8 @@ public:
    */
   virtual double getPower() const override;
 
+  ctre::phoenix6::StatusSignal<double> &getTargetPositionStatusSignal() const;
+
   /**
    * Queries the Phoenix API for the current set point of the motor
    */
@@ -207,11 +209,16 @@ public:
    */
   void stop() override;
 
+  ctre::phoenix6::StatusSignal<units::turns_per_second_t> &
+  getVelocityStatusSignal() const;
+
   /**
    * Get the current velocity of the motor
    * @return The velocity of the motor in a units::angular_velocity container
    */
   units::radians_per_second_t getVelocity() const override;
+
+  ctre::phoenix6::StatusSignal<units::turn_t> &getPositionStatusSignal() const;
 
   /**
    * Get the current position of the motor

@@ -4,61 +4,53 @@
 #include "pathplanner/lib/path/PathConstraints.h"
 #include "pathplanner/lib/path/PathPlannerPath.h"
 #include "pathplanner/lib/util/HolonomicPathFollowerConfig.h"
-#include "pathplanner/lib/util/PIDConstants.h"
 #include "pathplanner/lib/util/ReplanningConfig.h"
-#include "rmb/drive/BaseDrive.h"
-#include "units/acceleration.h"
 #include "units/angle.h"
-#include "units/angular_velocity.h"
 #include "units/base.h"
 #include "units/length.h"
-#include "units/math.h"
-#include "units/time.h"
 #include "units/velocity.h"
 
 #include "frc/controller/HolonomicDriveController.h"
 #include "frc/estimator/SwerveDrivePoseEstimator.h"
 #include "frc/geometry/Rotation2d.h"
-#include "frc/interfaces/Gyro.h"
+#include "frc/geometry/Translation2d.h"
 #include "frc/kinematics/ChassisSpeeds.h"
 #include "frc/kinematics/SwerveDriveKinematics.h"
 #include "frc/kinematics/SwerveModulePosition.h"
 #include "frc/kinematics/SwerveModuleState.h"
 
-#include "frc/geometry/Translation2d.h"
-
 #include "frc2/command//SwerveControllerCommand.h"
 #include "frc2/command/CommandPtr.h"
 #include "frc2/command/Commands.h"
 #include "frc2/command/Subsystem.h"
+
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableInstance.h"
+
 #include "rmb/drive/SwerveDrive.h"
 #include "rmb/drive/SwerveModule.h"
-#include "rmb/motorcontrol/feedforward/Feedforward.h"
+
 #include "units/angle.h"
-#include "units/angular_velocity.h"
 #include "units/length.h"
-#include "units/math.h"
 #include "units/velocity.h"
+
 #include "wpi/array.h"
-#include "wpi/sendable/SendableRegistry.h"
 
 #include <array>
 #include <cstddef>
-#include <functional>
 #include <initializer_list>
-#include <iostream>
 
 #include <Eigen/Core>
+
+#include <iostream>
 #include <memory>
+#include <mutex>
 
 #include "pathplanner/lib/commands/FollowPathHolonomic.h"
 #include "pathplanner/lib/commands/PathfindHolonomic.h"
 #include "pathplanner/lib/path/PathConstraints.h"
 #include "pathplanner/lib/util/HolonomicPathFollowerConfig.h"
 #include "pathplanner/lib/util/ReplanningConfig.h"
-#include <mutex>
 
 namespace rmb {
 
@@ -162,46 +154,64 @@ void SwerveDrive<NumModules>::driveCartesian(double xSpeed, double ySpeed,
    * from the center
    *
    * And we define our perpendicular functions as
-   * perpendicular(x, y) => (y, -x)
+   * perpendicular(x, y) => (-y, x)
+   * to enforce a counterclockwise positive angle
    *
    * so,
-   * output_x = vx * 1 + vy * 0 + w * y
-   * output_y = vx * 0 + vy * 1 + w * -x
+   * output_x = vx * 1 + vy * 0 + w * -y
+   * output_y = vx * 0 + vy * 1 + w * x
    */
 
   std::array<SwerveModulePower, NumModules> powers;
   double largestPower = 1.0;
 
+  // std::cout << "rotation: [";
   for (size_t i = 0; i < modules.size(); i++) {
     SwerveModule &module = modules[i];
 
     double output_x =
         robotRelativeVXY.x() +
-        zRotation * module.getModuleTranslation().Y() / largestModuleDistance;
+        zRotation * (module.getModuleTranslation().Y() / largestModuleDistance);
+    // -1 * 1
 
-    double output_y =
-        robotRelativeVXY.y() +
-        zRotation * -module.getModuleTranslation().X() / largestModuleDistance;
+    double output_y = robotRelativeVXY.y() +
+                      zRotation * -1 * module.getModuleTranslation().X() /
+                          largestModuleDistance;
 
-    frc::Rotation2d moduleRotation{output_x, output_y};
+    // -1 * -1
+
+    frc::Rotation2d moduleRotation =
+        units::radian_t(std::atan2(output_y, output_x));
+
+    // std::cout << "(" << robotRelativeVXY.x() << ", " << robotRelativeVXY.y()
+    //           << ")" << moduleRotation.Degrees()() << ", ";
+    //
+    // std::cout << "moduleRotation[" << i << "] = " <<
+    // moduleRotation.Degrees()()
+    //           << std::endl;
+
+    // std::cout << "output[" << i << "] = " << output_x << " " << output_y <<
+    // std::endl;
     double modulePower = std::sqrt(output_x * output_x + output_y * output_y);
 
     powers[i] = SwerveModulePower{modulePower, moduleRotation};
 
-    if (modulePower > largestPower) {
-      largestPower = modulePower;
+    if (std::abs(modulePower) > std::abs(largestPower)) {
+      largestPower = std::abs(modulePower);
     }
   }
 
+  // std::cout << "]" << std::endl;
+
   // Normalize
   for (SwerveModulePower &power : powers) {
-    power.power /= largestPower;
+    power.power /= std::abs(largestPower);
   }
 
   // Optimize
   for (size_t i = 0; i < modules.size(); i++) {
-    powers[i] =
-        SwerveModulePower::Optimize(powers[i], modules[i].getState().angle);
+    // powers[i] =
+    //     SwerveModulePower::Optimize(powers[i], modules[i].getState().angle);
   }
 
   driveModulePowers(powers);
@@ -250,12 +260,12 @@ frc::ChassisSpeeds SwerveDrive<NumModules>::getChassisSpeeds() const {
 
 template <size_t NumModules>
 frc::Pose2d SwerveDrive<NumModules>::getPose() const {
-  std::lock_guard<std::mutex> lock(visionThreadMutex);
+  // std::lock_guard<std::mutex> lock(visionThreadMutex);
   return poseEstimator.GetEstimatedPosition();
 }
 
 template <size_t NumModules> frc::Pose2d SwerveDrive<NumModules>::updatePose() {
-  std::lock_guard<std::mutex> lock(visionThreadMutex);
+  // std::lock_guard<std::mutex> lock(visionThreadMutex);
   return poseEstimator.Update(
       frc::Rotation2d((units::radian_t)gyro->getZRotation()),
       getModulePositions());
@@ -307,7 +317,7 @@ void SwerveDrive<NumModules>::updateNTDebugInfo(bool openLoopVelocity) {
 
     std::array<double, NumModules> positions;
     for (size_t i = 0; i < NumModules; i++) {
-      units::turn_t position = modules[i].getState().angle.Degrees();
+      units::degree_t position = modules[i].getState().angle.Degrees();
 
       positions[i] = position();
     }
@@ -336,21 +346,21 @@ SwerveDrive<NumModules>::getTargetModuleStates() const {
 
 template <size_t NumModules>
 void SwerveDrive<NumModules>::resetPose(const frc::Pose2d &pose) {
-  std::lock_guard<std::mutex> lock(visionThreadMutex);
+  // std::lock_guard<std::mutex> lock(visionThreadMutex);
   poseEstimator.ResetPosition(gyro->getRotation(), getModulePositions(), pose);
 }
 
 template <size_t NumModules>
 void SwerveDrive<NumModules>::addVisionMeasurments(
     const frc::Pose2d &poseEstimate, units::second_t time) {
-  std::lock_guard<std::mutex> lock(visionThreadMutex);
+  // std::lock_guard<std::mutex> lock(visionThreadMutex);
   poseEstimator.AddVisionMeasurement(poseEstimate, time);
 }
 
 template <size_t NumModules>
 void SwerveDrive<NumModules>::setVisionSTDevs(
     wpi::array<double, 3> standardDevs) {
-  std::lock_guard<std::mutex> lock(visionThreadMutex);
+  // std::lock_guard<std::mutex> lock(visionThreadMutex);
   poseEstimator.SetVisionMeasurementStdDevs(standardDevs);
 }
 

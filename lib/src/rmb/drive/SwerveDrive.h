@@ -227,6 +227,8 @@ public:
       frc::Pose2d targetPose, pathplanner::PathConstraints constraints,
       std::initializer_list<frc2::Subsystem *> driveRequirements);
 
+  inline units::meter_t getMaxDriveRadius() { return largestModuleDistance; }
+
   void updateNTDebugInfo(bool openLoopVelocity = false);
 
   void stop();
@@ -294,7 +296,7 @@ private:
   /**
    * Mutex to protect position estimations between vision threads.
    */
-  mutable std::mutex visionThreadMutex;
+  // mutable std::mutex visionThreadMutex;
 
   units::meters_per_second_t maxModuleSpeed;
 

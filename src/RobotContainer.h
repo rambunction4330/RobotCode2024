@@ -7,12 +7,16 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/button/CommandXboxController.h>
 
+#include <frc/smartdashboard/SendableChooser.h>
+
 #include "Constants.h"
 #include "frc/Joystick.h"
 #include "rmb/controller/LogitechGamepad.h"
 #include "rmb/sensors/AHRS/AHRSGyro.h"
 #include "subsystems/arm/IntakeSubsystem.h"
 #include "subsystems/drive/DriveSubsystem.h"
+
+#include <unordered_map>
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -25,12 +29,14 @@ class RobotContainer {
 public:
   RobotContainer();
 
-  frc2::CommandPtr getAutonomousCommand();
 
   frc2::CommandPtr getIntakeCommand();
+  void RunAutonomousCommand();
 
   void setTeleopDefaults();
   void setAutoDefaults();
+
+  void loadPPAutos();
 
 private:
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -38,14 +44,18 @@ private:
   //     constants::driverControllerPort};
 
   // The robot's subsystems are defined here...
-  // std::shared_ptr<rmb::AHRSGyro> gyro =
-  //     std::make_shared<rmb::AHRSGyro>(constants::gyroPort);
-  // DriveSubsystem driveSubsystem;
+   std::shared_ptr<rmb::AHRSGyro> gyro =
+       std::make_shared<rmb::AHRSGyro>(constants::gyroPort);
+  DriveSubsystem driveSubsystem;
 
-  rmb::LogitechGamepad gamepad{constants::driverControllerPort};
+  rmb::LogitechGamepad gamepad{constants::driverControllerPort, 0.05};
 
   void ConfigureBindings();
   frc::Joystick controller{1};
 
   IntakeSubsystem intake;
+
+  std::unordered_map<std::string, frc2::CommandPtr> autoCommands;
+
+  frc::SendableChooser<std::string> autonomousChooser;
 };

@@ -30,7 +30,7 @@ deploy {
 
                 // Static files artifact
                 frcStaticFileDeploy(getArtifactTypeClass('FileTreeArtifact')) {
-                    files = project.fileTree('src/deploy')
+                    files = project.fileTree('src/main/deploy')
                     directory = '/home/lvuser/deploy'
                 }
             }
@@ -116,3 +116,11 @@ model {
         }
     }
 }
+
+task listrepos {
+    doLast {
+        println "Repositories:"
+        project.repositories.each { println "Name: " + it.name + "; url: " + it.url }
+   }
+}
+

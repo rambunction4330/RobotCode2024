@@ -46,20 +46,18 @@ SparkMaxVelocityController::SparkMaxVelocityController(
             createInfo.profileConfig.maxAcceleration)
             .to<double>() *
         gearRatio);
-    pidController.SetSmartMotionAccelStrategy(
-        createInfo.profileConfig.accelStrategy);
   }
 
   // Encoder Configuation
   switch (encoderType) {
   case EncoderType::HallSensor:
-    encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(
-        sparkMax.GetEncoder(rev::SparkMaxRelativeEncoder::Type::kHallSensor,
+    encoder = std::make_unique<rev::SparkRelativeEncoder>(
+        sparkMax.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor,
                             createInfo.feedbackConfig.countPerRev));
     break;
   case EncoderType::Quadrature:
-    encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(
-        sparkMax.GetEncoder(rev::SparkMaxRelativeEncoder::Type::kQuadrature,
+    encoder = std::make_unique<rev::SparkRelativeEncoder>(
+        sparkMax.GetEncoder(rev::SparkRelativeEncoder::Type::kQuadrature,
                             createInfo.feedbackConfig.countPerRev));
     break;
   case EncoderType::Alternate:
@@ -67,9 +65,9 @@ SparkMaxVelocityController::SparkMaxVelocityController(
         sparkMax.GetAlternateEncoder(createInfo.feedbackConfig.countPerRev));
     break;
   case EncoderType::Absolute:
-    encoder = std::make_unique<rev::SparkMaxAbsoluteEncoder>(
-        sparkMax.GetAbsoluteEncoder(
-            rev::SparkMaxAbsoluteEncoder::Type::kDutyCycle));
+    encoder =
+        std::make_unique<rev::SparkAbsoluteEncoder>(sparkMax.GetAbsoluteEncoder(
+            rev::SparkAbsoluteEncoder::Type::kDutyCycle));
     break;
   }
 
@@ -78,36 +76,30 @@ SparkMaxVelocityController::SparkMaxVelocityController(
   // Limit Switch Configuaration
   switch (createInfo.feedbackConfig.forwardSwitch) {
   case LimitSwitchConfig::Disabled:
-    sparkMax
-        .GetForwardLimitSwitch(rev::SparkMaxLimitSwitch::Type::kNormallyOpen)
+    sparkMax.GetForwardLimitSwitch(rev::SparkLimitSwitch::Type::kNormallyOpen)
         .EnableLimitSwitch(false);
     break;
   case LimitSwitchConfig::NormalyOpen:
-    sparkMax
-        .GetForwardLimitSwitch(rev::SparkMaxLimitSwitch::Type::kNormallyOpen)
+    sparkMax.GetForwardLimitSwitch(rev::SparkLimitSwitch::Type::kNormallyOpen)
         .EnableLimitSwitch(true);
     break;
   case LimitSwitchConfig::NormalyClosed:
-    sparkMax
-        .GetForwardLimitSwitch(rev::SparkMaxLimitSwitch::Type::kNormallyClosed)
+    sparkMax.GetForwardLimitSwitch(rev::SparkLimitSwitch::Type::kNormallyClosed)
         .EnableLimitSwitch(true);
     break;
   }
 
   switch (createInfo.feedbackConfig.reverseSwitch) {
   case LimitSwitchConfig::Disabled:
-    sparkMax
-        .GetReverseLimitSwitch(rev::SparkMaxLimitSwitch::Type::kNormallyOpen)
+    sparkMax.GetReverseLimitSwitch(rev::SparkLimitSwitch::Type::kNormallyOpen)
         .EnableLimitSwitch(false);
     break;
   case LimitSwitchConfig::NormalyOpen:
-    sparkMax
-        .GetReverseLimitSwitch(rev::SparkMaxLimitSwitch::Type::kNormallyOpen)
+    sparkMax.GetReverseLimitSwitch(rev::SparkLimitSwitch::Type::kNormallyOpen)
         .EnableLimitSwitch(true);
     break;
   case LimitSwitchConfig::NormalyClosed:
-    sparkMax
-        .GetReverseLimitSwitch(rev::SparkMaxLimitSwitch::Type::kNormallyClosed)
+    sparkMax.GetReverseLimitSwitch(rev::SparkLimitSwitch::Type::kNormallyClosed)
         .EnableLimitSwitch(true);
     break;
   }
@@ -156,8 +148,8 @@ units::radians_per_second_t SparkMaxVelocityController::getVelocity() const {
   switch (encoderType) {
   case EncoderType::HallSensor:
   case EncoderType::Quadrature: {
-    rev::SparkMaxRelativeEncoder *rel =
-        static_cast<rev::SparkMaxRelativeEncoder *>(encoder.get());
+    rev::SparkRelativeEncoder *rel =
+        static_cast<rev::SparkRelativeEncoder *>(encoder.get());
     return units::revolutions_per_minute_t(rel->GetVelocity() / gearRatio);
   }
   case EncoderType::Alternate: {
@@ -181,8 +173,8 @@ units::radian_t SparkMaxVelocityController::getPosition() const {
   switch (encoderType) {
   case EncoderType::HallSensor:
   case EncoderType::Quadrature: {
-    rev::SparkMaxRelativeEncoder *rel =
-        static_cast<rev::SparkMaxRelativeEncoder *>(encoder.get());
+    rev::SparkRelativeEncoder *rel =
+        static_cast<rev::SparkRelativeEncoder *>(encoder.get());
     return units::turn_t(rel->GetPosition() / gearRatio);
   }
   case EncoderType::Alternate: {
@@ -191,8 +183,8 @@ units::radian_t SparkMaxVelocityController::getPosition() const {
     return units::turn_t(alt->GetPosition() / gearRatio);
   }
   case EncoderType::Absolute: {
-    rev::SparkMaxAbsoluteEncoder *ab =
-        static_cast<rev::SparkMaxAbsoluteEncoder *>(encoder.get());
+    rev::SparkAbsoluteEncoder *ab =
+        static_cast<rev::SparkAbsoluteEncoder *>(encoder.get());
     return units::turn_t(ab->GetPosition() / gearRatio);
   }
   }
@@ -206,8 +198,8 @@ void SparkMaxVelocityController::setEncoderPosition(units::radian_t position) {
   switch (encoderType) {
   case EncoderType::HallSensor:
   case EncoderType::Quadrature: {
-    rev::SparkMaxRelativeEncoder *rel =
-        static_cast<rev::SparkMaxRelativeEncoder *>(encoder.get());
+    rev::SparkRelativeEncoder *rel =
+        static_cast<rev::SparkRelativeEncoder *>(encoder.get());
     rel->SetPosition(units::turn_t(position).to<double>() * gearRatio);
     break;
   }
@@ -218,8 +210,8 @@ void SparkMaxVelocityController::setEncoderPosition(units::radian_t position) {
     break;
   }
   case EncoderType::Absolute: {
-    rev::SparkMaxAbsoluteEncoder *ab =
-        static_cast<rev::SparkMaxAbsoluteEncoder *>(encoder.get());
+    rev::SparkAbsoluteEncoder *ab =
+        static_cast<rev::SparkAbsoluteEncoder *>(encoder.get());
     ab->SetZeroOffset(units::turn_t(position).to<double>() * gearRatio);
   }
   }

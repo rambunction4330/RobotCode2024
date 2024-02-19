@@ -11,7 +11,7 @@ AHRSGyro::AHRSGyro(frc::SerialPort::Port port)
     : gyro(std::make_unique<AHRS>(port)) {}
 
 units::turn_t AHRSGyro::AHRSGyro::getZRotation() const {
-  return units::degree_t(-gyro->GetRotation2d().Degrees());
+  return -gyro->GetRotation2d().Degrees();
 }
 
 frc::Rotation2d AHRSGyro::getRotation() const { return gyro->GetRotation2d(); }
