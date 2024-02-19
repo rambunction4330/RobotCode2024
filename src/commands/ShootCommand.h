@@ -16,10 +16,12 @@ class ShootCommand
     : public frc2::CommandHelper<frc2::SequentialCommandGroup, ShootCommand> {
 public:
   ShootCommand(ArmSubsystem &armSubsystem, IntakeSubsystem &intakeSubsystem);
-  frc2::ParallelDeadlineGroup PositionAndRunBack(ArmSubsystem &armSubsystem,
-                                      IntakeSubsystem &intakeSubsystem);
-  frc2::ParallelDeadlineGroup ShootandKeepPosition(ArmSubsystem &armSubsystem,
-                                        IntakeSubsystem &intakeSubsystem);
+  frc2::ParallelDeadlineGroup
+  PositionAndRunBack(ArmSubsystem &armSubsystem,
+                     IntakeSubsystem &intakeSubsystem);
+  frc2::ParallelDeadlineGroup
+  ShootandKeepPosition(ArmSubsystem &armSubsystem,
+                       IntakeSubsystem &intakeSubsystem);
 
 private:
 };
