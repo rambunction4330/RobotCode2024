@@ -8,6 +8,7 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SequentialCommandGroup.h>
 
+#include "frc2/command/ParallelDeadlineGroup.h"
 #include "subsystems/arm/ArmSubsystem.h"
 #include "subsystems/arm/IntakeSubsystem.h"
 
@@ -15,9 +16,9 @@ class ShootCommand
     : public frc2::CommandHelper<frc2::SequentialCommandGroup, ShootCommand> {
 public:
   ShootCommand(ArmSubsystem &armSubsystem, IntakeSubsystem &intakeSubsystem);
-  frc2::CommandPtr PositionAndRunBack(ArmSubsystem &armSubsystem,
+  frc2::ParallelDeadlineGroup PositionAndRunBack(ArmSubsystem &armSubsystem,
                                       IntakeSubsystem &intakeSubsystem);
-  frc2::CommandPtr ShootandKeepPosition(ArmSubsystem &armSubsystem,
+  frc2::ParallelDeadlineGroup ShootandKeepPosition(ArmSubsystem &armSubsystem,
                                         IntakeSubsystem &intakeSubsystem);
 
 private:
