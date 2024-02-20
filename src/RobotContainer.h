@@ -11,6 +11,7 @@
 #include "rmb/controller/LogitechGamepad.h"
 #include "rmb/sensors/AHRS/AHRSGyro.h"
 #include "subsystems/drive/DriveSubsystem.h"
+#include "subsystems/vision/VisionSubsystem.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -34,10 +35,10 @@ private:
   //     constants::driverControllerPort};
 
   // The robot's subsystems are defined here...
-  std::shared_ptr<rmb::AHRSGyro> gyro =
-      std::make_shared<rmb::AHRSGyro>(constants::gyroPort);
-  DriveSubsystem driveSubsystem;
-
+  // std::shared_ptr<rmb::AHRSGyro> gyro =
+  // std::make_shared<rmb::AHRSGyro>(constants::gyroPort);
+  // DriveSubsystem driveSubsystem;
+  VisionSubsystem visionSubsystem;
   rmb::LogitechGamepad gamepad{constants::driverControllerPort};
 
   void ConfigureBindings();

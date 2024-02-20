@@ -10,7 +10,7 @@
 #include "frc2/command/RunCommand.h"
 #include "subsystems/drive/DriveSubsystem.h"
 
-RobotContainer::RobotContainer() : driveSubsystem(gyro) {
+RobotContainer::RobotContainer() /*: driveSubsystem(gyro)*/ {
   // Initialize all of your commands and subsystems here
 
   // Configure the button bindings
@@ -37,10 +37,10 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
 }
 
 void RobotContainer::setTeleopDefaults() {
-  driveSubsystem.SetDefaultCommand(driveSubsystem.driveTeleopCommand(gamepad));
+  // driveSubsystem.SetDefaultCommand(driveSubsystem.driveTeleopCommand(gamepad));
 }
 
 void RobotContainer::setAutoDefaults() {
-  driveSubsystem.SetDefaultCommand(
-      frc2::RunCommand([this] { driveSubsystem.stop(); }).ToPtr());
+  // driveSubsystem.SetDefaultCommand(
+  //    frc2::RunCommand([this] { driveSubsystem.stop(); }).ToPtr());
 }
