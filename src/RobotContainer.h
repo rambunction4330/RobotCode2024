@@ -42,14 +42,16 @@ public:
 
   void loadPPAutos();
 
+  DriveSubsystem& getDrive() { return driveSubsystem; }
+
 private:
   // Replace with CommandPS4Controller or CommandJoystick if needed
   // frc2::CommandXboxController m_driverController{
   //     constants::driverControllerPort};
 
   // The robot's subsystems are defined here...
-  std::shared_ptr<rmb::AHRSGyro> gyro =
-      std::make_shared<rmb::AHRSGyro>(constants::gyroPort);
+  std::shared_ptr<rmb::NavXGyro> gyro =
+      std::make_shared<rmb::NavXGyro>(constants::gyroPort);
   DriveSubsystem driveSubsystem;
 
   rmb::LogitechGamepad gamepad{constants::driverControllerPort, 0.05};

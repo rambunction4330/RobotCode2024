@@ -1,5 +1,7 @@
 #pragma once
 
+#include "frc/TimedRobot.h"
+#include "frc/Watchdog.h"
 #include "frc/geometry/Pose2d.h"
 #include "pathplanner/lib/path/PathConstraints.h"
 #include "pathplanner/lib/path/PathPlannerPath.h"
@@ -58,7 +60,7 @@ namespace rmb {
 template <size_t NumModules>
 SwerveDrive<NumModules>::SwerveDrive(
     std::array<SwerveModule, NumModules> modules,
-    std::shared_ptr<const rmb::Gyro> gyro,
+    std::shared_ptr<rmb::Gyro> gyro,
     frc::HolonomicDriveController holonomicController, std::string visionTable,
     units::meters_per_second_t maxModuleSpeed, const frc::Pose2d &initialPose)
     : modules(std::move(modules)), gyro(gyro),
@@ -66,7 +68,9 @@ SwerveDrive<NumModules>::SwerveDrive(
       holonomicController(holonomicController),
       poseEstimator(frc::SwerveDrivePoseEstimator<NumModules>(
           kinematics, gyro->getRotation(), getModulePositions(), initialPose)),
-      maxModuleSpeed(maxModuleSpeed) {
+      maxModuleSpeed(maxModuleSpeed),
+      watchdog(frc::TimedRobot::kDefaultPeriod,
+               []() { std::cout << "SwerveDrive<NumModules> loop overrun!"; }) {
   std::array<frc::Translation2d, NumModules> translations;
   for (size_t i = 0; i < NumModules; i++) {
     translations[i] = modules[i].getModuleTranslation();
@@ -104,7 +108,7 @@ SwerveDrive<NumModules>::SwerveDrive(
 template <size_t NumModules>
 SwerveDrive<NumModules>::SwerveDrive(
     std::array<SwerveModule, NumModules> modules,
-    std::shared_ptr<const rmb::Gyro> gyro,
+    std::shared_ptr<rmb::Gyro> gyro,
     frc::HolonomicDriveController holonomicController,
     units::meters_per_second_t maxModuleSpeed, const frc::Pose2d &initialPose)
     : SwerveDrive(std::move(modules), gyro, holonomicController, "",
@@ -178,6 +182,7 @@ void SwerveDrive<NumModules>::driveCartesian(double xSpeed, double ySpeed,
    * output_x = vx * 1 + vy * 0 + w * -y
    * output_y = vx * 0 + vy * 1 + w * x
    */
+  std::cout << "inputs: (" << xSpeed << ", " << ySpeed << ", " << zRotation << ")" << std::endl;
 
   std::array<SwerveModulePower, NumModules> powers;
   double largestPower = 1.0;
@@ -194,6 +199,8 @@ void SwerveDrive<NumModules>::driveCartesian(double xSpeed, double ySpeed,
     double output_y = robotRelativeVXY.y() +
                       zRotation * -1 * module.getModuleTranslation().X() /
                           largestModuleDistance;
+
+    std::cout << "output: (" << output_x << ", " << output_y << ")" << std::endl;
 
     // -1 * -1
 
@@ -220,18 +227,29 @@ void SwerveDrive<NumModules>::driveCartesian(double xSpeed, double ySpeed,
 
   // std::cout << "]" << std::endl;
 
-  // Normalize
+  // Desaturize
   for (SwerveModulePower &power : powers) {
     power.power /= std::abs(largestPower);
   }
 
   // Optimize
   for (size_t i = 0; i < modules.size(); i++) {
-    // powers[i] =
-    //     SwerveModulePower::Optimize(powers[i], modules[i].getState().angle);
+    powers[i] =
+        SwerveModulePower::Optimize(powers[i], modules[i].getState().angle);
   }
 
   driveModulePowers(powers);
+
+  watchdog.AddEpoch("SwerveDrive<" + std::to_string(NumModules) +
+                    ">.driveCartesian");
+}
+
+template <size_t NumModules>
+void SwerveDrive<NumModules>::driveCartesian(
+    units::meters_per_second_t xSpeed, units::meters_per_second_t ySpeed,
+    units::turns_per_second_t zRotation, bool fieldOriented) {
+  driveChassisSpeeds(frc::ChassisSpeeds{xSpeed, ySpeed, zRotation},
+                     fieldOriented);
 }
 
 template <size_t NumModules>
@@ -267,6 +285,20 @@ void SwerveDrive<NumModules>::driveChassisSpeeds(
   auto states = kinematics.ToSwerveModuleStates(chassisSpeeds);
   kinematics.DesaturateWheelSpeeds(&states, maxModuleSpeed);
   driveModuleStates(states);
+
+  watchdog.AddEpoch("SwerveDrive<" + std::to_string(NumModules) +
+                    ">.driveChassisSpeeds");
+}
+
+template <size_t NumModules>
+void SwerveDrive<NumModules>::driveChassisSpeeds(
+    frc::ChassisSpeeds chassisSpeeds, bool fieldRelative) {
+
+  if (fieldRelative)
+    chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(
+        chassisSpeeds, gyro->getRotation());
+
+  driveChassisSpeeds(chassisSpeeds);
 }
 
 template <size_t NumModules>
@@ -283,9 +315,7 @@ frc::Pose2d SwerveDrive<NumModules>::getPose() const {
 
 template <size_t NumModules> frc::Pose2d SwerveDrive<NumModules>::updatePose() {
   // std::lock_guard<std::mutex> lock(visionThreadMutex);
-  return poseEstimator.Update(
-      frc::Rotation2d((units::radian_t)gyro->getZRotation()),
-      getModulePositions());
+  return poseEstimator.Update(gyro->getRotation(), getModulePositions());
 }
 
 template <size_t NumModules>
@@ -295,10 +325,9 @@ void SwerveDrive<NumModules>::updateNTDebugInfo(bool openLoopVelocity) {
     units::meters_per_second_t error = 0.0_mps;
     if (!openLoopVelocity) {
       error = modules[i].getTargetState().speed - modules[i].getState().speed;
-    } else {
-
-      velocityErrors[i] = error();
     }
+
+    velocityErrors[i] = error();
     ntVelocityErrorTopics.Set(velocityErrors);
 
     std::array<double, NumModules> positionErrors;
@@ -365,6 +394,9 @@ template <size_t NumModules>
 void SwerveDrive<NumModules>::resetPose(const frc::Pose2d &pose) {
   // std::lock_guard<std::mutex> lock(visionThreadMutex);
   poseEstimator.ResetPosition(gyro->getRotation(), getModulePositions(), pose);
+
+  gyro->resetZRotation();
+  gyro->setZRotationOffset(pose.Rotation());
 }
 
 template <size_t NumModules>

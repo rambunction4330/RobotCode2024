@@ -101,7 +101,7 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
 void DriveSubsystem::odometryThreadMain() {
   while (true) {
     frc::Pose2d newPose = drive->updatePose();
-    drive->updateNTDebugInfo(true);
+    drive->updateNTDebugInfo(false);
     frc::ChassisSpeeds newChassisSpeeds = drive->getChassisSpeeds();
     {
       std::lock_guard<std::mutex> lock(currentPoseContainer.poseMutex);
@@ -152,7 +152,7 @@ DriveSubsystem::driveTeleopCommand(const rmb::LogitechGamepad &gamepad) {
 
 frc2::CommandPtr DriveSubsystem::driveTeleopCommand(double x, double y,
                                                     double twist) {
-  return frc2::RunCommand([&] { drive->driveCartesian(x, y, twist, true); },
+  return frc2::RunCommand([&] { drive->driveCartesian(x, y,  twist, false); },
                           {this})
       .ToPtr();
 }
