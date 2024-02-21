@@ -139,9 +139,9 @@ void DriveSubsystem::Periodic() {
 
 void DriveSubsystem::driveTeleop(const rmb::LogitechGamepad &gamepad) {
   // TODO: add filters
-  drive->driveCartesian(-1.0_mps * gamepad.GetLeftY(),
-                        1.0_mps * gamepad.GetLeftX(),
-                        1.0_tps * gamepad.GetRightX(), true);
+  drive->driveCartesian(-10_mps * gamepad.GetLeftY(),
+                        10_mps * gamepad.GetLeftX(),
+                        10_tps * gamepad.GetRightX(), true);
 }
 
 frc2::CommandPtr
@@ -152,7 +152,7 @@ DriveSubsystem::driveTeleopCommand(const rmb::LogitechGamepad &gamepad) {
 
 frc2::CommandPtr DriveSubsystem::driveTeleopCommand(double x, double y,
                                                     double twist) {
-  return frc2::RunCommand([&] { drive->driveCartesian(x, y,  twist, false); },
+  return frc2::RunCommand([&] { drive->driveCartesian(x, y, twist, false); },
                           {this})
       .ToPtr();
 }

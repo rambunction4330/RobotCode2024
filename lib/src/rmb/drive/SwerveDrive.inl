@@ -182,7 +182,8 @@ void SwerveDrive<NumModules>::driveCartesian(double xSpeed, double ySpeed,
    * output_x = vx * 1 + vy * 0 + w * -y
    * output_y = vx * 0 + vy * 1 + w * x
    */
-  std::cout << "inputs: (" << xSpeed << ", " << ySpeed << ", " << zRotation << ")" << std::endl;
+  std::cout << "inputs: (" << xSpeed << ", " << ySpeed << ", " << zRotation
+            << ")" << std::endl;
 
   std::array<SwerveModulePower, NumModules> powers;
   double largestPower = 1.0;
@@ -200,7 +201,8 @@ void SwerveDrive<NumModules>::driveCartesian(double xSpeed, double ySpeed,
                       zRotation * -1 * module.getModuleTranslation().X() /
                           largestModuleDistance;
 
-    std::cout << "output: (" << output_x << ", " << output_y << ")" << std::endl;
+    std::cout << "output: (" << output_x << ", " << output_y << ")"
+              << std::endl;
 
     // -1 * -1
 
