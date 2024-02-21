@@ -15,7 +15,8 @@ namespace rmb {
 TalonFXPositionController::TalonFXPositionController(
     const TalonFXPositionController::CreateInfo &createInfo)
     : motorcontroller(createInfo.config.id), range(createInfo.range),
-      usingCANCoder(createInfo.canCoderConfig.has_value() && !createInfo.canCoderConfig->useIntegrated) {
+      usingCANCoder(createInfo.canCoderConfig.has_value() &&
+                    !createInfo.canCoderConfig->useIntegrated) {
 
   ctre::phoenix6::configs::TalonFXConfiguration talonFXConfig{};
 
@@ -120,7 +121,8 @@ TalonFXPositionController::TalonFXPositionController(
   // tolerance = createInfo.pidConfig.tolerance;
   //
 
-  if (createInfo.canCoderConfig.has_value() && createInfo.canCoderConfig->useIntegrated) {
+  if (createInfo.canCoderConfig.has_value() &&
+      createInfo.canCoderConfig->useIntegrated) {
     setEncoderPosition(canCoder->GetPosition().GetValue());
   }
 }

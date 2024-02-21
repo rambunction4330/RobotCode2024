@@ -28,9 +28,7 @@ public:
   virtual units::meters_per_second_t getYVelocity() const = 0;
   virtual units::meters_per_second_t getZVelocity() const = 0;
 
-  void setZRotationOffset(frc::Rotation2d offset) {
-    this->offset = offset;
-  }
+  void setZRotationOffset(frc::Rotation2d offset) { this->offset = offset; }
 
 private:
   frc::Rotation2d offset = 0_deg;

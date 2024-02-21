@@ -15,7 +15,7 @@ public:
   virtual ~NavXGyro() = default;
 
   virtual void resetZRotation() override;
-  
+
   virtual frc::Rotation2d getRotationNoOffset() const override;
   virtual frc::Rotation2d getRotation() const override;
 
@@ -26,7 +26,6 @@ public:
   virtual units::meters_per_second_t getXVelocity() const override;
   virtual units::meters_per_second_t getYVelocity() const override;
   virtual units::meters_per_second_t getZVelocity() const override;
-
 
 private:
   std::unique_ptr<AHRS> gyro;

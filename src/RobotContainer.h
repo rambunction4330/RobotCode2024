@@ -34,7 +34,7 @@ public:
 
   void loadPPAutos();
 
-  DriveSubsystem& getDrive() { return driveSubsystem; }
+  DriveSubsystem &getDrive() { return driveSubsystem; }
 
 private:
   // Replace with CommandPS4Controller or CommandJoystick if needed
