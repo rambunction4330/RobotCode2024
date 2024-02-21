@@ -49,6 +49,8 @@ void Robot::TeleopInit() {
   frc2::CommandScheduler::GetInstance().CancelAll();
 
   container.setTeleopDefaults();
+
+  container.getDrive().setPoseEstimation(frc::Pose2d(0.0_m, 0.0_m, 0.0_rad));
 }
 
 /**

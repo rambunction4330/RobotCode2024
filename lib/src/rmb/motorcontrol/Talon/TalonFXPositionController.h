@@ -136,6 +136,8 @@ struct FeedbackConfig {
 struct CANCoderConfig {
   int id;
 
+  bool useIntegrated = false; // Use the integrated encoder, but set the position to the absolute on boot
+
   units::radian_t magnetOffset = 0.0_rad;
 };
 

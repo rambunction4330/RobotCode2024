@@ -15,7 +15,7 @@ namespace rmb {
 TalonFXPositionController::TalonFXPositionController(
     const TalonFXPositionController::CreateInfo &createInfo)
     : motorcontroller(createInfo.config.id), range(createInfo.range),
-      usingCANCoder(createInfo.canCoderConfig.has_value()) {
+      usingCANCoder(createInfo.canCoderConfig.has_value() && !createInfo.canCoderConfig->useIntegrated) {
 
   ctre::phoenix6::configs::TalonFXConfiguration talonFXConfig{};
 
@@ -93,7 +93,9 @@ TalonFXPositionController::TalonFXPositionController(
     canCoder->GetConfigurator().Apply(canCoderConfig);
 
     // talonFXConfig.Feedback.RotorToSensorRatio; // This is for FusedCANCoder
-    talonFXConfig.Feedback.WithRemoteCANcoder(canCoder.value());
+    if (!createInfo.canCoderConfig->useIntegrated) {
+      talonFXConfig.Feedback.WithRemoteCANcoder(canCoder.value());
+    }
   } else {
     talonFXConfig.Feedback.FeedbackSensorSource =
         ctre::phoenix6::signals::FeedbackSensorSourceValue::RotorSensor;
@@ -116,6 +118,11 @@ TalonFXPositionController::TalonFXPositionController(
 
   sensorToMechanismRatio = createInfo.feedbackConfig.sensorToMechanismRatio;
   // tolerance = createInfo.pidConfig.tolerance;
+  //
+
+  if (createInfo.canCoderConfig.has_value() && createInfo.canCoderConfig->useIntegrated) {
+    setEncoderPosition(canCoder->GetPosition().GetValue());
+  }
 }
 
 void TalonFXPositionController::setPosition(units::radian_t position) {
@@ -262,7 +269,7 @@ units::radian_t TalonFXPositionController::getPosition() const {
 }
 
 void TalonFXPositionController::setEncoderPosition(units::radian_t position) {
-  if (canCoder.has_value()) {
+  if (usingCANCoder) {
     canCoder->SetPosition(position);
   } else {
     motorcontroller.SetPosition(position);
