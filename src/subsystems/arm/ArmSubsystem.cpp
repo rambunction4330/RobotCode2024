@@ -25,8 +25,8 @@ ArmSubsystem::ArmSubsystem()
     : elbowPositionController(
           constants::arm::elbowPositionControllerCreateInfo),
       armExtensionPositionController(
-        
-                    constants::arm::armExtensionPositionControllerCreateInfo),
+
+          constants::arm::armExtensionPositionControllerCreateInfo),
       wristPositionController(
           constants::arm::wristPositionControllerCreateInfo) {
   // Implementation of subsystem constructor goes here.
@@ -72,9 +72,9 @@ units::meter_t ArmSubsystem::getTargetArmExtensionPosition() const {
 void ArmSubsystem::setWristPosition(units::turn_t position) {
   wristPositionController.setPosition(
       position,
-      constants::arm::wrist_kG *
-          std::cos(((units::radian_t)getWristPosition() + 0 * getElbowPosition())
-                       .value()));
+      constants::arm::wrist_kG * std::cos(((units::radian_t)getWristPosition() +
+                                           0 * getElbowPosition())
+                                              .value()));
 }
 
 units::turn_t ArmSubsystem::getWristPosition() const {
@@ -173,10 +173,13 @@ ArmSubsystem::setWristCOmmand(frc2::CommandJoystick &joystick) {
                setWristPosition(
                    ((units::turn_t)(joystick.GetThrottle() + 1) / 4));
                std::cout
-                   << "throttle: " << ((units::turn_t)(joystick.GetThrottle() + 2) / 4).value()
+                   << "throttle: "
+                   << ((units::turn_t)(joystick.GetThrottle() + 2) / 4).value()
                    << std::endl;
-               //std::cout << "power:" <<  wristPositionController.getPower() << std::endl;
-               std::cout << "position" << ((units::degree_t)(
+               // std::cout << "power:" <<  wristPositionController.getPower()
+               // << std::endl;
+               std::cout << "position"
+                         << ((units::degree_t)(
                                  wristPositionController.getPosition()))
                                 .value()
                          << std::endl;
@@ -189,8 +192,9 @@ ArmSubsystem::setWristCOmmand(frc2::CommandJoystick &joystick) {
 frc2::CommandPtr ArmSubsystem::getSpoolCommand(frc::Joystick &controller) {
   return frc2::RunCommand(
              [&]() {
-              // std::cout <<((units::turn_t)armExtensionPositionController.getPosition()).value()
-              //            << std::endl;
+               // std::cout
+               // <<((units::turn_t)armExtensionPositionController.getPosition()).value()
+               //            << std::endl;
                if (controller.GetRawButton(11)) {
                  armExtensionPositionController.setPower(0.3);
                } else if (controller.GetRawButton(12)) {
@@ -220,22 +224,24 @@ frc2::CommandPtr ArmSubsystem::spinElbowCommand(frc::Joystick &controller) {
 
 frc2::CommandPtr ArmSubsystem::extensionToSetPoint(units::meter_t pos) {
   return frc2::FunctionalCommand(
-             [this](){
-              armExtensionPositionController.setEncoderPosition(0.0_rad);
-             }, [&]() {
+             [this]() {
+               armExtensionPositionController.setEncoderPosition(0.0_rad);
+             },
+             [&]() {
                // set the conversion
-               
+
                // print out the possiton before converting
-               //std::cout <<((units::turn_t)armExtensionPositionController.getPosition()).value()
+               // std::cout
+               // <<((units::turn_t)armExtensionPositionController.getPosition()).value()
                //          << std::endl;
                // convert the controller ??
 
                // print out the position after the conversion
-               
+
                // set the postion after conversion with feet or meters
-               // armExtensionPositionController.setPosition(pos / constants::arm::extensionAfterGRLinearToAngularRatio);
+               // armExtensionPositionController.setPosition(pos /
+               // constants::arm::extensionAfterGRLinearToAngularRatio);
              },
-             [](bool interrupted ){}, [](){return  false;}, 
-             {this})
+             [](bool interrupted) {}, []() { return false; }, {this})
       .ToPtr();
 }

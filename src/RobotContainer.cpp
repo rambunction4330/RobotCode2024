@@ -27,7 +27,7 @@
 
 #include <frc2/command/button/JoystickButton.h>
 
-RobotContainer::RobotContainer() {//: driveSubsystem(gyro) {
+RobotContainer::RobotContainer() { //: driveSubsystem(gyro) {
   // Initialize all of your commands and subsystems here
 
   // Configure the button bindings
@@ -83,29 +83,26 @@ void RobotContainer::RunAutonomousCommand() {
 
 frc2::CommandPtr RobotContainer::getIntakeCommand() {
   // Joystick input is blocked during teleop
-  return frc2::FunctionalCommand([]() {},
-                                 [this]() {
-                                   intake.runIntake(controller);
-                                 },
-                                 [](bool canceled) {}, []() { return false; },
-                                 {&intake})
+  return frc2::FunctionalCommand(
+             []() {}, [this]() { intake.runIntake(controller); },
+             [](bool canceled) {}, []() { return false; }, {&intake})
       .ToPtr();
 }
 
 void RobotContainer::setTeleopDefaults() {
-  //static auto armCommand = frc2::RunCommand([this]() { std::cout << arm.getWristPosition()() << std::endl; });
+  // static auto armCommand = frc2::RunCommand([this]() { std::cout <<
+  // arm.getWristPosition()() << std::endl; });
   // driveSubsystem.SetDefaultCommand(driveSubsystem.driveTeleopCommand(gamepad));
   intake.SetDefaultCommand(getIntakeCommand());
-  // controller.Button(11).OnTrue(arm.setWristCOmmand((units::turn_t)(controller.GetThrottle() + 2) / 4));
-  //armCommand.Schedule();
+  // controller.Button(11).OnTrue(arm.setWristCOmmand((units::turn_t)(controller.GetThrottle()
+  // + 2) / 4));
+  // armCommand.Schedule();
   gamepad.Y().WhileTrue(arm.setWristCOmmand(controller));
   arm.SetDefaultCommand(arm.getSpoolCommand(controller));
-  
 }
 
 void RobotContainer::setAutoDefaults() {
-  
-  //driveSubsystem.SetDefaultCommand(
+
+  // driveSubsystem.SetDefaultCommand(
   //    frc2::RunCommand([this] { driveSubsystem.stop(); }).ToPtr());
-      
 }
