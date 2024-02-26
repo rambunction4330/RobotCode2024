@@ -1,6 +1,8 @@
 #include "TalonFXVelocityController.h"
 #include "ctre/phoenix6/StatusSignal.hpp"
 #include "ctre/phoenix6/controls/DutyCycleOut.hpp"
+#include "networktables/NetworkTable.h"
+#include "networktables/NetworkTableInstance.h"
 #include "units/angle.h"
 #include "units/angular_velocity.h"
 
@@ -113,6 +115,16 @@ TalonFXVelocityController::TalonFXVelocityController(
   configurator.Apply(talonFXConfig);
 
   this->profileConfig = createInfo.profileConfig;
+
+  nt::NetworkTableInstance ntInstance = nt::NetworkTableInstance::GetDefault();
+  std::shared_ptr<nt::NetworkTable> table =
+      ntInstance.GetTable("mod_" + std::to_string(createInfo.config.id));
+  ntVelocityVoltage = table->GetDoubleTopic("mod_velocity_voltage").Publish();
+  ntVelocityCurrent = table->GetDoubleTopic("mod_velocity_current").Publish();
+  ntVelocityClosedLoopOutput =
+      table->GetDoubleTopic("mod_velocity_closedloop_output").Publish();
+  ntVelocityDutyCycle =
+      table->GetDoubleTopic("mod_velocity_dutycycle").Publish();
 }
 
 void TalonFXVelocityController::setVelocity(
@@ -128,6 +140,12 @@ void TalonFXVelocityController::setVelocity(
   // units::millisecond_t start = frc::Timer::GetFPGATimestamp();
   motorcontroller.SetControl(
       ctre::phoenix6::controls::VelocityDutyCycle(velocity));
+
+  ntVelocityVoltage.Set(motorcontroller.GetMotorVoltage().GetValue()());
+  ntVelocityCurrent.Set(motorcontroller.GetStatorCurrent().GetValue()());
+  ntVelocityClosedLoopOutput.Set(
+      motorcontroller.GetClosedLoopOutput().GetValue());
+  ntVelocityDutyCycle.Set(motorcontroller.GetDutyCycle().GetValue());
 }
 
 ctre::phoenix6::StatusSignal<double> &

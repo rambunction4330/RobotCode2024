@@ -2,6 +2,8 @@
 
 #include <optional>
 
+#include "networktables/DoubleArrayTopic.h"
+#include "networktables/DoubleTopic.h"
 #include "rmb/motorcontrol/AngularVelocityController.h"
 
 #include "TalonFXPositionController.h"
@@ -144,6 +146,11 @@ private:
   const bool usingCANCoder;
 
   mutable std::optional<ctre::phoenix6::hardware::CANcoder> canCoder;
+
+  nt::DoublePublisher ntVelocityVoltage;
+  nt::DoublePublisher ntVelocityCurrent;
+  nt::DoublePublisher ntVelocityClosedLoopOutput;
+  nt::DoublePublisher ntVelocityDutyCycle;
 };
 
 } // namespace rmb

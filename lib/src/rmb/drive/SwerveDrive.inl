@@ -91,6 +91,11 @@ SwerveDrive<NumModules>::SwerveDrive(
   ntTargetVelocityTopics =
       table->GetDoubleArrayTopic("mod_velocity_targets").Publish();
 
+  ntVelocityVoltages =
+      table->GetDoubleArrayTopic("mod_velocity_voltages").Publish();
+  ntVelocityCurrents =
+      table->GetDoubleArrayTopic("mod_velocity_currents").Publish();
+
   units::meter_t maxDistance = 0.0_m;
   for (SwerveModule &module : this->modules) {
     auto &translation = module.getModuleTranslation();
@@ -285,7 +290,9 @@ template <size_t NumModules>
 void SwerveDrive<NumModules>::driveChassisSpeeds(
     frc::ChassisSpeeds chassisSpeeds) {
   auto states = kinematics.ToSwerveModuleStates(chassisSpeeds);
-  kinematics.DesaturateWheelSpeeds(&states, maxModuleSpeed);
+  std::cout << "rotation: "
+            << ((units::turns_per_second_t)chassisSpeeds.omega)() << std::endl;
+  // kinematics.DesaturateWheelSpeeds(&states, maxModuleSpeed);
   driveModuleStates(states);
 
   watchdog.AddEpoch("SwerveDrive<" + std::to_string(NumModules) +
@@ -330,55 +337,55 @@ void SwerveDrive<NumModules>::updateNTDebugInfo(bool openLoopVelocity) {
     }
 
     velocityErrors[i] = error();
-    ntVelocityErrorTopics.Set(velocityErrors);
+  }
+  ntVelocityErrorTopics.Set(velocityErrors);
 
-    std::array<double, NumModules> positionErrors;
-    for (size_t i = 0; i < NumModules; i++) {
-      units::turn_t error = modules[i].getTargetRotation().Degrees() -
+  std::array<double, NumModules> positionErrors;
+  for (size_t i = 0; i < NumModules; i++) {
+    units::degree_t error = modules[i].getTargetRotation().Degrees() -
                             modules[i].getState().angle.Degrees();
 
-      positionErrors[i] = error();
-    }
-    ntPositionErrorTopics.Set(positionErrors);
-
-    std::array<double, NumModules> velocityTargets;
-    for (size_t i = 0; i < NumModules; i++) {
-      double target = 0.0;
-
-      if (!openLoopVelocity) {
-        target = modules[i].getTargetVelocity()();
-      } else {
-        target = modules[i].getPower().power;
-      }
-
-      velocityTargets[i] = target;
-    }
-    ntTargetVelocityTopics.Set(velocityTargets);
-
-    std::array<double, NumModules> positionTargets;
-    for (size_t i = 0; i < NumModules; i++) {
-      units::degree_t target = modules[i].getTargetRotation().Degrees();
-
-      positionTargets[i] = target();
-    }
-    ntTargetPositionTopics.Set(positionTargets);
-
-    std::array<double, NumModules> positions;
-    for (size_t i = 0; i < NumModules; i++) {
-      units::degree_t position = modules[i].getState().angle.Degrees();
-
-      positions[i] = position();
-    }
-    ntPositionTopics.Set(positions);
-
-    std::array<double, NumModules> velocities;
-    for (size_t i = 0; i < NumModules; i++) {
-      units::meters_per_second_t velocity = modules[i].getState().speed;
-
-      velocities[i] = velocity();
-    }
-    ntVelocityTopics.Set(velocities);
+    positionErrors[i] = std::fmod(std::abs(error()), 180.0);
   }
+  ntPositionErrorTopics.Set(positionErrors);
+
+  std::array<double, NumModules> velocityTargets;
+  for (size_t i = 0; i < NumModules; i++) {
+    double target = 0.0;
+
+    if (!openLoopVelocity) {
+      target = modules[i].getTargetVelocity()();
+    } else {
+      target = modules[i].getPower().power;
+    }
+
+    velocityTargets[i] = target;
+  }
+  ntTargetVelocityTopics.Set(velocityTargets);
+
+  std::array<double, NumModules> positionTargets;
+  for (size_t i = 0; i < NumModules; i++) {
+    units::degree_t target = modules[i].getTargetRotation().Degrees();
+
+    positionTargets[i] = target();
+  }
+  ntTargetPositionTopics.Set(positionTargets);
+
+  std::array<double, NumModules> positions;
+  for (size_t i = 0; i < NumModules; i++) {
+    units::degree_t position = modules[i].getState().angle.Degrees();
+
+    positions[i] = position();
+  }
+  ntPositionTopics.Set(positions);
+
+  std::array<double, NumModules> velocities;
+  for (size_t i = 0; i < NumModules; i++) {
+    units::meters_per_second_t velocity = modules[i].getState().speed;
+
+    velocities[i] = velocity();
+  }
+  ntVelocityTopics.Set(velocities);
 }
 
 template <size_t NumModules>
