@@ -262,6 +262,9 @@ private:
   nt::DoubleArrayPublisher ntTargetPositionTopics;
   nt::DoubleArrayPublisher ntTargetVelocityTopics;
 
+  nt::DoubleArrayPublisher ntVelocityVoltages;
+  nt::DoubleArrayPublisher ntVelocityCurrents;
+
   //-----------------
   // Drive Variables
   //-----------------

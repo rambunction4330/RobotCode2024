@@ -51,6 +51,8 @@ struct SwerveModulePower {
 class SwerveModule : public wpi::Sendable,
                      public wpi::SendableHelper<SwerveModule> {
 public:
+  template<size_t> friend class SwerveDrive;
+
   SwerveModule(const SwerveModule &) = delete;
   SwerveModule(SwerveModule &&) = default;
 

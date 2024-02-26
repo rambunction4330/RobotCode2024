@@ -33,7 +33,7 @@ using rmb::TalonFXPositionControllerHelper::CANCoderConfig;
 const rmb::TalonFXVelocityControllerHelper::PIDConfig velocityModulePIDConfig =
     {.p = 1.5, .i = 0.0003, .d = 0.00, .ff = 0.000};
 const rmb::TalonFXPositionControllerHelper::PIDConfig positionModulePIDConfig =
-    {.p = 2.5f, .i = 0.0000f, .d = 0.0f, .ff = 0.000};
+    {.p = 8.0f, .i = 0.0003f, .d = 0.0f, .ff = 0.000};
 
 const units::turn_t module1MagnetOffset(-0.166016 - 0.5);
 const units::turn_t module2MagnetOffset(0.033691);
@@ -67,14 +67,14 @@ const rmb::TalonFXPositionController::CreateInfo positionControllerCreateInfo{
               .continuousWrap = true},
     .feedbackConfig =
         {
-            .sensorToMechanismRatio = 12.0f,
+            .sensorToMechanismRatio = 1.0f,
         },
     .openLoopConfig = {},
     .currentLimits = {},
     .canCoderConfig =
         CANCoderConfig{
             .id = 11,
-            .useIntegrated = true,
+            .useIntegrated = false,
             .magnetOffset = module1MagnetOffset,
         },
 };
@@ -101,14 +101,14 @@ const rmb::TalonFXPositionController::CreateInfo positionControllerCreateInfo1{
               .continuousWrap = true},
     .feedbackConfig =
         {
-            .sensorToMechanismRatio = 12.0f,
+            .sensorToMechanismRatio = 1.0f,
         },
     .openLoopConfig = {},
     .currentLimits = {},
     .canCoderConfig =
         CANCoderConfig{
             .id = 21,
-            .useIntegrated = true,
+            .useIntegrated = false,
             .magnetOffset = module2MagnetOffset,
         },
 };
@@ -135,14 +135,14 @@ const rmb::TalonFXPositionController::CreateInfo positionControllerCreateInfo2{
               .continuousWrap = true},
     .feedbackConfig =
         {
-            .sensorToMechanismRatio = 12.0f,
+            .sensorToMechanismRatio = 1.0f,
         },
     .openLoopConfig = {},
     .currentLimits = {},
     .canCoderConfig =
         CANCoderConfig{
             .id = 31,
-            .useIntegrated = true,
+            .useIntegrated = false,
             .magnetOffset = module3MagnetOffset,
         },
 };
@@ -169,14 +169,14 @@ const rmb::TalonFXPositionController::CreateInfo positionControllerCreateInfo3{
               .continuousWrap = true},
     .feedbackConfig =
         {
-            .sensorToMechanismRatio = 12.0f,
+            .sensorToMechanismRatio = 1.0f,
         },
     .openLoopConfig = {},
     .currentLimits = {},
     .canCoderConfig =
         CANCoderConfig{
             .id = 41,
-            .useIntegrated = true,
+            .useIntegrated = false,
             .magnetOffset = module4MagnetOffset,
         },
 };

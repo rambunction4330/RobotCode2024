@@ -139,9 +139,10 @@ void DriveSubsystem::Periodic() {
 
 void DriveSubsystem::driveTeleop(const rmb::LogitechGamepad &gamepad) {
   // TODO: add filters
+  std::cout << "right x = " << gamepad.GetRightX() << std::endl;
   drive->driveCartesian(-5_mps * gamepad.GetLeftY(),
                         0.0_mps * 0.25 * gamepad.GetLeftX(),
-                        0.0_rad_per_s * -0.5 * gamepad.GetRightX(), false);
+                        1.0_tps * gamepad.GetRightX(), false);
 }
 
 frc2::CommandPtr
