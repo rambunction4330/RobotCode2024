@@ -212,7 +212,8 @@ const rmb::SparkMaxVelocityController::CreateInfo
 //                       .maxOutput = 1.0,
 //                       .minOutput = -1.0},
 
-//         //.feedforward // TODO: consider? This would be an interesting physics
+//         //.feedforward // TODO: consider? This would be an interesting
+//         physics
 //         // mechanics FRQ lmao .range // TODO: just in case?
 //         .profileConfig =
 //             {

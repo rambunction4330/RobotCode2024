@@ -37,7 +37,7 @@ void IntakeSubsystem::runIntake(const frc::Joystick &controller) {
     frontPower = -1 * adjustablePower;
   }
 
-setFrontPower(frontPower);
+  setFrontPower(frontPower);
 }
 
 frc2::CommandPtr IntakeSubsystem::revFrontIntakeToShoot() {

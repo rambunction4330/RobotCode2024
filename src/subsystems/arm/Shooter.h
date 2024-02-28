@@ -7,16 +7,15 @@
 #include <frc2/command/SubsystemBase.h>
 
 class Shooter : public frc2::SubsystemBase {
- public:
+public:
   Shooter();
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
   void Periodic() override;
-  
 
- private:
+private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
 };
