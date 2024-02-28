@@ -105,7 +105,7 @@ const rmb::SparkMaxPositionController::CreateInfo
             .motorType = rev::CANSparkMax::MotorType::kBrushless,
             .inverted = true}}};
 
-double const wrist_kG = 0.025;
+double const wrist_kG = 0.25;
 const rmb::SparkMaxPositionController::CreateInfo
     wristPositionControllerCreateInfo{
         .motorConfig =

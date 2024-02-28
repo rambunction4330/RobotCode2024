@@ -9,6 +9,7 @@
 #include "ArmConstants.h"
 #include "frc/Joystick.h"
 #include "frc2/command/CommandPtr.h"
+#include "frc2/command/Commands.h"
 #include "frc2/command/FunctionalCommand.h"
 #include <new>
 
@@ -47,9 +48,10 @@ frc2::CommandPtr IntakeSubsystem::revFrontIntakeToShoot() {
       .ToPtr();
 }
 
-// frc2::CommandPtr IntakeSubsystem::shoot() {
-//   return IntakeSubsystem::setBackandFront();
-// }
+frc2::CommandPtr IntakeSubsystem::shoot() {
+  return frc2::cmd::None();
+  // return IntakeSubsystem::setBackandFront();
+}
 
 // frc2::CommandPtr IntakeSubsystem::setBackandFront() {
 //   return frc2::FunctionalCommand(

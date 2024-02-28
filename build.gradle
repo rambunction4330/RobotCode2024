@@ -124,3 +124,15 @@ task listrepos {
    }
 }
 
+task resolveAllDependencies {
+    description "Resolves all transitive dependencies so you can run using the --offline flag"
+        doLast {
+            try {
+                configurations.all {
+                    it.resolve()
+                }
+            } catch (Exception e) {
+                logger.quiet("dependency download exception: " + e.message);
+            }
+        }
+}

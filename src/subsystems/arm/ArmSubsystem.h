@@ -29,6 +29,8 @@ public:
   void Periodic() override;
 
   void setElbowPosition(units::turn_t position);
+  void resetElbowPosition(units::turn_t position = 0_tr);
+  void setElbowPower(double power) { elbowPositionController.setPower(power); }
   units::turn_t getElbowPosition() const;
   units::turn_t getTargetElbowPosition() const;
 

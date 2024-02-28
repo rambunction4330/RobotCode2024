@@ -37,6 +37,10 @@ void ArmSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
 }
 
+void ArmSubsystem::resetElbowPosition(units::turn_t position) {
+  elbowPositionController.setEncoderPosition(position);
+}
+
 void ArmSubsystem::setElbowPosition(units::turn_t position) {
   elbowPositionController.setPosition(
       position, constants::arm::arm_kG *

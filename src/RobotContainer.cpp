@@ -98,7 +98,23 @@ void RobotContainer::setTeleopDefaults() {
   // + 2) / 4));
   // armCommand.Schedule();
   // gamepad.Y().WhileTrue(arm.setWristCOmmand(controller));
-  arm.SetDefaultCommand(arm.getSpoolCommand(controller));
+  // arm.SetDefaultCommand(arm.getSpoolCommand(controller));
+
+  arm.resetElbowPosition();
+  gamepad.Y()
+      .WhileTrue(frc2::RunCommand(
+                     [this] {
+                       std::cout
+                           << "elbow position: " << arm.getElbowPosition()()
+                           << std::endl;
+                       std::cout << "throttle: " << controller.GetThrottle()
+                                 << std::endl;
+                       arm.setElbowPower(controller.GetThrottle());
+                     },
+                     {&arm})
+                     .ToPtr())
+      .WhileFalse(
+          frc2::RunCommand([this] { arm.setElbowPower(0.0); }, {&arm}).ToPtr());
 }
 
 void RobotContainer::setAutoDefaults() {
