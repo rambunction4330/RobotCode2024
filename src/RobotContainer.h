@@ -49,7 +49,7 @@ private:
   // The robot's subsystems are defined here...
   std::shared_ptr<rmb::AHRSGyro> gyro =
       std::make_shared<rmb::AHRSGyro>(constants::gyroPort);
-  // DriveSubsystem driveSubsystem;
+  DriveSubsystem driveSubsystem;
 
   rmb::LogitechGamepad gamepad{constants::driverControllerPort, 0.05};
 

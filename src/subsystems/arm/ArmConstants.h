@@ -67,7 +67,7 @@ const rmb::SparkMaxPositionController::CreateInfo
             {
                 .id = 58,
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
-                .inverted = false,
+                .inverted = true,
             },
         .pidConfig = {.p = 1.0,
                       .i = 0.0,
@@ -103,7 +103,7 @@ const rmb::SparkMaxPositionController::CreateInfo
         .followers = {rmb::SparkMaxPositionController::MotorConfig{
             .id = 51,
             .motorType = rev::CANSparkMax::MotorType::kBrushless,
-            .inverted = true}}};
+            .inverted = false}}};
 
 double const wrist_kG = 0.25;
 const rmb::SparkMaxPositionController::CreateInfo

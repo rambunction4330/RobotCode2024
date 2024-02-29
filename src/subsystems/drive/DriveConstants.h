@@ -43,7 +43,7 @@ const units::turn_t module4MagnetOffset(-0.948486 - 0.25);
 const units::meter_t wheelCircumference = 1.0_m; // TODO: CHANGE
 const units::meter_t robotDimX = 1.0_m;
 const units::meter_t robotDimY = 1.0_m;
-const units::meters_per_second_t maxModuleSpeed = 1.0_mps;
+const units::meters_per_second_t maxModuleSpeed = 5.0_mps;
 
 const rmb::TalonFXVelocityController::CreateInfo velocityControllerCreateInfo{
     .config = {.id = 10, .inverted = false, .brake = true},
@@ -64,7 +64,7 @@ const rmb::TalonFXPositionController::CreateInfo positionControllerCreateInfo{
                   -(units::radian_t)std::numeric_limits<double>::infinity(),
               .maxPosition =
                   (units::radian_t)std::numeric_limits<double>::infinity(),
-              .continuousWrap = false},
+              .continuousWrap = true},
     .feedbackConfig =
         {
             .sensorToMechanismRatio = 1.0f,
@@ -97,7 +97,7 @@ const rmb::TalonFXPositionController::CreateInfo positionControllerCreateInfo1{
                   -(units::radian_t)std::numeric_limits<double>::infinity(),
               .maxPosition =
                   (units::radian_t)std::numeric_limits<double>::infinity(),
-              .continuousWrap = false},
+              .continuousWrap = true},
     .feedbackConfig =
         {
             .sensorToMechanismRatio = 1.0f,
@@ -130,7 +130,7 @@ const rmb::TalonFXPositionController::CreateInfo positionControllerCreateInfo2{
                   -(units::radian_t)std::numeric_limits<double>::infinity(),
               .maxPosition =
                   (units::radian_t)std::numeric_limits<double>::infinity(),
-              .continuousWrap = false},
+              .continuousWrap = true},
     .feedbackConfig =
         {
             .sensorToMechanismRatio = 1.0f,
@@ -163,7 +163,7 @@ const rmb::TalonFXPositionController::CreateInfo positionControllerCreateInfo3{
                   -(units::radian_t)std::numeric_limits<double>::infinity(),
               .maxPosition =
                   (units::radian_t)std::numeric_limits<double>::infinity(),
-              .continuousWrap = false},
+              .continuousWrap = true},
     .feedbackConfig =
         {
             .sensorToMechanismRatio = 1.0f,

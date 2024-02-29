@@ -27,7 +27,7 @@
 
 #include <frc2/command/button/JoystickButton.h>
 
-RobotContainer::RobotContainer() { //: driveSubsystem(gyro) {
+RobotContainer::RobotContainer() : driveSubsystem(gyro) {
   // Initialize all of your commands and subsystems here
 
   // Configure the button bindings
@@ -92,9 +92,9 @@ frc2::CommandPtr RobotContainer::getIntakeCommand() {
 void RobotContainer::setTeleopDefaults() {
   // static auto armCommand = frc2::RunCommand([this]() { std::cout <<
   // arm.getWristPosition()() << std::endl; });
-  // driveSubsystem.SetDefaultCommand(driveSubsystem.driveTeleopCommand(gamepad));
+  driveSubsystem.SetDefaultCommand(driveSubsystem.driveTeleopCommand(gamepad));
   intake.SetDefaultCommand(getIntakeCommand());
-  controller.Button(11).WhileTrue(arm.setWristCOmmand(controller));
+  // controller.Button(11).WhileTrue(arm.setWristCOmmand(controller));
   // + 2) / 4));
   // armCommand.Schedule();
   // gamepad.Y().WhileTrue(arm.setWristCOmmand(controller));
@@ -115,6 +115,8 @@ void RobotContainer::setTeleopDefaults() {
                      .ToPtr())
       .WhileFalse(
           frc2::RunCommand([this] { arm.setElbowPower(0.0); }, {&arm}).ToPtr());
+
+  arm.SetDefaultCommand(arm.getSpoolCommand(controller));
 }
 
 void RobotContainer::setAutoDefaults() {
