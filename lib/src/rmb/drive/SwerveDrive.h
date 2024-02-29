@@ -99,7 +99,9 @@ public:
   void driveCartesian(double xSpeed, double ySpeed, double zRotation,
                       bool fieldOriented);
 
-  void driveCartesian(units::meters_per_second_t vx, units::meters_per_second_t vy, units::turns_per_second_t omega, bool fieldOriented);
+  void driveCartesian(units::meters_per_second_t vx,
+                      units::meters_per_second_t vy,
+                      units::turns_per_second_t omega, bool fieldOriented);
 
   void drivePolar(double speed, const frc::Rotation2d &angle, double zRotation,
                   bool fieldOriented);

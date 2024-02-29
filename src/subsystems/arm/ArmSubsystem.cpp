@@ -202,7 +202,8 @@ frc2::CommandPtr ArmSubsystem::getSpoolCommand(frc::Joystick &controller) {
                // std::cout
                // <<((units::turn_t)armExtensionPositionController.getPosition()).value()
                //            << std::endl;
-               // std::cout << "extender position: " << getArmExtensionPosition()()
+               // std::cout << "extender position: " <<
+               // getArmExtensionPosition()()
                //           << std::endl;
                if (controller.GetRawButton(11)) {
                  std::cout << "11" << std::endl;
@@ -211,7 +212,8 @@ frc2::CommandPtr ArmSubsystem::getSpoolCommand(frc::Joystick &controller) {
                  armExtensionPositionController.setPower(-0.3);
                } else if (controller.GetRawButton(10)) {
                  armExtensionPositionController.setPower(
-                     0.1 * -units::math::sin(90_deg + 0.0 * getElbowPosition()));
+                     0.1 *
+                     -units::math::sin(90_deg + 0.0 * getElbowPosition()));
                } else {
                  armExtensionPositionController.setPower(0.0);
                }
