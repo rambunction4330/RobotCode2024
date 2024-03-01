@@ -35,8 +35,6 @@ public:
 
   frc2::CommandPtr getIntakeCommand();
 
-
-
   void RunAutonomousCommand();
 
   void setTeleopDefaults();

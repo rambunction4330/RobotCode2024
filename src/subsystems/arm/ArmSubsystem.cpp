@@ -175,15 +175,16 @@ ArmSubsystem::setWristCOmmand(frc2::CommandJoystick &joystick) {
 
   return frc2::RunCommand(
              [&]() {
-              //  wristPositionController.setPower(0.2);
+               //  wristPositionController.setPower(0.2);
                setWristPosition(0.3_tr);
 
                //  setWristPosition(
                //      ((units::turn_t)(joystick.GetThrottle() + 1) / 4));
-              //  std::cout
-              //      << "throttle: "
-              //      << ((units::turn_t)(joystick.GetThrottle() + 2) / 4).value()
-              //      << std::endl;
+               //  std::cout
+               //      << "throttle: "
+               //      << ((units::turn_t)(joystick.GetThrottle() + 2) /
+               //      4).value()
+               //      << std::endl;
                // std::cout << "power:" <<  wristPositionController.getPower()
                // << std::endl;
                std::cout << "position"
@@ -205,14 +206,13 @@ frc2::CommandPtr ArmSubsystem::getSpoolCommand(rmb::LogitechGamepad &gamepad) {
                //            << std::endl;
                if (gamepad.GetA()) {
                  armExtensionPositionController.setPower(0.3);
-                 std::cout << "forward" << std::endl; 
+                 std::cout << "forward" << std::endl;
                } else if (gamepad.GetY()) {
                  armExtensionPositionController.setPower(-0.3);
-                 std::cout<< "backward"<< std::endl;
-               } 
-               else{
-                armExtensionPositionController.setPower(0.0);
-                std::cout<<"stop"<<std::endl;
+                 std::cout << "backward" << std::endl;
+               } else {
+                 armExtensionPositionController.setPower(0.0);
+                 std::cout << "stop" << std::endl;
                }
              },
              {this})

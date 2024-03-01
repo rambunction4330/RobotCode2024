@@ -18,15 +18,16 @@ ShooterSubsystem::ShooterSubsystem()
 void ShooterSubsystem::Periodic() {}
 
 frc2::CommandPtr ShooterSubsystem::runShooter(rmb::LogitechGamepad &gamepad) {
-  return frc2::RunCommand([&]() {
-           if (gamepad.GetRightBumperPressed()) {
-             setShooterPower(0.5, -0.5);
-           } 
-           else if (gamepad.GetLeftBumperPressed()) {
-            setShooterPower(-0.5, 0.5);
-           }
-           else{
-            setShooterPower(0,0);
-           }
-         }, {this})      .ToPtr();
+  return frc2::RunCommand(
+             [&]() {
+               if (gamepad.GetRightBumperPressed()) {
+                 setShooterPower(0.5, -0.5);
+               } else if (gamepad.GetLeftBumperPressed()) {
+                 setShooterPower(-0.5, 0.5);
+               } else {
+                 setShooterPower(0, 0);
+               }
+             },
+             {this})
+      .ToPtr();
 }

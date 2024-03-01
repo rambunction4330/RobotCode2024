@@ -17,22 +17,22 @@ public:
    * Will be called periodically whenever the CommandScheduler runs.
    */
   void Periodic() override;
-  inline void setBackShooterPower (double power) {
+  inline void setBackShooterPower(double power) {
     BackShooterVelocityController.setPower(power);
   }
-  inline void setFrontShooterPower (double power) {
+  inline void setFrontShooterPower(double power) {
     FrontShooterVelocityController.setPower(power);
   }
-  inline void setShooterPower (double front, double back) {
+  inline void setShooterPower(double front, double back) {
     setFrontShooterPower(front);
     setBackShooterPower(back);
   }
 
-frc2::CommandPtr runShooter(rmb::LogitechGamepad &gamepad);
+  frc2::CommandPtr runShooter(rmb::LogitechGamepad &gamepad);
 
 private:
-rmb::SparkMaxVelocityController FrontShooterVelocityController;
-rmb::SparkMaxVelocityController BackShooterVelocityController; 
+  rmb::SparkMaxVelocityController FrontShooterVelocityController;
+  rmb::SparkMaxVelocityController BackShooterVelocityController;
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
 };
