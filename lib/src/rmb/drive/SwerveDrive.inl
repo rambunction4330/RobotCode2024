@@ -105,6 +105,8 @@ SwerveDrive<NumModules>::SwerveDrive(
     maxDistance = units::math::max(distance, maxDistance);
   }
 
+  kinematics = frc::SwerveDriveKinematics<NumModules>(translations);
+
   largestModuleDistance = maxDistance;
 
   kinematics = frc::SwerveDriveKinematics<NumModules>(translations);
