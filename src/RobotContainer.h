@@ -17,6 +17,7 @@
 #include "rmb/sensors/AHRS/AHRSGyro.h"
 #include "subsystems/arm/ArmSubsystem.h"
 #include "subsystems/arm/IntakeSubsystem.h"
+#include "subsystems/arm/ShooterSubsystem.h"
 #include "subsystems/drive/DriveSubsystem.h"
 
 #include <unordered_map>
@@ -33,6 +34,8 @@ public:
   RobotContainer();
 
   frc2::CommandPtr getIntakeCommand();
+
+
 
   void RunAutonomousCommand();
 
@@ -55,10 +58,11 @@ private:
 
   void ConfigureBindings();
   frc2::CommandJoystick controller{1};
-  frc2::Trigger xButton = controller.Button(11);
+  // frc2::Trigger xButton = controller.Button(11);
 
   IntakeSubsystem intake;
   ArmSubsystem arm;
+  ShooterSubsystem shooter;
 
   std::unordered_map<std::string, frc2::CommandPtr> autoCommands;
 

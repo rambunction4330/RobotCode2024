@@ -11,11 +11,12 @@
 #include "frc2/command/CommandPtr.h"
 #include "frc2/command/Commands.h"
 #include "frc2/command/FunctionalCommand.h"
+#include "rmb/controller/LogitechGamepad.h"
 #include <new>
 
 IntakeSubsystem::IntakeSubsystem()
-    : frontIntakeVelocityController(
-          constants::arm::intakeFrontVelocityControllerCreateInfo) {
+    : IntakeVelocityController(
+          constants::arm::intakeVelocityControllerCreateInfo) {
   // Implementation of subsystem constructor goes here.
 }
 
@@ -27,15 +28,17 @@ void IntakeSubsystem::SimulationPeriodic() {
   // Implementation of subsystem simulation periodic method goes here.
 }
 
-void IntakeSubsystem::runIntake(const frc::Joystick &controller) {
+void IntakeSubsystem::runIntake(const rmb::LogitechGamepad &gamepad) {
   double frontPower;
-  double adjustablePower = (controller.GetThrottle() + 1) / 2;
 
-  if (controller.GetRawButton(3) == 1) {
-    frontPower = 1 * adjustablePower;
+  if (gamepad.GetB() == 1) {
+    frontPower = 0.7;
+  } else if (gamepad.GetX() == 1) {
+    frontPower = -0.7;
   }
-  if (controller.GetRawButton(5) == 1) {
-    frontPower = -1 * adjustablePower;
+
+  else {
+    frontPower = 0.0;
   }
 
   setFrontPower(frontPower);

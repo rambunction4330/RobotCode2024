@@ -154,7 +154,7 @@ const rmb::SparkMaxPositionController::CreateInfo
         .followers = {}};
 
 const rmb::SparkMaxVelocityController::CreateInfo
-    intakeFrontVelocityControllerCreateInfo{
+    intakeVelocityControllerCreateInfo{
         .motorConfig =
             {
                 .id = 59,
@@ -194,45 +194,85 @@ const rmb::SparkMaxVelocityController::CreateInfo
 
         .followers = {}};
 
-// const rmb::SparkMaxVelocityController::CreateInfo
-//     intakeBackVelocityControllerCreateInfo{
-//         .motorConfig =
-//             {
-//                 .id = 58,
-//                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
-//                 .inverted = false,
-//             },
-//         .pidConfig = {.p = 1.0,
-//                       .i = 0.0,
-//                       .d = 0.0,
-//                       .ff = 0.0,
-//                       .tolerance = 0.0_rad_per_s,
-//                       .iZone = 0.0,
-//                       .iMaxAccumulator = 0.0,
-//                       .maxOutput = 1.0,
-//                       .minOutput = -1.0},
+const rmb::SparkMaxVelocityController::CreateInfo
+    FrontShooterVelocityControllerCreateInfo{
+        .motorConfig =
+            {
+                .id = 52,
+                .motorType = rev::CANSparkMax::MotorType::kBrushless,
+                .inverted = false,
+            },
+        .pidConfig = {.p = 1.0,
+                      .i = 0.0,
+                      .d = 0.0,
+                      .ff = 0.0,
+                      .tolerance = 0.0_rad_per_s,
+                      .iZone = 0.0,
+                      .iMaxAccumulator = 0.0,
+                      .maxOutput = 1.0,
+                      .minOutput = -1.0},
 
-//         //.feedforward // TODO: consider? This would be an interesting
-//         physics
-//         // mechanics FRQ lmao .range // TODO: just in case?
-//         .profileConfig =
-//             {
-//                 false /* <- useSmartMotion */,
-//                 0.0_rpm /* <- maxVelocity */,
-//                 0.0_rad_per_s /* <- minVelocity */,
-//                 0.0_rad_per_s_sq /* <- maxAcceleration */,
-//             },
-//         .feedbackConfig =
-//             {
-//                 9.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
-//                 rmb::SparkMaxVelocityControllerHelper::EncoderType::
-//                     HallSensor /* <- encoder */,
-//                 42 /* <- countPerRev */,
-//                 rmb::SparkMaxVelocityController::LimitSwitchConfig::
-//                     Disabled /* <- fwd */,
-//                 rmb::SparkMaxVelocityController::LimitSwitchConfig::
-//                     Disabled /* <- rev */
-//             },
+        //.feedforward // TODO: consider? This would be an interesting physics
+        // mechanics FRQ lmao .range // TODO: just in case?
+        .profileConfig =
+            {
+                false /* <- useSmartMotion */,
+                0.0_rpm /* <- maxVelocity */,
+                0.0_rad_per_s /* <- minVelocity */,
+                0.0_rad_per_s_sq /* <- maxAcceleration */,
+            },
+        .feedbackConfig =
+            {
+                81.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
+                rmb::SparkMaxVelocityControllerHelper::EncoderType::
+                    HallSensor /* <- encoder */,
+                42 /* <- countPerRev */,
+                rmb::SparkMaxVelocityController::LimitSwitchConfig::
+                    Disabled /* <- fwd */,
+                rmb::SparkMaxVelocityController::LimitSwitchConfig::
+                    Disabled /* <- rev */
+            },
 
-//         .followers = {}};
+        .followers = {}};
+
+const rmb::SparkMaxVelocityController::CreateInfo
+    BackShooterVelocityControllerCreateInfo{
+        .motorConfig =
+            {
+                .id = 55,
+                .motorType = rev::CANSparkMax::MotorType::kBrushless,
+                .inverted = false,
+            },
+        .pidConfig = {.p = 1.0,
+                      .i = 0.0,
+                      .d = 0.0,
+                      .ff = 0.0,
+                      .tolerance = 0.0_rad_per_s,
+                      .iZone = 0.0,
+                      .iMaxAccumulator = 0.0,
+                      .maxOutput = 1.0,
+                      .minOutput = -1.0},
+
+        //.feedforward // TODO: consider? This would be an interesting physics
+        // mechanics FRQ lmao .range // TODO: just in case?
+        .profileConfig =
+            {
+                false /* <- useSmartMotion */,
+                0.0_rpm /* <- maxVelocity */,
+                0.0_rad_per_s /* <- minVelocity */,
+                0.0_rad_per_s_sq /* <- maxAcceleration */,
+            },
+        .feedbackConfig =
+            {
+                81.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
+                rmb::SparkMaxVelocityControllerHelper::EncoderType::
+                    HallSensor /* <- encoder */,
+                42 /* <- countPerRev */,
+                rmb::SparkMaxVelocityController::LimitSwitchConfig::
+                    Disabled /* <- fwd */,
+                rmb::SparkMaxVelocityController::LimitSwitchConfig::
+                    Disabled /* <- rev */
+            },
+
+        .followers = {}};
 } // namespace constants::arm

@@ -84,7 +84,7 @@ void RobotContainer::RunAutonomousCommand() {
 frc2::CommandPtr RobotContainer::getIntakeCommand() {
   // Joystick input is blocked during teleop
   return frc2::FunctionalCommand(
-             []() {}, [this]() { intake.runIntake(controller); },
+             []() {}, [this]() { intake.runIntake(gamepad); },
              [](bool canceled) {}, []() { return false; }, {&intake})
       .ToPtr();
 }
@@ -97,26 +97,10 @@ void RobotContainer::setTeleopDefaults() {
   // controller.Button(11).WhileTrue(arm.setWristCOmmand(controller));
   // + 2) / 4));
   // armCommand.Schedule();
-  // gamepad.Y().WhileTrue(arm.setWristCOmmand(controller));
-  // arm.SetDefaultCommand(arm.getSpoolCommand(controller));
-
-  arm.resetElbowPosition();
-  gamepad.Y()
-      .WhileTrue(frc2::RunCommand(
-                     [this] {
-                       std::cout
-                           << "elbow position: " << arm.getElbowPosition()()
-                           << std::endl;
-                       std::cout << "throttle: " << controller.GetThrottle()
-                                 << std::endl;
-                       arm.setElbowPower(controller.GetThrottle());
-                     },
-                     {&arm})
-                     .ToPtr())
-      .WhileFalse(
-          frc2::RunCommand([this] { arm.setElbowPower(0.0); }, {&arm}).ToPtr());
-
-  arm.SetDefaultCommand(arm.getSpoolCommand(controller));
+  controller.Button(11).WhileTrue(arm.spinElbowCommand(controller));
+  arm.SetDefaultCommand(arm.getSpoolCommand(gamepad));
+  shooter.SetDefaultCommand(shooter.runShooter(gamepad));
+  
 }
 
 void RobotContainer::setAutoDefaults() {

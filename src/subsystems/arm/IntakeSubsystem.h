@@ -7,6 +7,7 @@
 #include "ArmConstants.h"
 #include "frc/Joystick.h"
 #include "rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h"
+#include "rmb/controller/LogitechGamepad.h"
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 
@@ -29,18 +30,18 @@ public:
   void SimulationPeriodic() override;
 
   inline void setFrontPower(double power) {
-    frontIntakeVelocityController.setPower(power);
+    IntakeVelocityController.setPower(power);
   }
   // inline void setBackPower(double power) {
   //   backIntakeVelocityController.setPower(power);
   // };
 
-  inline void setPower(double front, double back) {
-    setFrontPower(front);
-    // setBackPower(back);
-  }
+  // inline void setPower(double front, double back) {
+  //   setFrontPower(front);
+  //   // setBackPower(back);
+  // }
 
-  void runIntake(const frc::Joystick &m_controller);
+  void runIntake(const rmb::LogitechGamepad &gamepad);
   frc2::CommandPtr revFrontIntakeToShoot();
   frc2::CommandPtr shoot();
 
@@ -50,6 +51,6 @@ private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
 
-  rmb::SparkMaxVelocityController frontIntakeVelocityController;
+  rmb::SparkMaxVelocityController IntakeVelocityController;
   // rmb::SparkMaxVelocityController backIntakeVelocityController;
 };
