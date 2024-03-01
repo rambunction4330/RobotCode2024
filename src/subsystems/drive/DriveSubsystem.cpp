@@ -16,9 +16,13 @@
 #include "frc2/command/RunCommand.h"
 
 #include "rmb/sensors/gyro.h"
+#include "units/dimensionless.h"
+#include "units/velocity.h"
 #include <memory>
 #include <mutex>
 #include <thread>
+
+#define SQUARED(x) x *x
 
 DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
   // Implementation of subsystem constructor goes here.
@@ -139,13 +143,23 @@ void DriveSubsystem::Periodic() {
 
 void DriveSubsystem::driveTeleop(const rmb::LogitechGamepad &gamepad) {
   // TODO: add filters
+  std::cout << "gyro angle: " << drive->getPose().Rotation().Degrees()()
+            << std::endl;
+  std::cout << "input: [" << gamepad.GetLeftY() << ", " << gamepad.GetLeftX()
+            << ", " << gamepad.GetRightX() << "]" << std::endl;
   drive->driveCartesian(-10_mps * gamepad.GetLeftY(),
                         10_mps * gamepad.GetLeftX(),
-                        10_tps * gamepad.GetRightX(), true);
+                        -1.0_tps * gamepad.GetRightX(), false);
+  // drive->drivePolar(10.0_mps * std::sqrt(SQUARED(gamepad.GetLeftX()) +
+  //                                        SQUARED(gamepad.GetRightY())),
+  //                   units::math::atan2((units::dimensionless_t)gamepad.GetLeftY(),
+  //                   (units::dimensionless_t)gamepad.GetLeftX()), 1.0_tps *
+  //                   gamepad.GetRightY(), true);
 }
 
 frc2::CommandPtr
 DriveSubsystem::driveTeleopCommand(const rmb::LogitechGamepad &gamepad) {
+  std::cout << "reset pose!" << std::endl;
   drive->resetPose();
   return frc2::RunCommand([&] { driveTeleop(gamepad); }, {this}).ToPtr();
 }
@@ -162,3 +176,5 @@ void DriveSubsystem::SimulationPeriodic() {
 }
 
 void DriveSubsystem::stop() { drive->stop(); }
+
+#undef SQUARED

@@ -105,8 +105,6 @@ SwerveDrive<NumModules>::SwerveDrive(
     maxDistance = units::math::max(distance, maxDistance);
   }
 
-  kinematics = frc::SwerveDriveKinematics<NumModules>(translations);
-
   largestModuleDistance = maxDistance;
 
   kinematics = frc::SwerveDriveKinematics<NumModules>(translations);
@@ -207,9 +205,9 @@ void SwerveDrive<NumModules>::driveCartesian(double xSpeed, double ySpeed,
     double output_y = robotRelativeVXY.y() +
                       zRotation * -1 * module.getModuleTranslation().X() /
                           largestModuleDistance;
-
-    std::cout << "output: (" << output_x << ", " << output_y << ")"
-              << std::endl;
+    //
+    // std::cout << "output: (" << output_x << ", " << output_y << ")"
+    //           << std::endl;
 
     // -1 * -1
 
@@ -280,6 +278,16 @@ void SwerveDrive<NumModules>::drivePolar(double speed,
 }
 
 template <size_t NumModules>
+void SwerveDrive<NumModules>::drivePolar(units::meters_per_second_t speed,
+                const frc::Rotation2d &angle, units::turns_per_second_t omega,
+                bool fieldOriented) {
+  units::meters_per_second_t vx = speed * angle.Cos();
+  units::meters_per_second_t vy = speed * angle.Sin();
+
+  driveCartesian(vx, vy, omega, fieldOriented);
+}
+
+template <size_t NumModules>
 void SwerveDrive<NumModules>::driveModulePowers(
     std::array<SwerveModulePower, NumModules> powers) {
   // std::cout << "powers: ";
@@ -292,9 +300,9 @@ template <size_t NumModules>
 void SwerveDrive<NumModules>::driveChassisSpeeds(
     frc::ChassisSpeeds chassisSpeeds) {
   auto states = kinematics.ToSwerveModuleStates(chassisSpeeds);
-  std::cout << "rotation: "
-            << ((units::turns_per_second_t)chassisSpeeds.omega)() << std::endl;
-  // kinematics.DesaturateWheelSpeeds(&states, maxModuleSpeed);
+  // std::cout << "rotation: "
+  //           << ((units::turns_per_second_t)chassisSpeeds.omega)() << std::endl;
+  kinematics.DesaturateWheelSpeeds(&states, maxModuleSpeed);
   driveModuleStates(states);
 
   watchdog.AddEpoch("SwerveDrive<" + std::to_string(NumModules) +
@@ -307,7 +315,7 @@ void SwerveDrive<NumModules>::driveChassisSpeeds(
 
   if (fieldRelative)
     chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-        chassisSpeeds, gyro->getRotation());
+        chassisSpeeds, -gyro->getRotation());
 
   driveChassisSpeeds(chassisSpeeds);
 }
@@ -404,10 +412,10 @@ SwerveDrive<NumModules>::getTargetModuleStates() const {
 template <size_t NumModules>
 void SwerveDrive<NumModules>::resetPose(const frc::Pose2d &pose) {
   // std::lock_guard<std::mutex> lock(visionThreadMutex);
-  poseEstimator.ResetPosition(gyro->getRotation(), getModulePositions(), pose);
-
   gyro->resetZRotation();
   gyro->setZRotationOffset(pose.Rotation());
+
+  poseEstimator.ResetPosition(gyro->getRotation(), getModulePositions(), pose);
 }
 
 template <size_t NumModules>

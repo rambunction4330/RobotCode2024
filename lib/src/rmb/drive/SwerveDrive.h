@@ -108,6 +108,10 @@ public:
   void drivePolar(double speed, const frc::Rotation2d &angle, double zRotation,
                   bool fieldOriented);
 
+  void drivePolar(units::meters_per_second_t speed,
+                  const frc::Rotation2d &angle, units::turns_per_second_t omega,
+                  bool fieldOriented);
+
   void driveModulePowers(std::array<SwerveModulePower, NumModules> powers);
 
   void driveModuleStates(std::array<frc::SwerveModuleState, NumModules> states);
