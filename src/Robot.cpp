@@ -5,6 +5,7 @@
 #include "Robot.h"
 
 #include <frc2/command/CommandScheduler.h>
+#include <optional>
 
 void Robot::RobotInit() {}
 
@@ -31,16 +32,7 @@ void Robot::DisabledPeriodic() {}
  * This autonomous runs the autonomous command selected by your {@link
  * RobotContainer} class.
  */
-void Robot::AutonomousInit() {
-  m_autonomousCommand = container.GetAutonomousCommand();
-
-  if (m_autonomousCommand) {
-    m_autonomousCommand->Schedule();
-  }
-
-  // TODO: Check to see if we need to remove this
-  frc2::CommandScheduler::GetInstance().CancelAll();
-}
+void Robot::AutonomousInit() { container.RunAutonomousCommand(); }
 
 void Robot::AutonomousPeriodic() {}
 
@@ -50,13 +42,15 @@ void Robot::TeleopInit() {
   // continue until interrupted by another command, remove
   // this line or comment it out.
   if (m_autonomousCommand) {
-    m_autonomousCommand->Cancel();
+    m_autonomousCommand.value()->Cancel();
   }
 
   // TODO: Check to see if we need to remove this
   frc2::CommandScheduler::GetInstance().CancelAll();
 
   container.setTeleopDefaults();
+
+  container.getDrive().setPoseEstimation(frc::Pose2d(0.0_m, 0.0_m, 0.0_rad));
 }
 
 /**

@@ -12,8 +12,12 @@
 namespace rmb {
 class Gyro {
 public:
-  virtual units::turn_t getZRotation() const = 0;
   virtual frc::Rotation2d getRotation() const = 0;
+  virtual frc::Rotation2d getRotationNoOffset() const = 0;
+
+  /**
+   * Sets offset to zero, sets gyro rotation to zero
+   */
   virtual void resetZRotation() = 0;
 
   virtual units::meters_per_second_squared_t getXAcceleration() const = 0;
@@ -23,5 +27,10 @@ public:
   virtual units::meters_per_second_t getXVelocity() const = 0;
   virtual units::meters_per_second_t getYVelocity() const = 0;
   virtual units::meters_per_second_t getZVelocity() const = 0;
+
+  void setZRotationOffset(frc::Rotation2d offset) { this->offset = offset; }
+
+private:
+  frc::Rotation2d offset = 0_deg;
 };
 } // namespace rmb

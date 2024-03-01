@@ -8,14 +8,15 @@
 #include <rmb/sensors/gyro.h>
 
 namespace rmb {
-class AHRSGyro : public Gyro {
+class NavXGyro : public Gyro {
 public:
-  AHRSGyro(frc::SerialPort::Port port);
+  NavXGyro(frc::SerialPort::Port port);
 
-  virtual ~AHRSGyro() = default;
+  virtual ~NavXGyro() = default;
 
-  virtual units::turn_t getZRotation() const override;
   virtual void resetZRotation() override;
+
+  virtual frc::Rotation2d getRotationNoOffset() const override;
   virtual frc::Rotation2d getRotation() const override;
 
   virtual units::meters_per_second_squared_t getXAcceleration() const override;
@@ -28,5 +29,7 @@ public:
 
 private:
   std::unique_ptr<AHRS> gyro;
+
+  units::turn_t offset = 0.0_tr;
 };
 } // namespace rmb

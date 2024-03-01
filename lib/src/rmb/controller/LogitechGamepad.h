@@ -11,12 +11,12 @@ namespace rmb {
 class LogitechGamepad : public frc2::CommandGenericHID {
 public:
   struct Axes {
-    constexpr static int leftX = 1;
-    constexpr static int leftY = 0;
+    constexpr static int leftX = 0;
+    constexpr static int leftY = 1;
     constexpr static int leftTrigger = 2;
 
-    constexpr static int rightX = 5;
-    constexpr static int rightY = 4;
+    constexpr static int rightX = 4;
+    constexpr static int rightY = 5;
     constexpr static int rightTrigger = 3;
   };
 

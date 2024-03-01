@@ -7,38 +7,43 @@
 
 namespace rmb {
 
-AHRSGyro::AHRSGyro(frc::SerialPort::Port port)
+NavXGyro::NavXGyro(frc::SerialPort::Port port)
     : gyro(std::make_unique<AHRS>(port)) {}
 
-units::turn_t AHRSGyro::AHRSGyro::getZRotation() const {
-  return units::degree_t(-gyro->GetRotation2d().Degrees());
+frc::Rotation2d NavXGyro::getRotation() const {
+  return gyro->GetRotation2d().Degrees() + offset;
 }
 
-frc::Rotation2d AHRSGyro::getRotation() const { return gyro->GetRotation2d(); }
+frc::Rotation2d NavXGyro::getRotationNoOffset() const {
+  return gyro->GetRotation2d().Degrees();
+}
 
-void AHRSGyro::resetZRotation() { gyro->ZeroYaw(); }
+void NavXGyro::resetZRotation() {
+  gyro->ZeroYaw();
+  offset = 0_tr;
+}
 
-units::meters_per_second_squared_t AHRSGyro::getXAcceleration() const {
+units::meters_per_second_squared_t NavXGyro::getXAcceleration() const {
   return units::meters_per_second_squared_t(this->gyro->GetRawAccelX());
 }
 
-units::meters_per_second_squared_t AHRSGyro::getYAcceleration() const {
+units::meters_per_second_squared_t NavXGyro::getYAcceleration() const {
   return units::meters_per_second_squared_t(this->gyro->GetRawAccelY());
 }
 
-units::meters_per_second_squared_t AHRSGyro::getZAcceleration() const {
+units::meters_per_second_squared_t NavXGyro::getZAcceleration() const {
   return units::meters_per_second_squared_t(this->gyro->GetRawAccelZ());
 }
 
-units::meters_per_second_t AHRSGyro::getXVelocity() const {
+units::meters_per_second_t NavXGyro::getXVelocity() const {
   return units::meters_per_second_t(this->gyro->GetVelocityX());
 }
 
-units::meters_per_second_t AHRSGyro::getYVelocity() const {
+units::meters_per_second_t NavXGyro::getYVelocity() const {
   return units::meters_per_second_t(this->gyro->GetVelocityY());
 }
 
-units::meters_per_second_t AHRSGyro::getZVelocity() const {
+units::meters_per_second_t NavXGyro::getZVelocity() const {
   return units::meters_per_second_t(this->gyro->GetVelocityZ());
 }
 } // namespace rmb

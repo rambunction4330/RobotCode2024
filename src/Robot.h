@@ -9,10 +9,12 @@
 #include <frc/TimedRobot.h>
 #include <frc2/command/CommandPtr.h>
 
+#include "Constants.h"
 #include "RobotContainer.h"
 
 class Robot : public frc::TimedRobot {
 public:
+  Robot() : frc::TimedRobot(constants::robotLoopTime) {}
   void RobotInit() override;
   void RobotPeriodic() override;
   void DisabledInit() override;
@@ -28,7 +30,7 @@ public:
 private:
   // Have it empty by default so that if testing teleop it
   // doesn't have undefined behavior and potentially crash.
-  std::optional<frc2::CommandPtr> m_autonomousCommand;
+  std::optional<frc2::CommandPtr *> m_autonomousCommand = std::nullopt;
 
   RobotContainer container;
 };

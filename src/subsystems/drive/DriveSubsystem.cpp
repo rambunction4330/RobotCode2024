@@ -5,6 +5,11 @@
 #include "subsystems/drive/DriveSubsystem.h"
 
 #include "Constants.h"
+#include "frc/DriverStation.h"
+#include "frc/RobotBase.h"
+#include "frc/TimedRobot.h"
+#include "frc/geometry/Pose2d.h"
+#include "pathplanner/lib/auto/AutoBuilder.h"
 #include "subsystems/drive/DriveConstants.h"
 
 #include "frc2/command/CommandPtr.h"
@@ -12,6 +17,8 @@
 
 #include "rmb/sensors/gyro.h"
 #include <memory>
+#include <mutex>
+#include <thread>
 
 DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
   // Implementation of subsystem constructor goes here.
@@ -23,7 +30,7 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
           std::make_unique<rmb::TalonFXPositionController>(
               constants::drive::positionControllerCreateInfo),
           frc::Translation2d(-constants::drive::robotDimX / 2.0,
-                             constants::drive::robotDimY),
+                             constants::drive::robotDimY / 2.0),
           true),
       rmb::SwerveModule(
           rmb::asLinear(std::make_unique<rmb::TalonFXVelocityController>(
@@ -31,8 +38,8 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
                         constants::drive::wheelCircumference / 1_tr),
           std::make_unique<rmb::TalonFXPositionController>(
               constants::drive::positionControllerCreateInfo1),
-          frc::Translation2d(constants::drive::robotDimX,
-                             constants::drive::robotDimY),
+          frc::Translation2d(-constants::drive::robotDimX / 2.0,
+                             -constants::drive::robotDimY / 2.0),
           true),
       rmb::SwerveModule(
           rmb::asLinear(std::make_unique<rmb::TalonFXVelocityController>(
@@ -40,8 +47,8 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
                         constants::drive::wheelCircumference / 1_tr),
           std::make_unique<rmb::TalonFXPositionController>(
               constants::drive::positionControllerCreateInfo2),
-          frc::Translation2d(constants::drive::robotDimX,
-                             -constants::drive::robotDimY),
+          frc::Translation2d(constants::drive::robotDimX / 2.0,
+                             -constants::drive::robotDimY / 2.0),
           true),
       rmb::SwerveModule(
           rmb::asLinear(std::make_unique<rmb::TalonFXVelocityController>(
@@ -49,8 +56,8 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
                         constants::drive::wheelCircumference / 1_tr),
           std::make_unique<rmb::TalonFXPositionController>(
               constants::drive::positionControllerCreateInfo3),
-          frc::Translation2d(-constants::drive::robotDimX,
-                             -constants::drive::robotDimY),
+          frc::Translation2d(constants::drive::robotDimX / 2.0,
+                             constants::drive::robotDimY / 2.0),
           true),
 
   };
@@ -65,27 +72,88 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
               frc::TrapezoidProfile<units::radian>::Constraints(
                   6.28_rad_per_s, 3.14_rad_per_s / 1_s))),
       constants::drive::maxModuleSpeed);
+
+  odometryThread = std::thread(&DriveSubsystem::odometryThreadMain, this);
+
+  pathplanner::AutoBuilder::configureHolonomic(
+      [this]() { return getPoseEstimation(); },
+      [this](frc::Pose2d pose) { setPoseEstimation(pose); },
+      [this]() { return getChassisSpeedsEstimation(); },
+      [this](frc::ChassisSpeeds speeds) { // should be robot relative
+        drive->driveChassisSpeeds(speeds);
+      },
+      pathplanner::HolonomicPathFollowerConfig{
+          constants::drive::pathTranslationalConstants,
+          constants::drive::pathRotationalConstants,
+          constants::drive::maxModuleSpeed, drive->getMaxDriveRadius(),
+          pathplanner::ReplanningConfig(), constants::robotLoopTime},
+      []() {
+        // Plan all autos on the blue side
+        auto alliance = frc::DriverStation::GetAlliance();
+        if (alliance) {
+          return alliance.value() == frc::DriverStation::Alliance::kRed;
+        }
+        return false;
+      },
+      this);
+}
+
+void DriveSubsystem::odometryThreadMain() {
+  while (true) {
+    frc::Pose2d newPose = drive->updatePose();
+    drive->updateNTDebugInfo(false);
+    frc::ChassisSpeeds newChassisSpeeds = drive->getChassisSpeeds();
+    {
+      std::lock_guard<std::mutex> lock(currentPoseContainer.poseMutex);
+      currentPoseContainer._pose = newPose;
+    }
+
+    {
+
+      std::lock_guard<std::mutex> lock(currentPoseContainer.chassisSpeedsMutex);
+      currentPoseContainer._chassisSpeeds = newChassisSpeeds;
+    }
+    std::this_thread::yield();
+  }
+}
+
+frc::ChassisSpeeds DriveSubsystem::getChassisSpeedsEstimation() {
+  std::lock_guard<std::mutex> lock(currentPoseContainer.chassisSpeedsMutex);
+  return currentPoseContainer._chassisSpeeds;
+}
+
+frc::Pose2d DriveSubsystem::getPoseEstimation() {
+  std::lock_guard<std::mutex> lock(currentPoseContainer.poseMutex);
+  return currentPoseContainer._pose;
+}
+
+void DriveSubsystem::setPoseEstimation(frc::Pose2d pose) {
+  std::lock_guard<std::mutex> lock(currentPoseContainer.poseMutex);
+  drive->resetPose(pose);
+  currentPoseContainer._pose = pose;
 }
 
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
-  drive->updatePose();
 }
 
 void DriveSubsystem::driveTeleop(const rmb::LogitechGamepad &gamepad) {
   // TODO: add filters
-  drive->driveCartesian(gamepad.GetLeftX(), gamepad.GetLeftY(),
-                        gamepad.GetRightX(), true);
+  std::cout << "right x = " << gamepad.GetRightX() << std::endl;
+  drive->driveCartesian(-5_mps * gamepad.GetLeftY(),
+                        0.0_mps * 0.25 * gamepad.GetLeftX(),
+                        1.0_tps * gamepad.GetRightX(), false);
 }
 
 frc2::CommandPtr
 DriveSubsystem::driveTeleopCommand(const rmb::LogitechGamepad &gamepad) {
-  return frc2::RunCommand([&] { driveTeleop(gamepad); }).ToPtr();
+  return frc2::RunCommand([&] { driveTeleop(gamepad); }, {this}).ToPtr();
 }
 
 frc2::CommandPtr DriveSubsystem::driveTeleopCommand(double x, double y,
                                                     double twist) {
-  return frc2::RunCommand([&] { drive->driveCartesian(x, y, twist, true); })
+  return frc2::RunCommand([&] { drive->driveCartesian(x, y, twist, false); },
+                          {this})
       .ToPtr();
 }
 

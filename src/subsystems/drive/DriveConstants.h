@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "pathplanner/lib/util/PIDConstants.h"
 #include <units/velocity.h>
 
 #include <rmb/motorcontrol/Talon/TalonFXPositionController.h>
@@ -24,22 +25,25 @@
 namespace constants {
 namespace drive {
 
+const pathplanner::PIDConstants pathTranslationalConstants(5.0, 0.0, 0.0, 1.0);
+const pathplanner::PIDConstants pathRotationalConstants(5.0, 0.0, 0.0, 1.0);
+
 using rmb::TalonFXPositionControllerHelper::CANCoderConfig;
 
 const rmb::TalonFXVelocityControllerHelper::PIDConfig velocityModulePIDConfig =
     {.p = 1.5, .i = 0.0003, .d = 0.00, .ff = 0.000};
 const rmb::TalonFXPositionControllerHelper::PIDConfig positionModulePIDConfig =
-    {.p = 2.5f, .i = 0.0000f, .d = 0.0f, .ff = 0.000};
+    {.p = 8.0f, .i = 0.0003f, .d = 0.0f, .ff = 0.000};
 
-const units::turn_t module1MagnetOffset(-0.169778);
-const units::turn_t module2MagnetOffset(-0.190430);
-const units::turn_t module3MagnetOffset(-0.726318 + 0.5);
-const units::turn_t module4MagnetOffset(-0.37963 + 0.5);
+const units::turn_t module1MagnetOffset(-0.166016 - 0.5);
+const units::turn_t module2MagnetOffset(0.033691);
+const units::turn_t module3MagnetOffset(-0.134766);
+const units::turn_t module4MagnetOffset(-0.198730 - 0.5);
 
 const units::meter_t wheelCircumference = 1.0_m; // TODO: CHANGE
 const units::meter_t robotDimX = 1.0_m;
 const units::meter_t robotDimY = 1.0_m;
-const units::meters_per_second_t maxModuleSpeed = 1.0_mps;
+const units::meters_per_second_t maxModuleSpeed = 15_mps;
 
 const rmb::TalonFXVelocityController::CreateInfo velocityControllerCreateInfo{
     .config = {.id = 10, .inverted = false, .brake = true},
@@ -60,7 +64,7 @@ const rmb::TalonFXPositionController::CreateInfo positionControllerCreateInfo{
                   -(units::radian_t)std::numeric_limits<double>::infinity(),
               .maxPosition =
                   (units::radian_t)std::numeric_limits<double>::infinity(),
-              .continuousWrap = false},
+              .continuousWrap = true},
     .feedbackConfig =
         {
             .sensorToMechanismRatio = 1.0f,
@@ -70,6 +74,7 @@ const rmb::TalonFXPositionController::CreateInfo positionControllerCreateInfo{
     .canCoderConfig =
         CANCoderConfig{
             .id = 11,
+            .useIntegrated = false,
             .magnetOffset = module1MagnetOffset,
         },
 };
@@ -93,7 +98,7 @@ const rmb::TalonFXPositionController::CreateInfo positionControllerCreateInfo1{
                   -(units::radian_t)std::numeric_limits<double>::infinity(),
               .maxPosition =
                   (units::radian_t)std::numeric_limits<double>::infinity(),
-              .continuousWrap = false},
+              .continuousWrap = true},
     .feedbackConfig =
         {
             .sensorToMechanismRatio = 1.0f,
@@ -103,6 +108,7 @@ const rmb::TalonFXPositionController::CreateInfo positionControllerCreateInfo1{
     .canCoderConfig =
         CANCoderConfig{
             .id = 21,
+            .useIntegrated = false,
             .magnetOffset = module2MagnetOffset,
         },
 };
@@ -126,7 +132,7 @@ const rmb::TalonFXPositionController::CreateInfo positionControllerCreateInfo2{
                   -(units::radian_t)std::numeric_limits<double>::infinity(),
               .maxPosition =
                   (units::radian_t)std::numeric_limits<double>::infinity(),
-              .continuousWrap = false},
+              .continuousWrap = true},
     .feedbackConfig =
         {
             .sensorToMechanismRatio = 1.0f,
@@ -136,6 +142,7 @@ const rmb::TalonFXPositionController::CreateInfo positionControllerCreateInfo2{
     .canCoderConfig =
         CANCoderConfig{
             .id = 31,
+            .useIntegrated = false,
             .magnetOffset = module3MagnetOffset,
         },
 };
@@ -159,7 +166,7 @@ const rmb::TalonFXPositionController::CreateInfo positionControllerCreateInfo3{
                   -(units::radian_t)std::numeric_limits<double>::infinity(),
               .maxPosition =
                   (units::radian_t)std::numeric_limits<double>::infinity(),
-              .continuousWrap = false},
+              .continuousWrap = true},
     .feedbackConfig =
         {
             .sensorToMechanismRatio = 1.0f,
@@ -169,6 +176,7 @@ const rmb::TalonFXPositionController::CreateInfo positionControllerCreateInfo3{
     .canCoderConfig =
         CANCoderConfig{
             .id = 41,
+            .useIntegrated = false,
             .magnetOffset = module4MagnetOffset,
         },
 };

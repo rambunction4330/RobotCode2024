@@ -1,9 +1,7 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 #pragma once
 
+#include "frc/geometry/Pose2d.h"
+#include "frc/kinematics/ChassisSpeeds.h"
 #include "rmb/sensors/gyro.h"
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
@@ -11,6 +9,7 @@
 #include <memory>
 #include <rmb/controller/LogitechGamepad.h>
 #include <rmb/drive/SwerveDrive.h>
+#include <thread>
 
 class DriveSubsystem : public frc2::SubsystemBase {
 public:
@@ -28,6 +27,11 @@ public:
   frc2::CommandPtr driveTeleopCommand(const rmb::LogitechGamepad &gamepad);
   frc2::CommandPtr driveTeleopCommand(double x, double y, double twist);
 
+  frc::Pose2d getPoseEstimation();
+  void setPoseEstimation(frc::Pose2d pose);
+
+  frc::ChassisSpeeds getChassisSpeedsEstimation();
+
   void stop();
 
   /**
@@ -37,8 +41,17 @@ public:
   void SimulationPeriodic() override;
 
 private:
-  // Components (e.g. motor controllers and sensors) should generally be
-  // declared private and exposed only through public methods.
+  void odometryThreadMain();
 
   std::unique_ptr<rmb::SwerveDrive<4>> drive;
+
+  std::thread odometryThread;
+
+  struct {
+    frc::Pose2d _pose;
+    std::mutex poseMutex;
+
+    frc::ChassisSpeeds _chassisSpeeds;
+    std::mutex chassisSpeedsMutex;
+  } currentPoseContainer;
 };
