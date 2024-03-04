@@ -140,20 +140,6 @@ SwerveDrive<NumModules>::getModuleStates() const {
 
   return states;
 }
-template <size_t NumModules>
-void SwerveDrive<NumModules>::driveCartesian(units::meters_per_second_t vx,
-                                             units::meters_per_second_t vy,
-                                             units::turns_per_second_t omega,
-                                             bool fieldOriented) {
-  frc::ChassisSpeeds chassisSpeeds = frc::ChassisSpeeds(vx, vy, omega);
-
-  if (fieldOriented) {
-    chassisSpeeds = frc::ChassisSpeeds::FromRobotRelativeSpeeds(
-        chassisSpeeds, gyro->getRotation());
-  }
-
-  driveChassisSpeeds(chassisSpeeds);
-}
 
 template <size_t NumModules>
 void SwerveDrive<NumModules>::driveCartesian(double xSpeed, double ySpeed,
