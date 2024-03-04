@@ -265,8 +265,9 @@ void SwerveDrive<NumModules>::drivePolar(double speed,
 
 template <size_t NumModules>
 void SwerveDrive<NumModules>::drivePolar(units::meters_per_second_t speed,
-                const frc::Rotation2d &angle, units::turns_per_second_t omega,
-                bool fieldOriented) {
+                                         const frc::Rotation2d &angle,
+                                         units::turns_per_second_t omega,
+                                         bool fieldOriented) {
   units::meters_per_second_t vx = speed * angle.Cos();
   units::meters_per_second_t vy = speed * angle.Sin();
 
@@ -287,7 +288,8 @@ void SwerveDrive<NumModules>::driveChassisSpeeds(
     frc::ChassisSpeeds chassisSpeeds) {
   auto states = kinematics.ToSwerveModuleStates(chassisSpeeds);
   // std::cout << "rotation: "
-  //           << ((units::turns_per_second_t)chassisSpeeds.omega)() << std::endl;
+  //           << ((units::turns_per_second_t)chassisSpeeds.omega)() <<
+  //           std::endl;
   kinematics.DesaturateWheelSpeeds(&states, maxModuleSpeed);
   driveModuleStates(states);
 
