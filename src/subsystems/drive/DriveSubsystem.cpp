@@ -143,13 +143,16 @@ void DriveSubsystem::Periodic() {
 
 void DriveSubsystem::driveTeleop(const rmb::LogitechGamepad &gamepad) {
   // TODO: add filters
-  std::cout << "gyro angle: " << drive->getPose().Rotation().Degrees()()
-            << std::endl;
-  std::cout << "input: [" << gamepad.GetLeftY() << ", " << gamepad.GetLeftX()
-            << ", " << gamepad.GetRightX() << "]" << std::endl;
+  // std::cout << "gyro angle: " << drive->getPose().Rotation().Degrees()()
+  //           << std::endl;
+  // std::cout << "input: [" << gamepad.GetLeftY() << ", " << gamepad.GetLeftX()
+  //           << ", " << gamepad.GetRightX() << "]" << std::endl;
   drive->driveCartesian(-10_mps * gamepad.GetLeftY(),
                         10_mps * gamepad.GetLeftX(),
-                        -1.0_tps * gamepad.GetRightX(), false);
+                        -1.0_tps * gamepad.GetRightX(), true);
+  // drive->driveCartesian(-gamepad.GetLeftY(),
+  //                       gamepad.GetLeftX(),
+  //                       gamepad.GetRightX(), true);
   // drive->drivePolar(10.0_mps * std::sqrt(SQUARED(gamepad.GetLeftX()) +
   //                                        SQUARED(gamepad.GetRightY())),
   //                   units::math::atan2((units::dimensionless_t)gamepad.GetLeftY(),

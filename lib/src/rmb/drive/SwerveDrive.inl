@@ -11,6 +11,7 @@
 #include "units/angular_velocity.h"
 #include "units/base.h"
 #include "units/length.h"
+#include "units/math.h"
 #include "units/velocity.h"
 
 #include "frc/controller/HolonomicDriveController.h"
@@ -303,7 +304,7 @@ void SwerveDrive<NumModules>::driveChassisSpeeds(
 
   if (fieldRelative)
     chassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-        chassisSpeeds, -gyro->getRotation());
+        chassisSpeeds, gyro->getRotation());
 
   driveChassisSpeeds(chassisSpeeds);
 }
@@ -334,16 +335,30 @@ void SwerveDrive<NumModules>::updateNTDebugInfo(bool openLoopVelocity) {
       error = modules[i].getTargetState().speed - modules[i].getState().speed;
     }
 
-    velocityErrors[i] = error();
+    velocityErrors[i] = std::abs(error());
   }
   ntVelocityErrorTopics.Set(velocityErrors);
 
   std::array<double, NumModules> positionErrors;
   for (size_t i = 0; i < NumModules; i++) {
-    units::degree_t error = modules[i].getTargetRotation().Degrees() -
-                            modules[i].getState().angle.Degrees();
+    units::turn_t rotation = units::math::fmod(
+        units::math::abs(modules[i].getState().angle.Degrees()), 180.0_deg);
+    // rotation = wpi::sgn(rotation()) *
+    //            units::math::min(units::math::abs(rotation),
+    //                             180_deg - units::math::abs(rotation));
 
-    positionErrors[i] = std::fmod(std::abs(error()), 180.0);
+    units::turn_t target = units::math::fmod(
+        units::math::abs(modules[i].getTargetRotation().Degrees()), 180.0_deg);
+    // target = wpi::sgn(target()) *
+    //            units::math::min(units::math::abs(target),
+    //                             180_deg - units::math::abs(target));
+
+    units::degree_t error =
+        units::math::min(units::math::abs(target - rotation),
+                         units::math::abs(target - rotation));
+    // modules[i].getState().angle.Degrees();
+
+    positionErrors[i] = error();
   }
   ntPositionErrorTopics.Set(positionErrors);
 

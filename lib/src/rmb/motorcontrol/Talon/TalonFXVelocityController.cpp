@@ -28,7 +28,7 @@ TalonFXVelocityController::TalonFXVelocityController(
       createInfo.openLoopConfig.maxOutput;
   talonFXConfig.MotorOutput.PeakReverseDutyCycle =
       createInfo.openLoopConfig.minOutput;
-  // talonFXConfig.MotorOutput.DutyCycleNeutralDeadband; NOTE: use if you want
+  talonFXConfig.MotorOutput.DutyCycleNeutralDeadband = 0.05; //NOTE: use if you want
   // to demote low target percentage outputs to zero
   talonFXConfig.MotorOutput.NeutralMode =
       ctre::phoenix6::signals::NeutralModeValue(
@@ -162,6 +162,7 @@ TalonFXVelocityController::getTargetVelocityStatusSignal() const {
                  this, ctre::phoenix6::StatusSignal<double>(
                            motorcontroller.GetClosedLoopReference())))
              .first;
+    it->second.SetUpdateFrequency(15 / 1_s);
   }
 
   return (*it).second;
@@ -209,6 +210,7 @@ TalonFXVelocityController::getVelocityStatusSignal() const {
                   this, ctre::phoenix6::StatusSignal<units::turns_per_second_t>(
                             motorcontroller.GetVelocity())))
               .first;
+      it->second.SetUpdateFrequency(15 / 1_s);
     }
 
     return (*it).second;
