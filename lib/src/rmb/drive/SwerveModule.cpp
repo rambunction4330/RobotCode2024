@@ -39,7 +39,7 @@ void SwerveModule::setState(const units::meters_per_second_t &velocity,
   setState({velocity, angle});
 
   if (velocity == 0.0_mps) {
-    std:: cout << "brake!" << std::endl;
+    std::cout << "brake!" << std::endl;
     velocityController->stop();
     velocityController->setPower(0.0);
   }

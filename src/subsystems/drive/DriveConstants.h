@@ -48,7 +48,7 @@ const units::meters_per_second_t maxModuleSpeed = 15_mps;
 const rmb::TalonFXVelocityController::CreateInfo velocityControllerCreateInfo{
     .config = {.id = 10, .inverted = false, .brake = true},
     .pidConfig = /* velocityModulePIDConfig, */
-        {.p = 7.0, .i = 0.000, .d = 0.000, .ff = 0.00},
+    {.p = 7.0, .i = 0.000, .d = 0.000, .ff = 0.00},
     .profileConfig = {.maxVelocity = 100_tps,
                       .minVelocity = -100_tps,
                       .maxAcceleration = 1.0_rad_per_s_sq},
@@ -83,7 +83,7 @@ const rmb::TalonFXPositionController::CreateInfo positionControllerCreateInfo{
 const rmb::TalonFXVelocityController::CreateInfo velocityControllerCreateInfo1{
     .config = {.id = 20, .inverted = false, .brake = true},
     .pidConfig = /* velocityModulePIDConfig, */
-        {.p = 7.0, .i = 0.000, .d = 0.000, .ff = 0.00},
+    {.p = 7.0, .i = 0.000, .d = 0.000, .ff = 0.00},
     .profileConfig = {.maxVelocity = 100_tps,
                       .minVelocity = -100_tps,
                       .maxAcceleration = 1.0_rad_per_s_sq},
@@ -118,7 +118,7 @@ const rmb::TalonFXPositionController::CreateInfo positionControllerCreateInfo1{
 const rmb::TalonFXVelocityController::CreateInfo velocityControllerCreateInfo2{
     .config = {.id = 30, .inverted = false, .brake = true},
     .pidConfig = /* velocityModulePIDConfig, */
-        {.p = 7.0, .i = 0.000, .d = 0.000, .ff = 0.00},
+    {.p = 7.0, .i = 0.000, .d = 0.000, .ff = 0.00},
     .profileConfig = {.maxVelocity = 100_tps,
                       .minVelocity = -100_tps,
                       .maxAcceleration = 1.0_rad_per_s_sq},
@@ -153,7 +153,7 @@ const rmb::TalonFXPositionController::CreateInfo positionControllerCreateInfo2{
 const rmb::TalonFXVelocityController::CreateInfo velocityControllerCreateInfo3{
     .config = {.id = 40, .inverted = false, .brake = true},
     .pidConfig = /* velocityModulePIDConfig */
-        {.p = 7.0, .i = 0.000, .d = 0.000, .ff = 0.00},
+    {.p = 7.0, .i = 0.000, .d = 0.000, .ff = 0.00},
     .profileConfig = {.maxVelocity = 100_tps,
                       .minVelocity = -100_tps,
                       .maxAcceleration = 1.0_rad_per_s_sq},
