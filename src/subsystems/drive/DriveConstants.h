@@ -5,6 +5,8 @@
 #pragma once
 
 #include "pathplanner/lib/util/PIDConstants.h"
+#include <ios>
+#include <numbers>
 #include <units/velocity.h>
 
 #include <rmb/motorcontrol/Talon/TalonFXPositionController.h>
@@ -40,7 +42,7 @@ const units::turn_t module2MagnetOffset(0.033691);
 const units::turn_t module3MagnetOffset(-0.134766);
 const units::turn_t module4MagnetOffset(-0.198730 - 0.5);
 
-const units::meter_t wheelCircumference = 1.0_m; // TODO: CHANGE
+const units::meter_t wheelCircumference = 4_in * std::numbers::pi;
 const units::meter_t robotDimX = 1.0_m;
 const units::meter_t robotDimY = 1.0_m;
 const units::meters_per_second_t maxModuleSpeed = 15_mps;

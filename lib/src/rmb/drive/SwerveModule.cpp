@@ -37,12 +37,6 @@ SwerveModule::SwerveModule(
 void SwerveModule::setState(const units::meters_per_second_t &velocity,
                             const frc::Rotation2d &angle) {
   setState({velocity, angle});
-
-  if (velocity == 0.0_mps) {
-    std::cout << "brake!" << std::endl;
-    velocityController->stop();
-    velocityController->setPower(0.0);
-  }
 }
 
 void SwerveModule::setState(const frc::SwerveModuleState &state) {
