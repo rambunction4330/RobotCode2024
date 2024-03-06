@@ -176,15 +176,14 @@ ArmSubsystem::setWristCOmmand(frc2::CommandJoystick &joystick) {
   return frc2::RunCommand(
              [&]() {
                //  wristPositionController.setPower(0.2);
-               if (joystick.GetRawButton(9)){
-               setWristPosition(0.8_tr);
+               if (joystick.GetRawButton(9)) {
+                 setWristPosition(0.8_tr);
+               } else if (joystick.GetRawButton(10)) {
+                 setWristPosition(0.0_tr);
                }
-               else if (joystick.GetRawButton(10)){
-                setWristPosition(0.0_tr);
-               }
-              //  else{
-              //   wristPositionController.setPower(0.0);
-              //  }
+               //  else{
+               //   wristPositionController.setPower(0.0);
+               //  }
                //  setWristPosition(
                //      ((units::turn_t)(joystick.GetThrottle() + 1) / 4));
                //  std::cout
@@ -208,18 +207,21 @@ ArmSubsystem::setWristCOmmand(frc2::CommandJoystick &joystick) {
 frc2::CommandPtr ArmSubsystem::getSpoolCommand(frc::Joystick &controller) {
   return frc2::RunCommand(
              [&]() {
-               std::cout<< ((units::turn_t)armExtensionPositionController.getPosition()).value() << std::endl;
+               std::cout << ((units::turn_t)
+                                 armExtensionPositionController.getPosition())
+                                .value()
+                         << std::endl;
                if (controller.GetRawButton(3)) {
                  armExtensionPositionController.setPosition(0.5_tr);
                  std::cout << "forward" << std::endl;
                } else if (controller.GetRawButton(4)) {
                  armExtensionPositionController.setPosition(0.0_tr);
-                 std::cout << "backward" << std::endl;}
-              //  } else {
-              //    armExtensionPositionController.setPower(0.0);
-              //    std::cout << "stop" << std::endl;
-              //  }
-
+                 std::cout << "backward" << std::endl;
+               }
+               //  } else {
+               //    armExtensionPositionController.setPower(0.0);
+               //    std::cout << "stop" << std::endl;
+               //  }
              },
              {this})
       .ToPtr();
@@ -229,16 +231,18 @@ frc2::CommandPtr ArmSubsystem::spinElbowCommand(frc::Joystick &controller) {
   resetElbowPosition();
   return frc2::RunCommand(
              [&]() {
-              std::cout<< ((units::turn_t)elbowPositionController.getPosition()).value() <<std::endl; 
+               std::cout
+                   << ((units::turn_t)elbowPositionController.getPosition())
+                          .value()
+                   << std::endl;
                if (controller.GetRawButton(7)) {
                  elbowPositionController.setPosition(0.0_tr);
                } else if (controller.GetRawButton(8)) {
                  elbowPositionController.setPosition(0.8_tr);
-               } 
-               else{
-                elbowPositionController.setPosition(((units::turn_t)elbowPositionController.getPosition()));
+               } else {
+                 elbowPositionController.setPosition(
+                     ((units::turn_t)elbowPositionController.getPosition()));
                }
-               
              },
              {this})
       .ToPtr();

@@ -31,7 +31,9 @@ public:
 
   void setElbowPosition(units::turn_t position);
   void resetElbowPosition(units::turn_t position = 0_tr);
-  inline void setElbowPower(double power) { elbowPositionController.setPower(power); }
+  inline void setElbowPower(double power) {
+    elbowPositionController.setPower(power);
+  }
   units::turn_t getElbowPosition() const;
   units::turn_t getTargetElbowPosition() const;
 
@@ -42,7 +44,9 @@ public:
   void setWristPosition(units::turn_t position);
   units::turn_t getWristPosition() const;
   units::turn_t getTargetWristPosition() const;
-  inline void resetWristPosition(units::turn_t position = 0.0_tr) { wristPositionController.setEncoderPosition(position); }
+  inline void resetWristPosition(units::turn_t position = 0.0_tr) {
+    wristPositionController.setEncoderPosition(position);
+  }
 
   bool atTarget() const;
   //
