@@ -11,6 +11,7 @@
 #include "rmb/motorcontrol/LinearPositionController.h"
 #include "rmb/motorcontrol/sparkmax/SparkMaxPositionController.h"
 #include "rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h"
+#include "subsystems/arm/ArmConstants.h"
 #include "units/angle.h"
 #include "units/angular_velocity.h"
 #include "units/length.h"
@@ -40,6 +41,10 @@ public:
   void setArmExtensionPosition(units::meter_t position);
   units::meter_t getArmExtensionPosition() const;
   units::meter_t getTargetArmExtensionPosition() const;
+  inline void resetArmExtensionPosition(units::meter_t position) {
+    armExtensionPositionController.setEncoderPosition(
+        position / constants::arm::extensionAfterGRLinearToAngularRatio);
+  }
 
   void setWristPosition(units::turn_t position);
   units::turn_t getWristPosition() const;
@@ -72,10 +77,12 @@ public:
 
   frc2::CommandPtr setArmToSpeaker();
 
-  frc2::CommandPtr setWristCOmmand(frc2::CommandJoystick &joystick);
-  frc2::CommandPtr getSpoolCommand(frc::Joystick &controller);
+  frc2::CommandPtr setWristCommand(frc2::CommandJoystick &joystick);
+  frc2::CommandPtr getSpoolCommand(rmb::LogitechGamepad &gamepad);
   frc2::CommandPtr spinElbowCommand(frc::Joystick &controller);
-  frc2::CommandPtr extensionToSetPoint(units::meter_t pos);
+
+  frc2::CommandPtr getTeleopCommand(frc::Joystick &joystick,
+                                    rmb::LogitechGamepad &gampead);
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be

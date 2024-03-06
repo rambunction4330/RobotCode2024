@@ -2,7 +2,6 @@
 
 #include "rmb/motorcontrol/feedforward/ArmFeedforward.h"
 #include "rmb/motorcontrol/feedforward/Feedforward.h"
-#include "units/angle.h"
 #include <optional>
 
 #include <rmb/motorcontrol/sparkmax/SparkMaxPositionController.h>
@@ -44,7 +43,7 @@ const rmb::SparkMaxPositionController::CreateInfo
             },
         .feedbackConfig =
             {
-                230.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
+                9.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
                 rmb::SparkMaxPositionController::EncoderType::
                     HallSensor /* <- encoder */,
                 42 /* <- countPerRev */,
@@ -59,9 +58,7 @@ const rmb::SparkMaxPositionController::CreateInfo
             .motorType = rev::CANSparkMax::MotorType::kBrushless,
             .inverted = true}}};
 
-const units::meter_t maxExtension = 29_cm;
-const units::turn_t maxTurns = 3.25_tr;
-const auto extensionAfterGRLinearToAngularRatio = maxExtension / maxTurns;
+const auto extensionAfterGRLinearToAngularRatio = 29_cm / 3.25_tr;
 double const extension_kS = 0.1;
 double const extension_kG = 0.1;
 const rmb::SparkMaxPositionController::CreateInfo
@@ -70,7 +67,7 @@ const rmb::SparkMaxPositionController::CreateInfo
             {
                 .id = 58,
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
-                .inverted = false,
+                .inverted = true,
             },
         .pidConfig = {.p = 1.0,
                       .i = 0.0,
@@ -81,11 +78,10 @@ const rmb::SparkMaxPositionController::CreateInfo
                       .iMaxAccumulator = 0.0,
                       .maxOutput = 1.0,
                       .minOutput = -1.0},
-        .range =
-            {
-                .minPosition = 0.0_tr,
-                .maxPosition = maxTurns,
-            },
+        .range = {
+    .maxPosition = 29_cm,
+    .minPosition = 0.0_tr
+  }
 
         //.feedforward // TODO: Consider? Should probably be variant on 1 -
         // cos(theta) .range // TODO: just in case?
@@ -111,9 +107,9 @@ const rmb::SparkMaxPositionController::CreateInfo
         .followers = {rmb::SparkMaxPositionController::MotorConfig{
             .id = 51,
             .motorType = rev::CANSparkMax::MotorType::kBrushless,
-            .inverted = true}}};
+            .inverted = false}}};
 
-double const wrist_kG = 0.01;
+double const wrist_kG = 0.25;
 const rmb::SparkMaxPositionController::CreateInfo
     wristPositionControllerCreateInfo{
         .motorConfig =
@@ -122,7 +118,7 @@ const rmb::SparkMaxPositionController::CreateInfo
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
                 .inverted = false,
             },
-        .pidConfig = {.p = 0.01,
+        .pidConfig = {.p = 0.0,
                       .i = 0.0,
                       .d = 0.0,
                       .ff = 0.0,
@@ -137,7 +133,7 @@ const rmb::SparkMaxPositionController::CreateInfo
         .range =
             {
                 .minPosition = 0.0_tr,
-                .maxPosition = 0.5_tr,
+                .maxPosition = 3.25_tr,
                 .isContinuous = false,
             },
         .profileConfig =
@@ -149,7 +145,7 @@ const rmb::SparkMaxPositionController::CreateInfo
             },
         .feedbackConfig =
             {
-                36.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
+                9.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
                 rmb::SparkMaxPositionController::EncoderType::
                     HallSensor /* <- encoder */,
                 42 /* <- countPerRev */,
