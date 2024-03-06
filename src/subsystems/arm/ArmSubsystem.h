@@ -78,7 +78,7 @@ public:
   frc2::CommandPtr setArmToSpeaker();
 
   frc2::CommandPtr setWristCommand(frc2::CommandJoystick &joystick);
-  frc2::CommandPtr getSpoolCommand(rmb::LogitechGamepad &gamepad);
+  frc2::CommandPtr getSpoolCommand(frc::Joystick &controller);
   frc2::CommandPtr spinElbowCommand(frc::Joystick &controller);
 
   frc2::CommandPtr getTeleopCommand(frc::Joystick &joystick,

@@ -24,7 +24,7 @@
 
 namespace constants {
 
-const units::millisecond_t robotLoopTime = 20_ms;
+const units::millisecond_t robotLoopTime = 30_ms;
 
 inline constexpr int driverControllerPort = 0;
 

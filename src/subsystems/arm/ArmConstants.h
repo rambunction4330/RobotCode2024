@@ -9,7 +9,7 @@
 #include <rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h>
 
 namespace constants::arm {
-double const arm_kG = 1.0;
+double const arm_kG = 0.05;
 const rmb::SparkMaxPositionController::CreateInfo
     elbowPositionControllerCreateInfo{
         .motorConfig =
@@ -18,7 +18,7 @@ const rmb::SparkMaxPositionController::CreateInfo
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
                 .inverted = false,
             },
-        .pidConfig = {.p = 1.0,
+        .pidConfig = {.p = 0.1,
                       .i = 0.0,
                       .d = 0.0,
                       .ff = 0.0,
@@ -29,7 +29,7 @@ const rmb::SparkMaxPositionController::CreateInfo
                       .minOutput = -1.0},
         .feedforward = std::make_shared<rmb::ArmFeedforward>(
             rmb::ArmFeedforward::Ks_t{0.0} /* <- Ks */,
-            rmb::ArmFeedforward::Ks_t{0.5} /* <- Kcos */,
+            rmb::ArmFeedforward::Ks_t{0.0} /* <- Kcos */,
             rmb::ArmFeedforward::Kv_t{0.0} /* <- Kv */,
             rmb::ArmFeedforward::Ka_t{0.0} /* <- Ka */
             ),
@@ -44,7 +44,7 @@ const rmb::SparkMaxPositionController::CreateInfo
             },
         .feedbackConfig =
             {
-                230.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
+                273.375 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
                 rmb::SparkMaxPositionController::EncoderType::
                     HallSensor /* <- encoder */,
                 42 /* <- countPerRev */,
@@ -72,7 +72,7 @@ const rmb::SparkMaxPositionController::CreateInfo
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
                 .inverted = false,
             },
-        .pidConfig = {.p = 1.0,
+        .pidConfig = {.p = 0.7,
                       .i = 0.0,
                       .d = 0.0,
                       .ff = 0.0,

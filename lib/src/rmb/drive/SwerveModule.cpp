@@ -46,7 +46,11 @@ void SwerveModule::setState(const frc::SwerveModuleState &state) {
   //           << ((units::millisecond_t)frc::Timer::GetFPGATimestamp() -
   //           start)()
   //           << std::endl;
-  velocityController->setVelocity(optomized.speed);
+  if (false && units::math::abs(state.speed) <= 0.05_mps) {
+    velocityController->setPower(0.0);
+  } else {
+    velocityController->setVelocity(optomized.speed);
+  }
   angularController->setPosition(optomized.angle.Radians());
 }
 

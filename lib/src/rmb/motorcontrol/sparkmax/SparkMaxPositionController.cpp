@@ -3,6 +3,8 @@
 #include "rev/SparkPIDController.h"
 
 #include <algorithm>
+#include <iostream>
+#include <ostream>
 
 namespace rmb {
 SparkMaxPositionController::SparkMaxPositionController(
@@ -135,12 +137,16 @@ void SparkMaxPositionController::setPosition(units::radian_t position) {
 
 void SparkMaxPositionController::setPosition(units::radian_t position,
                                              double ff) {
-  targetPosition = pidController.GetPositionPIDWrappingEnabled()
-                       ? position
-                       : std::clamp(position, minPose, maxPose);
-  pidController.SetReference(units::turn_t(targetPosition).to<double>() *
-                                 gearRatio,
-                             controlType, 0, ff, FeedforwardUnits);
+  // std::cout << "setpoint a: " << ((units::turn_t)position).value() << std::endl;
+  targetPosition =
+      pidController.GetPositionPIDWrappingEnabled()
+          ? (units::turn_t)position
+          : units::turn_t(std::clamp(((units::turn_t)position).value(),
+                                     ((units::turn_t)minPose).value(),
+                                     ((units::turn_t)maxPose).value()));
+  pidController.SetReference(position.value() * gearRatio, controlType, 0,
+                             ff, FeedforwardUnits);
+  // std::cout << "setpoint b: " << ((units::turn_t)position).value() << std::endl;
 }
 
 units::radian_t SparkMaxPositionController::getTargetPosition() const {
