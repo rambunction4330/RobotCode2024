@@ -37,7 +37,6 @@ public:
 
   void RunAutonomousCommand();
 
-
   void setTeleopDefaults();
   void setAutoDefaults();
 
@@ -68,5 +67,4 @@ private:
   std::unordered_map<std::string, frc2::CommandPtr> autoCommands;
 
   frc::SendableChooser<std::string> autonomousChooser;
-
 };

@@ -8,9 +8,9 @@
 #include <frc2/command/button/Trigger.h>
 
 #include "frc/Joystick.h"
+#include "frc2/command/CommandPtr.h"
 #include "frc2/command/Commands.h"
 #include "frc2/command/RunCommand.h"
-#include "frc2/command/CommandPtr.h"
 #include "rmb/controller/LogitechGamepad.h"
 #include "subsystems/arm/ArmConstants.h"
 #include "subsystems/arm/ArmSubsystem.h"
@@ -91,8 +91,6 @@ frc2::CommandPtr RobotContainer::getIntakeCommand() {
       .ToPtr();
 }
 
-
-
 void RobotContainer::setTeleopDefaults() {
   // static auto armCommand = frc2::RunCommand([this]() { std::cout <<
   // arm.getWristPosition()() << std::endl; });
@@ -107,7 +105,6 @@ void RobotContainer::setTeleopDefaults() {
   arm.SetDefaultCommand(arm.getTeleopCommand(controller, gamepad));
   shooter.SetDefaultCommand(shooter.runShooter(gamepad));
 }
-
 
 void RobotContainer::setAutoDefaults() {
 
