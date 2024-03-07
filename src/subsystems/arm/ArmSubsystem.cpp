@@ -66,7 +66,7 @@ void ArmSubsystem::setArmExtensionPosition(units::meter_t position) {
             << std::endl;
   armExtensionPositionController.setPosition(
       position / constants::arm::extensionAfterGRLinearToAngularRatio,
-      0 * constants::arm::extension_kS -
+      constants::arm::extension_kS -
           (constants::arm::extension_kG *
            std::sin(((units::radian_t)getElbowPosition()).value())));
 }

@@ -72,7 +72,7 @@ const rmb::SparkMaxPositionController::CreateInfo
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
                 .inverted = false,
             },
-        .pidConfig = {.p = 0.7,
+        .pidConfig = {.p = 0.3,
                       .i = 0.0,
                       .d = 0.0,
                       .ff = 0.0,
