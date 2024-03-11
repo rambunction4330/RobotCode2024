@@ -9,7 +9,7 @@
 #include <rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h>
 
 namespace constants::arm {
-double const arm_kG = 0.07;
+double const arm_kG = 0.20;
 const rmb::SparkMaxPositionController::CreateInfo
     elbowPositionControllerCreateInfo{
         .motorConfig =
@@ -18,7 +18,7 @@ const rmb::SparkMaxPositionController::CreateInfo
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
                 .inverted = false,
             },
-        .pidConfig = {.p = 0.1,
+        .pidConfig = {.p = 0.3,
                       .i = 0.0,
                       .d = 0.0,
                       .ff = 0.0,
@@ -68,7 +68,7 @@ const units::meter_t maxExtension = 27_cm;
 const units::turn_t maxTurns = 3_tr;
 const auto extensionAfterGRLinearToAngularRatio = maxExtension / maxTurns;
 double const extension_kS = 0.1;
-double const extension_kG = 0.1;
+double const extension_kG = 0.15;
 const rmb::SparkMaxPositionController::CreateInfo
     armExtensionPositionControllerCreateInfo{
         .motorConfig =
@@ -118,7 +118,7 @@ const rmb::SparkMaxPositionController::CreateInfo
             .motorType = rev::CANSparkMax::MotorType::kBrushless,
             .inverted = true}}};
 
-double const wrist_kG = 0.08;
+double const wrist_kG = 0.15;
 const rmb::SparkMaxPositionController::CreateInfo
     wristPositionControllerCreateInfo{
         .motorConfig =
@@ -127,7 +127,7 @@ const rmb::SparkMaxPositionController::CreateInfo
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
                 .inverted = false,
             },
-        .pidConfig = {.p = 0.01,
+        .pidConfig = {.p = 0.25,
                       .i = 0.0,
                       .d = 0.0,
                       .ff = 0.0,
