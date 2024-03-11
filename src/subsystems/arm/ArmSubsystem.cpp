@@ -83,9 +83,12 @@ units::meter_t ArmSubsystem::getTargetArmExtensionPosition() const {
 }
 
 void ArmSubsystem::setWristPosition(units::turn_t position) {
-  std::cout << "ff = " <<constants::arm::wrist_kG * std::cos(((units::radian_t)getWristPosition() +
-                                           (units::radian_t)getElbowPosition())
-                                              .value()) << std::endl;
+  std::cout << "ff = "
+            << constants::arm::wrist_kG *
+                   std::cos(((units::radian_t)getWristPosition() +
+                             (units::radian_t)getElbowPosition())
+                                .value())
+            << std::endl;
   wristPositionController.setPosition(
       position,
       constants::arm::wrist_kG * std::cos(((units::radian_t)getWristPosition() +
@@ -251,7 +254,7 @@ frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
                targetPercentageExtended = (-joystick.GetThrottle() + 1.0) / 2.0;
 
                units::turn_t targetWristPosition =
-                     units::math::abs(1_tr * (joystick.GetX()) / 2.0);
+                   units::math::abs(1_tr * (joystick.GetX()) / 2.0);
 
                // elbowPositionController.setPosition(targetElbowPosition);
 
@@ -260,7 +263,7 @@ frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
                setArmExtensionPosition(targetPercentageExtended *
                                        constants::arm::maxExtension);
                // armExtensionPositionController.setPosition(0.5_tr);
-                // setWristPosition(targetWristPosition);
+               // setWristPosition(targetWristPosition);
 
                printf("elbow{target=%f, position=%f}\n", targetElbowPosition(),
                       elbowPositionController.getPosition()
@@ -270,10 +273,9 @@ frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
                //     100.0 * targetPercentageExtended,
                //     ((units::turn_t)armExtensionPositionController.getPosition())
                //         .value());
-                printf("wrist{target=%f, position=%f}\n",
-                targetWristPosition(),
-                       wristPositionController.getPosition()
-                           .convert<units::turns>()());
+               printf("wrist{target=%f, position=%f}\n", targetWristPosition(),
+                      wristPositionController.getPosition()
+                          .convert<units::turns>()());
                // printf("wrist{target=%f, position=%f}\n",
                // 0.0,
                //        wristPositionController.getPosition()
