@@ -246,8 +246,8 @@ frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
                //      0.0, 1.0);
                targetPercentageExtended = (-joystick.GetThrottle() + 1.0) / 2.0;
 
-              // units::turn_t targetWristPosition =
-              //       1_tr * (joystick.GetThrottle() + 1.0) / 4.0;
+               // units::turn_t targetWristPosition =
+               //       1_tr * (joystick.GetThrottle() + 1.0) / 4.0;
 
                // elbowPositionController.setPosition(targetElbowPosition);
 
@@ -258,10 +258,9 @@ frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
                // armExtensionPositionController.setPosition(0.5_tr);
                //  setWristPosition(targetWristPosition);
 
-                printf("elbow{target=%f, position=%f}\n",
-                targetElbowPosition(),
-                       elbowPositionController.getPosition()
-                           .convert<units::turns>()());
+               printf("elbow{target=%f, position=%f}\n", targetElbowPosition(),
+                      elbowPositionController.getPosition()
+                          .convert<units::turns>()());
                printf(
                    "extender{target=%f%%, position=%f}\n",
                    100.0 * targetPercentageExtended,
