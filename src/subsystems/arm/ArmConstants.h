@@ -33,11 +33,7 @@ const rmb::SparkMaxPositionController::CreateInfo
             rmb::ArmFeedforward::Kv_t{0.0} /* <- Kv */,
             rmb::ArmFeedforward::Ka_t{0.0} /* <- Ka */
             ),
-        .range =
-            {
-              .minPosition = 0.0_tr,
-              .maxPosition = 70_deg
-            },
+        .range = {.minPosition = 0.0_tr, .maxPosition = 70_deg},
 
         //.range // TODO: just in case?
         .profileConfig =

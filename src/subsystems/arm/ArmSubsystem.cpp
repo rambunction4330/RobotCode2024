@@ -61,7 +61,8 @@ units::turn_t ArmSubsystem::getTargetElbowPosition() const {
 
 void ArmSubsystem::setArmExtensionPosition(units::meter_t position) {
   // std::cout << "setpoint: "
-  //           << (position / constants::arm::extensionAfterGRLinearToAngularRatio)
+  //           << (position /
+  //           constants::arm::extensionAfterGRLinearToAngularRatio)
   //                  .value()
   //           << std::endl;
   armExtensionPositionController.setPosition(
@@ -84,9 +85,9 @@ units::meter_t ArmSubsystem::getTargetArmExtensionPosition() const {
 void ArmSubsystem::setWristPosition(units::turn_t position) {
   wristPositionController.setPosition(
       position,
-      constants::arm::wrist_kG * std::cos(((units::radian_t)getWristPosition() +
-                                           getElbowPosition())
-                                              .value()));
+      constants::arm::wrist_kG *
+          std::cos(((units::radian_t)getWristPosition() + getElbowPosition())
+                       .value()));
 }
 
 units::turn_t ArmSubsystem::getWristPosition() const {
@@ -201,7 +202,7 @@ frc2::CommandPtr ArmSubsystem::getSpoolCommand(frc::Joystick &controller) {
 }
 
 frc2::CommandPtr ArmSubsystem::spinElbowCommand(frc::Joystick &controller) {
-   resetElbowPosition();
+  resetElbowPosition();
   return frc2::RunCommand(
              [&]() {
                std::cout
@@ -258,7 +259,8 @@ frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
                // armExtensionPositionController.setPosition(0.5_tr);
                //  setWristPosition(targetWristPosition);
 
-               // printf("elbow{target=%f, position=%f}\n", targetElbowPosition(),
+               // printf("elbow{target=%f, position=%f}\n",
+               // targetElbowPosition(),
                //        elbowPositionController.getPosition()
                //            .convert<units::turns>()());
                // printf(
@@ -266,10 +268,10 @@ frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
                //     100.0 * targetPercentageExtended,
                //     ((units::turn_t)armExtensionPositionController.getPosition())
                //         .value());
-                // printf("wrist{target=%f, position=%f}\n",
-                // 0.0,
-                //        wristPositionController.getPosition()
-                //            .convert<units::turns>()());
+               // printf("wrist{target=%f, position=%f}\n",
+               // 0.0,
+               //        wristPositionController.getPosition()
+               //            .convert<units::turns>()());
              },
              {this})
       .ToPtr();
