@@ -60,10 +60,10 @@ units::turn_t ArmSubsystem::getTargetElbowPosition() const {
 }
 
 void ArmSubsystem::setArmExtensionPosition(units::meter_t position) {
-  std::cout << "setpoint: "
-            << (position / constants::arm::extensionAfterGRLinearToAngularRatio)
-                   .value()
-            << std::endl;
+  // std::cout << "setpoint: "
+  //           << (position / constants::arm::extensionAfterGRLinearToAngularRatio)
+  //                  .value()
+  //           << std::endl;
   armExtensionPositionController.setPosition(
       position / constants::arm::extensionAfterGRLinearToAngularRatio,
       constants::arm::extension_kS -
@@ -85,7 +85,7 @@ void ArmSubsystem::setWristPosition(units::turn_t position) {
   wristPositionController.setPosition(
       position,
       constants::arm::wrist_kG * std::cos(((units::radian_t)getWristPosition() +
-                                           0 * getElbowPosition())
+                                           getElbowPosition())
                                               .value()));
 }
 
@@ -201,7 +201,7 @@ frc2::CommandPtr ArmSubsystem::getSpoolCommand(frc::Joystick &controller) {
 }
 
 frc2::CommandPtr ArmSubsystem::spinElbowCommand(frc::Joystick &controller) {
-  resetElbowPosition();
+   resetElbowPosition();
   return frc2::RunCommand(
              [&]() {
                std::cout
@@ -227,7 +227,7 @@ frc2::CommandPtr ArmSubsystem::spinElbowCommand(frc::Joystick &controller) {
 frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
                                                 rmb::LogitechGamepad &gamepad) {
   resetArmExtensionPosition(0_cm);
-  // resetElbowPosition();
+  resetElbowPosition();
   resetWristPosition();
   return frc2::RunCommand(
              [&]() {
@@ -251,25 +251,25 @@ frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
 
                // elbowPositionController.setPosition(targetElbowPosition);
 
-               // wristPositionController.setPosition(targetWristPosition);
+               setWristPosition(0.0_tr);
                setElbowPosition(targetElbowPosition);
                setArmExtensionPosition(targetPercentageExtended *
                                        constants::arm::maxExtension);
                // armExtensionPositionController.setPosition(0.5_tr);
                //  setWristPosition(targetWristPosition);
 
-               printf("elbow{target=%f, position=%f}\n", targetElbowPosition(),
-                      elbowPositionController.getPosition()
-                          .convert<units::turns>()());
-               printf(
-                   "extender{target=%f%%, position=%f}\n",
-                   100.0 * targetPercentageExtended,
-                   ((units::turn_t)armExtensionPositionController.getPosition())
-                       .value());
-               //  printf("wrist{target=%f, position=%f}\n",
-               //  targetWristPosition(),
-               //         wristPositionController.getPosition()
-               //             .convert<units::turns>()());
+               // printf("elbow{target=%f, position=%f}\n", targetElbowPosition(),
+               //        elbowPositionController.getPosition()
+               //            .convert<units::turns>()());
+               // printf(
+               //     "extender{target=%f%%, position=%f}\n",
+               //     100.0 * targetPercentageExtended,
+               //     ((units::turn_t)armExtensionPositionController.getPosition())
+               //         .value());
+                // printf("wrist{target=%f, position=%f}\n",
+                // 0.0,
+                //        wristPositionController.getPosition()
+                //            .convert<units::turns>()());
              },
              {this})
       .ToPtr();

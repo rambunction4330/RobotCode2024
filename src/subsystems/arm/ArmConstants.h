@@ -33,6 +33,11 @@ const rmb::SparkMaxPositionController::CreateInfo
             rmb::ArmFeedforward::Kv_t{0.0} /* <- Kv */,
             rmb::ArmFeedforward::Ka_t{0.0} /* <- Ka */
             ),
+        .range =
+            {
+              .minPosition = 0.0_tr,
+              .maxPosition = 70_deg
+            },
 
         //.range // TODO: just in case?
         .profileConfig =
@@ -113,7 +118,7 @@ const rmb::SparkMaxPositionController::CreateInfo
             .motorType = rev::CANSparkMax::MotorType::kBrushless,
             .inverted = true}}};
 
-double const wrist_kG = 0.01;
+double const wrist_kG = 0.08;
 const rmb::SparkMaxPositionController::CreateInfo
     wristPositionControllerCreateInfo{
         .motorConfig =
