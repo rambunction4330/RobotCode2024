@@ -61,7 +61,8 @@ units::turn_t ArmSubsystem::getTargetElbowPosition() const {
 
 void ArmSubsystem::setArmExtensionPosition(units::meter_t position) {
   // std::cout << "setpoint: "
-  //           << (position / constants::arm::extensionAfterGRLinearToAngularRatio)
+  //           << (position /
+  //           constants::arm::extensionAfterGRLinearToAngularRatio)
   //                  .value()
   //           << std::endl;
   armExtensionPositionController.setPosition(
@@ -204,7 +205,7 @@ frc2::CommandPtr ArmSubsystem::getSpoolCommand(frc::Joystick &controller) {
 }
 
 frc2::CommandPtr ArmSubsystem::spinElbowCommand(frc::Joystick &controller) {
-   resetElbowPosition();
+  resetElbowPosition();
   return frc2::RunCommand(
              [&]() {
                std::cout
@@ -273,6 +274,10 @@ frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
                 targetWristPosition(),
                        wristPositionController.getPosition()
                            .convert<units::turns>()());
+               // printf("wrist{target=%f, position=%f}\n",
+               // 0.0,
+               //        wristPositionController.getPosition()
+               //            .convert<units::turns>()());
              },
              {this})
       .ToPtr();
