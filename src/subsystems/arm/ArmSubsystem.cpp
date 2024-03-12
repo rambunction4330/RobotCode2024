@@ -255,7 +255,7 @@ frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
 
                units::turn_t targetWristPosition =
                    // units::math::abs(1_tr * (joystick.GetX()) / 2.0);
-                  0.5_tr;
+                   0.5_tr;
 
                // elbowPositionController.setPosition(targetElbowPosition);
 
