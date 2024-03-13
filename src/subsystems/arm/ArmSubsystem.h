@@ -49,7 +49,7 @@ public:
   void setWristPosition(units::turn_t position);
   units::turn_t getWristPosition() const;
   units::turn_t getTargetWristPosition() const;
-  inline void resetWristPosition(units::turn_t position = 0.0_tr) {
+  inline void resetWristPosition(units::turn_t position ) {
     wristPositionController.setEncoderPosition(position);
   }
 
@@ -83,6 +83,21 @@ public:
 
   frc2::CommandPtr getTeleopCommand(frc::Joystick &joystick,
                                     rmb::LogitechGamepad &gampead);
+  const ArmState stowedPosition = {
+    0.0_tr, 
+    constants::arm::maxExtension - 2_in, 
+    0.0_tr
+  };
+    const ArmState intakePosition = {
+    0.0_tr, 
+    constants::arm::maxExtension - 2_in, 
+    0.45_tr
+  };
+    const ArmState ampPosition = {
+    0.0_tr, 
+    constants::arm::maxExtension - 2_in, 
+    0.0_tr
+  };
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be
