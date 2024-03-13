@@ -104,11 +104,10 @@ void RobotContainer::setTeleopDefaults() {
   // arm.SetDefaultCommand(arm.getSpoolCommand(controller));
   arm.SetDefaultCommand(arm.getTeleopCommand(controller, gamepad));
   shooter.SetDefaultCommand(shooter.runShooter(gamepad));
-  controller.Button(11).WhileTrue(arm.setArmStateCommand(arm.stowedPosition)); 
-  controller.Button(12).WhileTrue(arm.setArmStateCommand(arm.intakePosition)); 
-  controller.Button(10).WhileTrue(arm.setArmStateCommand(arm.ampPosition)); 
-  controller.Button(8).WhileTrue(arm.getSpoolCommand(controller)); 
-  
+  controller.Button(11).WhileTrue(arm.setArmStateCommand(arm.stowedPosition));
+  controller.Button(12).WhileTrue(arm.setArmStateCommand(arm.intakePosition));
+  controller.Button(10).WhileTrue(arm.setArmStateCommand(arm.ampPosition));
+  controller.Button(8).WhileTrue(arm.getSpoolCommand(controller));
 }
 
 void RobotContainer::setAutoDefaults() {
