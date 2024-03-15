@@ -49,7 +49,7 @@ public:
   void setWristPosition(units::turn_t position);
   units::turn_t getWristPosition() const;
   units::turn_t getTargetWristPosition() const;
-  inline void resetWristPosition(units::turn_t position ) {
+  inline void resetWristPosition(units::turn_t position) {
     wristPositionController.setEncoderPosition(position);
   }
 
