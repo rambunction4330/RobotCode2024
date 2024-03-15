@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 3.0,
+      "y": 5.0
+    },
+    "rotation": 0.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "straight to speaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootToSpeaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "out of zone"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

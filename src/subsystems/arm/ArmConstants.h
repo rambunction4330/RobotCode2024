@@ -9,15 +9,15 @@
 #include <rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h>
 
 namespace constants::arm {
-double const arm_kG = 0.5;
-double const arm_KGe = 0.2;
+double const arm_kG = 0.05;
+double const arm_KGe = 0.00;
 const rmb::SparkMaxPositionController::CreateInfo
     elbowPositionControllerCreateInfo{
         .motorConfig =
             {
-                .id = 50,
+                .id = 53,
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
-                .inverted = false,
+                .inverted = true,
             },
         .pidConfig = {.p = 0.3,
                       .i = 0.0,
@@ -57,9 +57,9 @@ const rmb::SparkMaxPositionController::CreateInfo
             },
 
         .followers = {rmb::SparkMaxPositionController::MotorConfig{
-            .id = 53,
+            .id = 50,
             .motorType = rev::CANSparkMax::MotorType::kBrushless,
-            .inverted = true}}};
+            .inverted = false}}};
 
 const units::meter_t maxExtension = 35_cm;
 const units::turn_t maxTurns = 3.5_tr;
@@ -124,15 +124,15 @@ const rmb::SparkMaxPositionController::CreateInfo
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
                 .inverted = true,
             },
-        .pidConfig = {.p = 0.15,
+        .pidConfig = {.p = 0.05,
                       .i = 0.0,
-                      .d = 0.0,
+                      .d = 0.2,
                       .ff = 0.0,
                       .tolerance = 0.0_rad,
                       .iZone = 0.0,
                       .iMaxAccumulator = 0.0,
-                      .maxOutput = 1.0,
-                      .minOutput = -1.0},
+                      .maxOutput = 0.5,
+                      .minOutput = -0.5},
 
         //.feedforward // TODO: consider? This would be an interesting physics
         // mechanics FRQ lmao .range // TODO: just in case?

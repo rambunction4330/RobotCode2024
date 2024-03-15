@@ -8,7 +8,11 @@
 #include <frc2/command/CommandScheduler.h>
 #include <optional>
 
-void Robot::RobotInit() {}
+void Robot::RobotInit() {
+  container.arm.resetArmExtensionPosition(constants::arm::maxExtension - 2_in);
+  container.arm.resetElbowPosition();
+  container.arm.resetWristPosition(0.0_tr);
+}
 
 /**
  * This function is called every 20 ms, no matter the mode. Use

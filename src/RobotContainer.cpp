@@ -104,15 +104,18 @@ void RobotContainer::setTeleopDefaults() {
   // arm.SetDefaultCommand(arm.getSpoolCommand(controller));
   arm.SetDefaultCommand(arm.getTeleopCommand(controller, gamepad));
   shooter.SetDefaultCommand(shooter.runShooter(gamepad));
-  controller.Button(11).WhileTrue(arm.setArmStateCommand(arm.stowedPosition)); 
-  controller.Button(12).WhileTrue(arm.setArmStateCommand(arm.intakePosition)); 
-  controller.Button(10).WhileTrue(arm.setArmStateCommand(arm.ampPosition)); 
-  controller.Button(8).WhileTrue(arm.getSpoolCommand(controller)); 
-  
+  controller.Button(11).WhileTrue(arm.setArmStateCommand(arm.stowedPosition));
+  controller.Button(12).WhileTrue(arm.setArmStateCommand(arm.intakePosition));
+  controller.Button(10).WhileTrue(arm.setArmStateCommand(arm.ampPosition));
+  controller.Button(8).WhileTrue(arm.getSpoolCommand(controller));
 }
 
 void RobotContainer::setAutoDefaults() {
 
-  // driveSubsystem.SetDefaultCommand(
-  //    frc2::RunCommand([this] { driveSubsystem.stop(); }).ToPtr());
+  driveSubsystem.SetDefaultCommand(
+  autoDriveCommand().WithTimeout(2.0_s));
+}
+
+frc2::CommandPtr RobotContainer::autoDriveCommand() {
+  return frc2::RunCommand([&](){driveSubsystem.driveTeleop(0.4, 0, 0);}).ToPtr();
 }

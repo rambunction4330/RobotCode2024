@@ -234,9 +234,7 @@ frc2::CommandPtr ArmSubsystem::spinElbowCommand(frc::Joystick &controller) {
 
 frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
                                                 rmb::LogitechGamepad &gamepad) {
-  resetArmExtensionPosition(constants::arm::maxExtension - 2_in);
-  resetElbowPosition();
-  resetWristPosition(0.0_tr);
+  
   return frc2::RunCommand(
              [&]() {
               double joystickX = std::abs(joystick.GetX()) < 0.05 ? 0.0 : joystick.GetX();
@@ -265,7 +263,7 @@ frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
                setWristPosition(targetWristPosition);
                setElbowPosition(targetElbowPosition);
                setArmExtensionPosition(targetPercentageExtended *
-                                       constants::arm::maxExtension);
+                                       constants::arm::maxExtension - 1_in);
                // armExtensionPositionController.setPosition(0.5_tr);
                // setWristPosition(targetWristPosition);
 

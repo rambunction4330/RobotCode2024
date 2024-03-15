@@ -85,7 +85,7 @@ public:
                                     rmb::LogitechGamepad &gampead);
   const ArmState stowedPosition = {
     0.0_tr, 
-    constants::arm::maxExtension - 2_in, 
+    constants::arm::maxExtension - 1_in, 
     0.0_tr
   };
     const ArmState intakePosition = {
@@ -94,9 +94,9 @@ public:
     0.45_tr
   };
     const ArmState ampPosition = {
-    0.0_tr, 
-    constants::arm::maxExtension - 2_in, 
-    0.0_tr
+    0.17_tr, 
+    0.0_in, 
+    0.5_tr
   };
 
 private:
