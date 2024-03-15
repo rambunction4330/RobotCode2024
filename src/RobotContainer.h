@@ -44,8 +44,7 @@ public:
 
   DriveSubsystem &getDrive() { return driveSubsystem; }
 
-  frc2::CommandPtr autoDriveCommand(); 
-  
+  frc2::CommandPtr autoDriveCommand();
 
 private:
   // Replace with CommandPS4Controller or CommandJoystick if needed

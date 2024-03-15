@@ -112,10 +112,10 @@ void RobotContainer::setTeleopDefaults() {
 
 void RobotContainer::setAutoDefaults() {
 
-  driveSubsystem.SetDefaultCommand(
-  autoDriveCommand().WithTimeout(2.0_s));
+  driveSubsystem.SetDefaultCommand(autoDriveCommand().WithTimeout(2.0_s));
 }
 
 frc2::CommandPtr RobotContainer::autoDriveCommand() {
-  return frc2::RunCommand([&](){driveSubsystem.driveTeleop(0.4, 0, 0);}).ToPtr();
+  return frc2::RunCommand([&]() { driveSubsystem.driveTeleop(0.4, 0, 0); })
+      .ToPtr();
 }
