@@ -46,7 +46,7 @@ const rmb::SparkMaxPositionController::CreateInfo
             },
         .feedbackConfig =
             {
-                273.375 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
+                175.5 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
                 rmb::SparkMaxPositionController::EncoderType::
                     HallSensor /* <- encoder */,
                 42 /* <- countPerRev */,

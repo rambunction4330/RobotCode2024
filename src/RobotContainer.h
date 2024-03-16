@@ -34,6 +34,7 @@ public:
   RobotContainer();
 
   frc2::CommandPtr getIntakeCommand();
+  frc2::CommandPtr getShooterCommand();
 
   void RunAutonomousCommand();
 
@@ -44,8 +45,11 @@ public:
 
   DriveSubsystem &getDrive() { return driveSubsystem; }
 
-  frc2::CommandPtr autoDriveCommand(); 
-  
+  frc2::CommandPtr autoDriveCommand();
+  void resetMechPos();
+
+  frc2::CommandPtr getAutoCommand(); 
+
 
 private:
   // Replace with CommandPS4Controller or CommandJoystick if needed

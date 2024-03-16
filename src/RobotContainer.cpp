@@ -24,14 +24,16 @@
 #include "pathplanner/lib/auto/NamedCommands.h"
 #include "pathplanner/lib/commands/PathPlannerAuto.h"
 #include "pathplanner/lib/path/PathPlannerPath.h"
+#include "subsystems/arm/ShooterSubsystem.h"
 #include "subsystems/drive/DriveSubsystem.h"
 #include "units/angle.h"
 
 #include <frc2/command/button/JoystickButton.h>
 
-RobotContainer::RobotContainer() : driveSubsystem(gyro) {
+RobotContainer::RobotContainer() : driveSubsystem(gyro), intake(), shooter() {
   // Initialize all of your commands and subsystems here
-
+  pathplanner::NamedCommands::registerCommand("runIntake", getIntakeCommand());
+  pathplanner::NamedCommands::registerCommand("runShooter", getShooterCommand()); 
   // Configure the button bindings
   ConfigureBindings();
 }
@@ -91,6 +93,10 @@ frc2::CommandPtr RobotContainer::getIntakeCommand() {
       .ToPtr();
 }
 
+frc2::CommandPtr RobotContainer::getShooterCommand(){
+  return frc2::RunCommand([&](){shooter.runShooter(gamepad);}).ToPtr(); 
+}
+
 void RobotContainer::setTeleopDefaults() {
   // static auto armCommand = frc2::RunCommand([this]() { std::cout <<
   // arm.getWristPosition()() << std::endl; });
@@ -103,7 +109,7 @@ void RobotContainer::setTeleopDefaults() {
   // controller.Button(12).WhileTrue(arm.setWristCommand(controller));
   // arm.SetDefaultCommand(arm.getSpoolCommand(controller));
   arm.SetDefaultCommand(arm.getTeleopCommand(controller, gamepad));
-  shooter.SetDefaultCommand(shooter.runShooter(gamepad));
+  shooter.SetDefaultCommand(getShooterCommand());
   controller.Button(11).WhileTrue(arm.setArmStateCommand(arm.stowedPosition));
   controller.Button(12).WhileTrue(arm.setArmStateCommand(arm.intakePosition));
   controller.Button(10).WhileTrue(arm.setArmStateCommand(arm.ampPosition));
@@ -116,6 +122,17 @@ void RobotContainer::setAutoDefaults() {
   autoDriveCommand().WithTimeout(2.0_s));
 }
 
-frc2::CommandPtr RobotContainer::autoDriveCommand() {
+frc2::CommandPtr RobotContainer::                                                            autoDriveCommand() {
   return frc2::RunCommand([&](){driveSubsystem.driveTeleop(0.4, 0, 0);}).ToPtr();
 }
+
+void RobotContainer::resetMechPos(){
+  arm.resetArmExtensionPosition(constants::arm::maxExtension - 2_in);
+  arm.resetElbowPosition();
+  arm.resetWristPosition(0.0_tr);
+}
+
+frc2::CommandPtr RobotContainer::getAutoCommand(){
+  return pathplanner::PathPlannerAuto("Speaker Auto").ToPtr();
+}
+

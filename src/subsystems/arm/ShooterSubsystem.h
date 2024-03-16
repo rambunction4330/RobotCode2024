@@ -28,7 +28,7 @@ public:
     setBackShooterPower(back);
   }
 
-  frc2::CommandPtr runShooter(rmb::LogitechGamepad &gamepad);
+  void runShooter(rmb::LogitechGamepad &gamepad);
 
 private:
   rmb::SparkMaxVelocityController FrontShooterVelocityController;

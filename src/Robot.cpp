@@ -9,9 +9,7 @@
 #include <optional>
 
 void Robot::RobotInit() {
-  container.arm.resetArmExtensionPosition(constants::arm::maxExtension - 2_in);
-  container.arm.resetElbowPosition();
-  container.arm.resetWristPosition(0.0_tr);
+  container.resetMechPos();
 }
 
 /**
@@ -37,7 +35,7 @@ void Robot::DisabledPeriodic() {}
  * This autonomous runs the autonomous command selected by your {@link
  * RobotContainer} class.
  */
-void Robot::AutonomousInit() { container.RunAutonomousCommand(); }
+void Robot::AutonomousInit() { container.getAutoCommand(); }
 
 void Robot::AutonomousPeriodic() {}
 

@@ -17,9 +17,8 @@ ShooterSubsystem::ShooterSubsystem()
 // This method will be called once per scheduler run
 void ShooterSubsystem::Periodic() {}
 
-frc2::CommandPtr ShooterSubsystem::runShooter(rmb::LogitechGamepad &gamepad) {
-  return frc2::RunCommand(
-             [&]() {
+void ShooterSubsystem::runShooter(rmb::LogitechGamepad &gamepad) {
+ 
                if (gamepad.GetRightBumper()) {
                  setShooterPower(1, 1);
                } else if (gamepad.GetLeftBumper()) {
@@ -27,7 +26,5 @@ frc2::CommandPtr ShooterSubsystem::runShooter(rmb::LogitechGamepad &gamepad) {
                } else {
                  setShooterPower(0, 0);
                }
-             },
-             {this})
-      .ToPtr();
+            
 }
