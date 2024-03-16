@@ -83,21 +83,11 @@ public:
 
   frc2::CommandPtr getTeleopCommand(frc::Joystick &joystick,
                                     rmb::LogitechGamepad &gampead);
-  const ArmState stowedPosition = {
-    0.0_tr, 
-    constants::arm::maxExtension - 1_in, 
-    0.0_tr
-  };
-    const ArmState intakePosition = {
-    0.0_tr, 
-    constants::arm::maxExtension - 2_in, 
-    0.45_tr
-  };
-    const ArmState ampPosition = {
-    0.17_tr, 
-    0.0_in, 
-    0.5_tr
-  };
+  const ArmState stowedPosition = {0.0_tr, constants::arm::maxExtension - 1_in,
+                                   0.0_tr};
+  const ArmState intakePosition = {0.0_tr, constants::arm::maxExtension - 2_in,
+                                   0.45_tr};
+  const ArmState ampPosition = {0.17_tr, 0.0_in, 0.5_tr};
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be

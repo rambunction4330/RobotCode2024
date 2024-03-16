@@ -34,7 +34,6 @@ public:
   frc::ChassisSpeeds getChassisSpeedsEstimation();
 
   void stop();
-  
 
   /**
    * Will be called periodically whenever the CommandScheduler runs during

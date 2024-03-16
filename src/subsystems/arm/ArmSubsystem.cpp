@@ -234,7 +234,7 @@ frc2::CommandPtr ArmSubsystem::spinElbowCommand(frc::Joystick &controller) {
 
 frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
                                                 rmb::LogitechGamepad &gamepad) {
-  
+
   return frc2::RunCommand(
              [&]() {
                double joystickX =
@@ -266,7 +266,8 @@ frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
                setWristPosition(targetWristPosition);
                setElbowPosition(targetElbowPosition);
                setArmExtensionPosition(targetPercentageExtended *
-                                       constants::arm::maxExtension - 1_in);
+                                           constants::arm::maxExtension -
+                                       1_in);
                // armExtensionPositionController.setPosition(0.5_tr);
                // setWristPosition(targetWristPosition);
 
