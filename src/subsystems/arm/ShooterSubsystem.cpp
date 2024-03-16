@@ -18,13 +18,12 @@ ShooterSubsystem::ShooterSubsystem()
 void ShooterSubsystem::Periodic() {}
 
 void ShooterSubsystem::runShooter(rmb::LogitechGamepad &gamepad) {
- 
-               if (gamepad.GetRightBumper()) {
-                 setShooterPower(1, 1);
-               } else if (gamepad.GetLeftBumper()) {
-                 setShooterPower(-1, -1);
-               } else {
-                 setShooterPower(0, 0);
-               }
-            
+
+  if (gamepad.GetRightBumper()) {
+    setShooterPower(1, 1);
+  } else if (gamepad.GetLeftBumper()) {
+    setShooterPower(-1, -1);
+  } else {
+    setShooterPower(0, 0);
+  }
 }

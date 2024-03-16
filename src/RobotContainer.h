@@ -48,8 +48,7 @@ public:
   frc2::CommandPtr autoDriveCommand();
   void resetMechPos();
 
-  frc2::CommandPtr getAutoCommand(); 
-
+  frc2::CommandPtr getAutoCommand();
 
 private:
   // Replace with CommandPS4Controller or CommandJoystick if needed
