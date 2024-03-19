@@ -100,6 +100,7 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
         return false;
       },
       this);
+  std::cout << "drive subsystem up" << std::endl;
 }
 
 void DriveSubsystem::odometryThreadMain() {

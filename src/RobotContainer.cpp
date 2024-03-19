@@ -69,6 +69,10 @@ void RobotContainer::loadPPAutos() {
   for (const auto &kv : autoCommands) {
     autonomousChooser.AddOption(kv.first, kv.first);
   }
+  frc::SmartDashboard::PutData("Auto Choices", &autonomousChooser);
+
+
+
 
   // Register named commands here
   // with
@@ -79,7 +83,9 @@ void RobotContainer::RunAutonomousCommand() {
 
   if (!autonomousChooser.GetSelected().empty()) {
     try {
+      std::cout << "schedule " << autonomousChooser.GetSelected() << std::endl;
       autoCommands.at(autonomousChooser.GetSelected()).Schedule();
+      std::cout << "scheduled" << std::endl;
     } catch (const std::exception &_e) {
       std::cout << "Error: no such command \""
                 << autonomousChooser.GetSelected() << "\"" << std::endl;
