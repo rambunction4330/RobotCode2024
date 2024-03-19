@@ -141,6 +141,10 @@ void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
 }
 
+void DriveSubsystem::driveTeleop(double x, double y, double z) {
+  drive->driveCartesian(x, y, z, false);
+}
+
 void DriveSubsystem::driveTeleop(const rmb::LogitechGamepad &gamepad) {
   // TODO: add filters
   // std::cout << "gyro angle: " << drive->getPose().Rotation().Degrees()()

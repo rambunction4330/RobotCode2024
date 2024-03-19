@@ -36,6 +36,7 @@ RobotContainer::RobotContainer() : driveSubsystem(gyro), intake(), shooter() {
   pathplanner::NamedCommands::registerCommand("runShooter",
                                               getShooterCommand());
   // Configure the button bindings
+  loadPPAutos();
   ConfigureBindings();
 }
 
@@ -123,8 +124,7 @@ void RobotContainer::setAutoDefaults() {
 }
 
 frc2::CommandPtr RobotContainer::autoDriveCommand() {
-  return frc2::RunCommand([&]() { driveSubsystem.driveTeleop(0.4, 0, 0); })
-      .ToPtr();
+  return driveSubsystem.driveTeleopCommand(0.4, 0, 0).WithTimeout(1.0_s);
 }
 
 void RobotContainer::resetMechPos() {

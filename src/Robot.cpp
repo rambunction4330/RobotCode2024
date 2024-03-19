@@ -33,7 +33,10 @@ void Robot::DisabledPeriodic() {}
  * This autonomous runs the autonomous command selected by your {@link
  * RobotContainer} class.
  */
-void Robot::AutonomousInit() { container.getAutoCommand(); }
+void Robot::AutonomousInit() {
+  // frc2::CommandScheduler::GetInstance().Schedule(container.getAutoCommand());
+  container.RunAutonomousCommand();
+}
 
 void Robot::AutonomousPeriodic() {}
 
