@@ -105,11 +105,11 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
 
 void DriveSubsystem::odometryThreadMain() {
   while (true) {
-    frc::Pose2d newPose = drive->updatePose();
     // drive->updateNTDebugInfo(false);
     frc::ChassisSpeeds newChassisSpeeds = drive->getChassisSpeeds();
     {
       std::lock_guard<std::mutex> lock(currentPoseContainer.poseMutex);
+      frc::Pose2d newPose = drive->updatePose();
       currentPoseContainer._pose = newPose;
     }
 
