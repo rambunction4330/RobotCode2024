@@ -146,8 +146,6 @@ frc2::CommandPtr ArmSubsystem::setArmStateCommand(const ArmState &state) {
       .ToPtr();
 }
 
-
-
 frc2::CommandPtr ArmSubsystem::getSpoolCommand(frc::Joystick &controller) {
   return frc2::RunCommand(
              [&]() {
@@ -169,50 +167,48 @@ frc2::CommandPtr ArmSubsystem::getSpoolCommand(frc::Joystick &controller) {
       .ToPtr();
 }
 
-
 frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
                                                 rmb::LogitechGamepad &gamepad) {
 
   return frc2::RunCommand(
              [&]() {
-               double elbow =
-                   std::abs(gamepad.GetLeftY()) < 0.05 ? 0.0 : gamepad.GetLeftY();
-               double wrist  =
-                   std::abs(gamepad.GetRightY()) < 0.05 ? 0.0 : gamepad.GetRightY();
+               double elbow = std::abs(gamepad.GetLeftY()) < 0.05
+                                  ? 0.0
+                                  : gamepad.GetLeftY();
+               double wrist = std::abs(gamepad.GetRightY()) < 0.05
+                                  ? 0.0
+                                  : gamepad.GetRightY();
                // calculate elbow position
                static units::turn_t targetElbowPosition = 0.0_tr;
-               targetElbowPosition =
-                   std::clamp(targetElbowPosition + 1_tr * elbow / 100.0,
-                              0.0_tr, 0.25_tr);
+               targetElbowPosition = std::clamp(
+                   targetElbowPosition + 1_tr * elbow / 100.0, 0.0_tr, 0.25_tr);
 
                // calculate extension position
-              static double targetPercentageExtended = 1.0;
+               static double targetPercentageExtended = 1.0;
                //  targetPercentageExtended = std::clamp(
                //      targetPercentageExtended - joystick.GetThrottle() / 50.0
                //      +
                //          joystick.GetThrottle() / 50.0,
                //      0.0, 1.0);
-               
 
-              // if (gamepad.GetRightTrigger()){
-              // armExtensionPositionController.setPower(0.5); 
-              // }
-              // else if(gamepad.GetLeftTrigger()){
-              // armExtensionPositionController.setPower(-0.5);
-              // }
-              // else{
-              //   armExtensionPositionController.setPower(0.0);
-              // }
+               // if (gamepad.GetRightTrigger()){
+               // armExtensionPositionController.setPower(0.5);
+               // }
+               // else if(gamepad.GetLeftTrigger()){
+               // armExtensionPositionController.setPower(-0.5);
+               // }
+               // else{
+               //   armExtensionPositionController.setPower(0.0);
+               // }
 
                static units::turn_t targetWristPosition = 0.0_tr;
                targetWristPosition = std::clamp(
-                   targetWristPosition + 1_tr * wrist / 100.0, 0.0_tr,
-                   0.5_tr);
+                   targetWristPosition + 1_tr * wrist / 100.0, 0.0_tr, 0.5_tr);
 
                // elbowPositionController.setPosition(targetElbowPosition);
 
-              //  setWristPosition(targetWristPosition);
-               
+               //  setWristPosition(targetWristPosition);
+
                setElbowPosition(targetElbowPosition);
                setArmExtensionPosition(targetPercentageExtended *
                                            constants::arm::maxExtension -

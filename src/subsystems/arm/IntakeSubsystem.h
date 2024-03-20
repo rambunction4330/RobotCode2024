@@ -42,10 +42,8 @@ public:
   // }
 
   void runIntake(const rmb::LogitechGamepad &gamepad);
-  void runIntake(double power); 
+  void runIntake(double power);
   // frc2::CommandPtr revFrontIntakeToShoot();
-
-
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be

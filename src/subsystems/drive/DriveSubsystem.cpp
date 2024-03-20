@@ -86,7 +86,8 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
       [this](frc::Pose2d pose) { setPoseEstimation(pose); },
       [this]() { return getChassisSpeedsEstimation(); },
       [this](frc::ChassisSpeeds speeds) { // should be robot relative
-      std::cout << getPoseEstimation().X().value() << getPoseEstimation().Y().value() << std::endl;
+        std::cout << getPoseEstimation().X().value()
+                  << getPoseEstimation().Y().value() << std::endl;
         drive->driveChassisSpeeds(speeds);
       },
       pathplanner::HolonomicPathFollowerConfig{
@@ -103,7 +104,7 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
         return false;
       },
       this);
-      std::cout << "drive subsystem up" << std::endl;
+  std::cout << "drive subsystem up" << std::endl;
 }
 
 void DriveSubsystem::odometryThreadMain() {
@@ -152,8 +153,7 @@ void DriveSubsystem::driveTeleop(double x, double y, double z) {
 void DriveSubsystem::driveTeleop(const rmb::LogitechGamepad &gamepad) {
   // TODO: add filters
   units::meters_per_second_t maxSpeed = 1_mps;
-  units::turns_per_second_t
-  maxRotation = 0.4_tps;
+  units::turns_per_second_t maxRotation = 0.4_tps;
   if (gamepad.GetRightBumper() == 1) {
     maxSpeed *= 10.0;
     maxRotation *= 1;
@@ -165,7 +165,6 @@ void DriveSubsystem::driveTeleop(const rmb::LogitechGamepad &gamepad) {
   drive->driveCartesian(-maxSpeed * gamepad.GetLeftY(),
                         maxSpeed * gamepad.GetLeftX(),
                         -maxRotation * gamepad.GetRightX(), true);
-  
 
   // drive->driveCartesian(-gamepad.GetLeftY(),
   //                       gamepad.GetLeftX(),

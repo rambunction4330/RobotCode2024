@@ -37,13 +37,13 @@ void Robot::DisabledPeriodic() {}
 void Robot::AutonomousInit() {
   // frc2::CommandScheduler::GetInstance().Schedule(container.getAutoCommand());
   // container.RunAutonomousCommand();
-  container.autoDriveCommand(); 
+  container.autoDriveCommand();
 }
 
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
-  std::cout<<"hello world" <<std::endl; 
+  std::cout << "hello world" << std::endl;
   // This makes sure that the autonomous stops running when
   // teleop starts running. If you want the autonomous to
   // continue until interrupted by another command, remove

@@ -33,10 +33,16 @@
 
 RobotContainer::RobotContainer() : driveSubsystem(gyro), intake() {
   // Initialize all of your commands and subsystems here
-  pathplanner::NamedCommands::registerCommand("run intake front",runIntakeforward().WithTimeout(2_s));
-  pathplanner::NamedCommands::registerCommand("run intake back",runIntakebackward().WithTimeout(2_s));
-  pathplanner::NamedCommands::registerCommand("position to amp", arm.setArmStateCommand(arm.ampPosition).WithTimeout(2_s));
-  pathplanner::NamedCommands::registerCommand("position to intake", arm.setArmStateCommand(arm.intakePosition).WithTimeout(2_s));
+  pathplanner::NamedCommands::registerCommand(
+      "run intake front", runIntakeforward().WithTimeout(2_s));
+  pathplanner::NamedCommands::registerCommand(
+      "run intake back", runIntakebackward().WithTimeout(2_s));
+  pathplanner::NamedCommands::registerCommand(
+      "position to amp",
+      arm.setArmStateCommand(arm.ampPosition).WithTimeout(2_s));
+  pathplanner::NamedCommands::registerCommand(
+      "position to intake",
+      arm.setArmStateCommand(arm.intakePosition).WithTimeout(2_s));
 
   // Configure the button bindings
   loadPPAutos();
@@ -72,7 +78,6 @@ void RobotContainer::loadPPAutos() {
   }
   frc::SmartDashboard::PutData("Auto Choices", &autonomousChooser);
 
-
   // Register named commands here
   // with
   // pathplanner::NamedCommands::registerCommand()
@@ -100,7 +105,6 @@ frc2::CommandPtr RobotContainer::getIntakeCommand() {
       .ToPtr();
 }
 
-
 void RobotContainer::setTeleopDefaults() {
   driveSubsystem.SetDefaultCommand(
       driveSubsystem.driveTeleopCommand(drivegamepad));
@@ -127,13 +131,12 @@ void RobotContainer::resetMechPos() {
   arm.resetWristPosition(0.0_tr);
 }
 
-frc2::CommandPtr RobotContainer::runIntakebackward(){
-return frc2::RunCommand([&](){intake.runIntake(0.7); }, {&intake}).ToPtr();
+frc2::CommandPtr RobotContainer::runIntakebackward() {
+  return frc2::RunCommand([&]() { intake.runIntake(0.7); }, {&intake}).ToPtr();
 }
 
-frc2::CommandPtr RobotContainer::runIntakeforward(){
-  return frc2::RunCommand([&](){intake.runIntake(-0.7);}, {&intake}).ToPtr();
-
+frc2::CommandPtr RobotContainer::runIntakeforward() {
+  return frc2::RunCommand([&]() { intake.runIntake(-0.7); }, {&intake}).ToPtr();
 }
 
 // frc2::CommandPtr RobotContainer::getAutoCommand(){

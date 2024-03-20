@@ -44,9 +44,7 @@ void IntakeSubsystem::runIntake(const rmb::LogitechGamepad &gamepad) {
   setIntakePower(frontPower);
 }
 
-void IntakeSubsystem::runIntake(double power){
-  setIntakePower(power); 
-}
+void IntakeSubsystem::runIntake(double power) { setIntakePower(power); }
 
 // frc2::CommandPtr IntakeSubsystem::revFrontIntakeToShoot() {
 //   return frc2::FunctionalCommand(
@@ -54,8 +52,6 @@ void IntakeSubsystem::runIntake(double power){
 //              [](bool interrupted) {}, []() { return false; }, {this})
 //       .ToPtr();
 // }
-
-
 
 // frc2::CommandPtr IntakeSubsystem::setBackandFront() {
 //   return frc2::FunctionalCommand(

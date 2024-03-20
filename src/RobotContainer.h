@@ -50,7 +50,7 @@ public:
   // frc2::CommandPtr autoDriveCommand();
   void resetMechPos();
 
-  // frc2::CommandPtr getAutoCommand(); 
+  // frc2::CommandPtr getAutoCommand();
   frc2::CommandPtr runIntakeforward();
   frc2::CommandPtr runIntakebackward();
   frc2::CommandPtr autoDriveCommand();
@@ -66,7 +66,7 @@ private:
   DriveSubsystem driveSubsystem;
 
   rmb::LogitechGamepad drivegamepad{constants::driverControllerPort, 0.05};
-  rmb::LogitechGamepad armgamepad{2}; 
+  rmb::LogitechGamepad armgamepad{2};
 
   void ConfigureBindings();
 
@@ -75,7 +75,6 @@ private:
 
   IntakeSubsystem intake;
   ArmSubsystem arm;
-
 
   std::unordered_map<std::string, frc2::CommandPtr> autoCommands;
 
