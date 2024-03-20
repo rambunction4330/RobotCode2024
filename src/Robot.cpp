@@ -6,6 +6,7 @@
 #include "RobotContainer.h"
 
 #include <frc2/command/CommandScheduler.h>
+#include <iostream>
 #include <optional>
 
 void Robot::RobotInit() {
@@ -35,11 +36,16 @@ void Robot::DisabledPeriodic() {}
  * This autonomous runs the autonomous command selected by your {@link
  * RobotContainer} class.
  */
-void Robot::AutonomousInit() { container.getAutoCommand(); }
+void Robot::AutonomousInit() {
+  // frc2::CommandScheduler::GetInstance().Schedule(container.getAutoCommand());
+  // container.RunAutonomousCommand();
+  container.autoDriveCommand(); 
+}
 
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
+  std::cout<<"hello world" <<std::endl; 
   // This makes sure that the autonomous stops running when
   // teleop starts running. If you want the autonomous to
   // continue until interrupted by another command, remove

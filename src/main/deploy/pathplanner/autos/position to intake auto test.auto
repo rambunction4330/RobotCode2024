@@ -12,15 +12,9 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Move to ring"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "move to amp"
+            "name": "position to intake"
           }
         }
       ]

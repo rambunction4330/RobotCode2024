@@ -146,46 +146,7 @@ frc2::CommandPtr ArmSubsystem::setArmStateCommand(const ArmState &state) {
       .ToPtr();
 }
 
-frc2::CommandPtr ArmSubsystem::setArmToSpeaker() {
-  units::radian_t elbowPosAngle = 0.0_rad;
-  units::radian_t wristPosAngle = 0.0_rad;
-  units::meter_t armExtensionLength = 0.0_m;
-  return ArmSubsystem::setArmStateCommand(elbowPosAngle, armExtensionLength,
-                                          wristPosAngle);
-}
 
-frc2::CommandPtr
-ArmSubsystem::setWristCommand(frc2::CommandJoystick &joystick) {
-  return frc2::RunCommand(
-             [&]() {
-               //  wristPositionController.setPower(0.2);
-               if (joystick.GetRawButton(9)) {
-                 setWristPosition(0.8_tr);
-               } else if (joystick.GetRawButton(10)) {
-                 setWristPosition(0.0_tr);
-               }
-               //  else{
-               //   wristPositionController.setPower(0.0);
-               //  }
-               //  setWristPosition(
-               //      ((units::turn_t)(joystick.GetThrottle() + 1) / 4));
-               //  std::cout
-               //      << "throttle: "
-               //      << ((units::turn_t)(joystick.GetThrottle() + 2) /
-               //      4).value()
-               //      << std::endl;
-               // std::cout << "power:" <<  wristPositionController.getPower()
-               // << std::endl;
-               std::cout << "position: "
-                         << ((units::turn_t)(
-                                 wristPositionController.getPosition()))
-                                .value()
-                         << std::endl;
-             },
-             {this})
-      .ToPtr();
-  // setWristPosition(pos); std::cout << "right damn here" << std::endl;
-}
 
 frc2::CommandPtr ArmSubsystem::getSpoolCommand(frc::Joystick &controller) {
   return frc2::RunCommand(
@@ -194,7 +155,7 @@ frc2::CommandPtr ArmSubsystem::getSpoolCommand(frc::Joystick &controller) {
                //                    armExtensionPositionController.getPosition())
                //                   .value()
                //            << std::endl;
-               if (controller.GetRawButton(3)) {
+               if (controller.GetRawButton(5)) {
                  armExtensionPositionController.setPower(0.4);
                  std::cout << "forward" << std::endl;
                } else if (controller.GetRawButton(4)) {
@@ -208,68 +169,56 @@ frc2::CommandPtr ArmSubsystem::getSpoolCommand(frc::Joystick &controller) {
       .ToPtr();
 }
 
-frc2::CommandPtr ArmSubsystem::spinElbowCommand(frc::Joystick &controller) {
-  resetElbowPosition();
-  return frc2::RunCommand(
-             [&]() {
-               std::cout
-                   << ((units::turn_t)elbowPositionController.getPosition())
-                          .value()
-                   << std::endl;
-               if (controller.GetRawButton(7)) {
-                 // elbowPositionController.setPosition(0.0_tr);
-                 elbowPositionController.setPower(-0.3);
-               } else if (controller.GetRawButton(8)) {
-                 // elbowPositionController.setPosition(0.8_tr);
-                 elbowPositionController.setPower(0.3);
-               } else {
-                 // elbowPositionController.setPosition(
-                 //     ((units::turn_t)elbowPositionController.getPosition()));
-                 elbowPositionController.setPower(0.0);
-               }
-             },
-             {this})
-      .ToPtr();
-}
 
 frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
                                                 rmb::LogitechGamepad &gamepad) {
 
   return frc2::RunCommand(
              [&]() {
-               double joystickX =
-                   std::abs(joystick.GetX()) < 0.05 ? 0.0 : joystick.GetX();
-               double joystickY =
-                   std::abs(joystick.GetX()) < 0.05 ? 0.0 : joystick.GetY();
+               double elbow =
+                   std::abs(gamepad.GetLeftY()) < 0.05 ? 0.0 : gamepad.GetLeftY();
+               double wrist  =
+                   std::abs(gamepad.GetRightY()) < 0.05 ? 0.0 : gamepad.GetRightY();
                // calculate elbow position
                static units::turn_t targetElbowPosition = 0.0_tr;
                targetElbowPosition =
-                   std::clamp(targetElbowPosition + 1_tr * joystickY / 100.0,
+                   std::clamp(targetElbowPosition + 1_tr * elbow / 100.0,
                               0.0_tr, 0.25_tr);
 
                // calculate extension position
-               static double targetPercentageExtended = 1.0;
+              static double targetPercentageExtended = 1.0;
                //  targetPercentageExtended = std::clamp(
                //      targetPercentageExtended - joystick.GetThrottle() / 50.0
                //      +
                //          joystick.GetThrottle() / 50.0,
                //      0.0, 1.0);
-               targetPercentageExtended = (-joystick.GetThrottle() + 1.0) / 2.0;
+               
+
+              // if (gamepad.GetRightTrigger()){
+              // armExtensionPositionController.setPower(0.5); 
+              // }
+              // else if(gamepad.GetLeftTrigger()){
+              // armExtensionPositionController.setPower(-0.5);
+              // }
+              // else{
+              //   armExtensionPositionController.setPower(0.0);
+              // }
 
                static units::turn_t targetWristPosition = 0.0_tr;
                targetWristPosition = std::clamp(
-                   targetWristPosition + (1_tr * (joystickX) / 100.0), 0.0_tr,
+                   targetWristPosition + 1_tr * wrist / 100.0, 0.0_tr,
                    0.5_tr);
 
                // elbowPositionController.setPosition(targetElbowPosition);
 
-               setWristPosition(targetWristPosition);
+              //  setWristPosition(targetWristPosition);
+               
                setElbowPosition(targetElbowPosition);
                setArmExtensionPosition(targetPercentageExtended *
                                            constants::arm::maxExtension -
                                        1_in);
                // armExtensionPositionController.setPosition(0.5_tr);
-               // setWristPosition(targetWristPosition);
+               setWristPosition(targetWristPosition);
 
                printf("elbow{target=%f, position=%f}\n", targetElbowPosition(),
                       elbowPositionController.getPosition()

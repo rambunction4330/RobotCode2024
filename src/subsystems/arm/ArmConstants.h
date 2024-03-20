@@ -19,15 +19,15 @@ const rmb::SparkMaxPositionController::CreateInfo
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
                 .inverted = true,
             },
-        .pidConfig = {.p = 0.3,
+        .pidConfig = {.p = 0.35,
                       .i = 0.0,
                       .d = 0.0,
                       .ff = 0.0,
                       .tolerance = 0.0_rad,
                       .iZone = 0.0,
                       .iMaxAccumulator = 0.0,
-                      .maxOutput = 1.0,
-                      .minOutput = -1.0},
+                      .maxOutput = 0.3,
+                      .minOutput = -0.3},
         .feedforward = std::make_shared<rmb::ArmFeedforward>(
             rmb::ArmFeedforward::Ks_t{0.0} /* <- Ks */,
             rmb::ArmFeedforward::Ks_t{0.0} /* <- Kcos */,
@@ -59,7 +59,7 @@ const rmb::SparkMaxPositionController::CreateInfo
         .followers = {rmb::SparkMaxPositionController::MotorConfig{
             .id = 50,
             .motorType = rev::CANSparkMax::MotorType::kBrushless,
-            .inverted = false}}};
+            .inverted = true}}};
 
 const units::meter_t maxExtension = 35_cm;
 const units::turn_t maxTurns = 3.5_tr;
@@ -74,15 +74,15 @@ const rmb::SparkMaxPositionController::CreateInfo
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
                 .inverted = false,
             },
-        .pidConfig = {.p = 0.3,
+        .pidConfig = {.p = 0.05,
                       .i = 0.0,
                       .d = 0.0,
                       .ff = 0.0,
                       .tolerance = 0.0_rad,
                       .iZone = 0.0,
                       .iMaxAccumulator = 0.0,
-                      .maxOutput = 1.0,
-                      .minOutput = -1.0},
+                      .maxOutput = 0.5,
+                      .minOutput = -0.5},
         .range =
             {
                 .minPosition = 0.0_tr,
@@ -124,22 +124,22 @@ const rmb::SparkMaxPositionController::CreateInfo
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
                 .inverted = true,
             },
-        .pidConfig = {.p = 0.05,
+        .pidConfig = {.p = 0.04,
                       .i = 0.0,
                       .d = 0.2,
                       .ff = 0.0,
                       .tolerance = 0.0_rad,
                       .iZone = 0.0,
                       .iMaxAccumulator = 0.0,
-                      .maxOutput = 0.5,
-                      .minOutput = -0.5},
+                      .maxOutput = 0.25,
+                      .minOutput = -0.25},
 
         //.feedforward // TODO: consider? This would be an interesting physics
         // mechanics FRQ lmao .range // TODO: just in case?
         .range =
             {
                 .minPosition = 0.0_tr,
-                .maxPosition = 0.5_tr,
+                .maxPosition = 0.6_tr,
                 .isContinuous = false,
             },
         .profileConfig =
@@ -168,88 +168,6 @@ const rmb::SparkMaxVelocityController::CreateInfo
         .motorConfig =
             {
                 .id = 59,
-                .motorType = rev::CANSparkMax::MotorType::kBrushless,
-                .inverted = false,
-            },
-        .pidConfig = {.p = 1.0,
-                      .i = 0.0,
-                      .d = 0.0,
-                      .ff = 0.0,
-                      .tolerance = 0.0_rad_per_s,
-                      .iZone = 0.0,
-                      .iMaxAccumulator = 0.0,
-                      .maxOutput = 1.0,
-                      .minOutput = -1.0},
-
-        //.feedforward // TODO: consider? This would be an interesting physics
-        // mechanics FRQ lmao .range // TODO: just in case?
-        .profileConfig =
-            {
-                false /* <- useSmartMotion */,
-                0.0_rpm /* <- maxVelocity */,
-                0.0_rad_per_s /* <- minVelocity */,
-                0.0_rad_per_s_sq /* <- maxAcceleration */,
-            },
-        .feedbackConfig =
-            {
-                81.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
-                rmb::SparkMaxVelocityControllerHelper::EncoderType::
-                    HallSensor /* <- encoder */,
-                42 /* <- countPerRev */,
-                rmb::SparkMaxVelocityController::LimitSwitchConfig::
-                    Disabled /* <- fwd */,
-                rmb::SparkMaxVelocityController::LimitSwitchConfig::
-                    Disabled /* <- rev */
-            },
-
-        .followers = {}};
-
-const rmb::SparkMaxVelocityController::CreateInfo
-    FrontShooterVelocityControllerCreateInfo{
-        .motorConfig =
-            {
-                .id = 52,
-                .motorType = rev::CANSparkMax::MotorType::kBrushless,
-                .inverted = false,
-            },
-        .pidConfig = {.p = 1.0,
-                      .i = 0.0,
-                      .d = 0.0,
-                      .ff = 0.0,
-                      .tolerance = 0.0_rad_per_s,
-                      .iZone = 0.0,
-                      .iMaxAccumulator = 0.0,
-                      .maxOutput = 1.0,
-                      .minOutput = -1.0},
-
-        //.feedforward // TODO: consider? This would be an interesting physics
-        // mechanics FRQ lmao .range // TODO: just in case?
-        .profileConfig =
-            {
-                false /* <- useSmartMotion */,
-                0.0_rpm /* <- maxVelocity */,
-                0.0_rad_per_s /* <- minVelocity */,
-                0.0_rad_per_s_sq /* <- maxAcceleration */,
-            },
-        .feedbackConfig =
-            {
-                81.0 /* <- gearRatio */, // TODO: Ask Adi about gear ratio
-                rmb::SparkMaxVelocityControllerHelper::EncoderType::
-                    HallSensor /* <- encoder */,
-                42 /* <- countPerRev */,
-                rmb::SparkMaxVelocityController::LimitSwitchConfig::
-                    Disabled /* <- fwd */,
-                rmb::SparkMaxVelocityController::LimitSwitchConfig::
-                    Disabled /* <- rev */
-            },
-
-        .followers = {}};
-
-const rmb::SparkMaxVelocityController::CreateInfo
-    BackShooterVelocityControllerCreateInfo{
-        .motorConfig =
-            {
-                .id = 55,
                 .motorType = rev::CANSparkMax::MotorType::kBrushless,
                 .inverted = false,
             },

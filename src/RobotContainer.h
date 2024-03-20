@@ -17,7 +17,7 @@
 #include "rmb/sensors/AHRS/AHRSGyro.h"
 #include "subsystems/arm/ArmSubsystem.h"
 #include "subsystems/arm/IntakeSubsystem.h"
-#include "subsystems/arm/ShooterSubsystem.h"
+// #include "subsystems/arm/ShooterSubsystem.h"
 #include "subsystems/drive/DriveSubsystem.h"
 
 #include <unordered_map>
@@ -34,22 +34,26 @@ public:
   RobotContainer();
 
   frc2::CommandPtr getIntakeCommand();
+
   frc2::CommandPtr getShooterCommand();
 
   void RunAutonomousCommand();
 
   void setTeleopDefaults();
+
   void setAutoDefaults();
 
   void loadPPAutos();
 
   DriveSubsystem &getDrive() { return driveSubsystem; }
 
-  frc2::CommandPtr autoDriveCommand();
+  // frc2::CommandPtr autoDriveCommand();
   void resetMechPos();
 
-  frc2::CommandPtr getAutoCommand(); 
-
+  // frc2::CommandPtr getAutoCommand(); 
+  frc2::CommandPtr runIntakeforward();
+  frc2::CommandPtr runIntakebackward();
+  frc2::CommandPtr autoDriveCommand();
 
 private:
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -61,15 +65,17 @@ private:
       std::make_shared<rmb::NavXGyro>(constants::gyroPort);
   DriveSubsystem driveSubsystem;
 
-  rmb::LogitechGamepad gamepad{constants::driverControllerPort, 0.05};
+  rmb::LogitechGamepad drivegamepad{constants::driverControllerPort, 0.05};
+  rmb::LogitechGamepad armgamepad{2}; 
 
   void ConfigureBindings();
+
   frc2::CommandJoystick controller{1};
   // frc2::Trigger xButton = controller.Button(11);
 
   IntakeSubsystem intake;
   ArmSubsystem arm;
-  ShooterSubsystem shooter;
+
 
   std::unordered_map<std::string, frc2::CommandPtr> autoCommands;
 

@@ -29,7 +29,7 @@ public:
    */
   void SimulationPeriodic() override;
 
-  inline void setFrontPower(double power) {
+  inline void setIntakePower(double power) {
     IntakeVelocityController.setPower(power);
   }
   // inline void setBackPower(double power) {
@@ -42,10 +42,10 @@ public:
   // }
 
   void runIntake(const rmb::LogitechGamepad &gamepad);
-  frc2::CommandPtr revFrontIntakeToShoot();
-  frc2::CommandPtr shoot();
+  void runIntake(double power); 
+  // frc2::CommandPtr revFrontIntakeToShoot();
 
-  // frc2::CommandPtr setBackandFront();
+
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be

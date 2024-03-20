@@ -31,9 +31,9 @@ void IntakeSubsystem::SimulationPeriodic() {
 void IntakeSubsystem::runIntake(const rmb::LogitechGamepad &gamepad) {
   double frontPower;
 
-  if (gamepad.GetB() == 1) {
+  if (gamepad.GetLeftBumper() == 1) {
     frontPower = 0.7;
-  } else if (gamepad.GetX() == 1) {
+  } else if (gamepad.GetRightBumper() == 1) {
     frontPower = -0.7;
   }
 
@@ -41,20 +41,21 @@ void IntakeSubsystem::runIntake(const rmb::LogitechGamepad &gamepad) {
     frontPower = 0.0;
   }
 
-  setFrontPower(frontPower);
+  setIntakePower(frontPower);
 }
 
-frc2::CommandPtr IntakeSubsystem::revFrontIntakeToShoot() {
-  return frc2::FunctionalCommand(
-             []() {}, [this]() { IntakeSubsystem::setFrontPower(1.0); },
-             [](bool interrupted) {}, []() { return false; }, {this})
-      .ToPtr();
+void IntakeSubsystem::runIntake(double power){
+  setIntakePower(power); 
 }
 
-frc2::CommandPtr IntakeSubsystem::shoot() {
-  return frc2::cmd::None();
-  // return IntakeSubsystem::setBackandFront();
-}
+// frc2::CommandPtr IntakeSubsystem::revFrontIntakeToShoot() {
+//   return frc2::FunctionalCommand(
+//              []() {}, [this]() { IntakeSubsystem::setFrontPower(1.0); },
+//              [](bool interrupted) {}, []() { return false; }, {this})
+//       .ToPtr();
+// }
+
+
 
 // frc2::CommandPtr IntakeSubsystem::setBackandFront() {
 //   return frc2::FunctionalCommand(

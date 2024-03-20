@@ -5,6 +5,7 @@
 #include "subsystems/drive/DriveSubsystem.h"
 
 #include "Constants.h"
+#include "ctre/phoenix6/sim/ChassisReference.hpp"
 #include "frc/DriverStation.h"
 #include "frc/RobotBase.h"
 #include "frc/TimedRobot.h"
@@ -16,6 +17,7 @@
 #include "frc2/command/RunCommand.h"
 
 #include "rmb/sensors/gyro.h"
+#include "units/angular_velocity.h"
 #include "units/dimensionless.h"
 #include "units/velocity.h"
 #include <memory>
@@ -84,6 +86,7 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
       [this](frc::Pose2d pose) { setPoseEstimation(pose); },
       [this]() { return getChassisSpeedsEstimation(); },
       [this](frc::ChassisSpeeds speeds) { // should be robot relative
+      std::cout << getPoseEstimation().X().value() << getPoseEstimation().Y().value() << std::endl;
         drive->driveChassisSpeeds(speeds);
       },
       pathplanner::HolonomicPathFollowerConfig{
@@ -100,6 +103,7 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
         return false;
       },
       this);
+      std::cout << "drive subsystem up" << std::endl;
 }
 
 void DriveSubsystem::odometryThreadMain() {
@@ -141,15 +145,28 @@ void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
 }
 
+void DriveSubsystem::driveTeleop(double x, double y, double z) {
+  drive->driveCartesian(x, y, z, false);
+}
+
 void DriveSubsystem::driveTeleop(const rmb::LogitechGamepad &gamepad) {
   // TODO: add filters
+  units::meters_per_second_t maxSpeed = 1_mps;
+  units::turns_per_second_t
+  maxRotation = 0.4_tps;
+  if (gamepad.GetRightBumper() == 1) {
+    maxSpeed *= 10.0;
+    maxRotation *= 1;
+  }
   // std::cout << "gyro angle: " << drive->getPose().Rotation().Degrees()()
   //           << std::endl;
   // std::cout << "input: [" << gamepad.GetLeftY() << ", " << gamepad.GetLeftX()
   //           << ", " << gamepad.GetRightX() << "]" << std::endl;
-  drive->driveCartesian(-10_mps * gamepad.GetLeftY(),
-                        10_mps * gamepad.GetLeftX(),
-                        -1.0_tps * gamepad.GetRightX(), true);
+  drive->driveCartesian(-maxSpeed * gamepad.GetLeftY(),
+                        maxSpeed * gamepad.GetLeftX(),
+                        -maxRotation * gamepad.GetRightX(), true);
+  
+
   // drive->driveCartesian(-gamepad.GetLeftY(),
   //                       gamepad.GetLeftX(),
   //                       gamepad.GetRightX(), true);

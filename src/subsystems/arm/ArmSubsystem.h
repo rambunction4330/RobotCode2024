@@ -75,19 +75,15 @@ public:
                                       units::turn_t wristPosition);
   frc2::CommandPtr setArmStateCommand(const ArmState &state);
 
-  frc2::CommandPtr setArmToSpeaker();
-
-  frc2::CommandPtr setWristCommand(frc2::CommandJoystick &joystick);
   frc2::CommandPtr getSpoolCommand(frc::Joystick &controller);
-  frc2::CommandPtr spinElbowCommand(frc::Joystick &controller);
 
   frc2::CommandPtr getTeleopCommand(frc::Joystick &joystick,
                                     rmb::LogitechGamepad &gampead);
   const ArmState stowedPosition = {0.0_tr, constants::arm::maxExtension - 1_in,
                                    0.0_tr};
   const ArmState intakePosition = {0.0_tr, constants::arm::maxExtension - 2_in,
-                                   0.45_tr};
-  const ArmState ampPosition = {0.17_tr, 0.0_in, 0.5_tr};
+                                   0.465_tr};
+  const ArmState ampPosition = {0.21_tr, 0.0_in, 0.53_tr};
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be
