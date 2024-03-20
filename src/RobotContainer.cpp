@@ -71,9 +71,6 @@ void RobotContainer::loadPPAutos() {
   }
   frc::SmartDashboard::PutData("Auto Choices", &autonomousChooser);
 
-
-
-
   // Register named commands here
   // with
   // pathplanner::NamedCommands::registerCommand()
