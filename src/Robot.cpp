@@ -9,9 +9,7 @@
 #include <iostream>
 #include <optional>
 
-void Robot::RobotInit() {
-  container.resetMechPos();
-}
+void Robot::RobotInit() { container.resetMechPos(); }
 
 /**
  * This function is called every 20 ms, no matter the mode. Use
