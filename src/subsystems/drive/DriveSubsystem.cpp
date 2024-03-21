@@ -86,7 +86,7 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
       [this](frc::Pose2d pose) { setPoseEstimation(pose); },
       [this]() { return getChassisSpeedsEstimation(); },
       [this](frc::ChassisSpeeds speeds) { // should be robot relative
-        std::cout << getPoseEstimation().X().value()
+        std::cout << getPoseEstimation().X().value() << ", "
                   << getPoseEstimation().Y().value() << std::endl;
         drive->driveChassisSpeeds(speeds);
       },

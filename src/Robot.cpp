@@ -36,8 +36,8 @@ void Robot::DisabledPeriodic() {}
  */
 void Robot::AutonomousInit() {
   // frc2::CommandScheduler::GetInstance().Schedule(container.getAutoCommand());
-  // container.RunAutonomousCommand();
-  container.autoDriveCommand();
+  container.RunAutonomousCommand();
+  // container.autoDriveCommand();
 }
 
 void Robot::AutonomousPeriodic() {}

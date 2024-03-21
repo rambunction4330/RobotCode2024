@@ -84,8 +84,10 @@ void RobotContainer::loadPPAutos() {
 }
 
 void RobotContainer::RunAutonomousCommand() {
+  std::cout << "right here!" << std::endl;
 
   if (!autonomousChooser.GetSelected().empty()) {
+    std::cout << "right darn here!" << std::endl;
     try {
       std::cout << "schedule " << autonomousChooser.GetSelected() << std::endl;
       autoCommands.at(autonomousChooser.GetSelected()).Schedule();
