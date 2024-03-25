@@ -34,7 +34,7 @@
 RobotContainer::RobotContainer() : driveSubsystem(gyro), intake() {
   // Initialize all of your commands and subsystems here
   pathplanner::NamedCommands::registerCommand(
-      "run intake front", runIntakeforward().WithTimeout(2_s));
+      "run intake front", runIntakeforward().WithTimeout(1_s));
   pathplanner::NamedCommands::registerCommand(
       "run intake back", runIntakebackward().WithTimeout(2_s));
   pathplanner::NamedCommands::registerCommand(
@@ -74,6 +74,7 @@ void RobotContainer::loadPPAutos() {
     }
   }
   for (const auto &kv : autoCommands) {
+    std::cout << "Auto Named " << kv.first << std::endl;
     autonomousChooser.AddOption(kv.first, kv.first);
   }
   frc::SmartDashboard::PutData("Auto Choices", &autonomousChooser);
@@ -107,6 +108,8 @@ frc2::CommandPtr RobotContainer::getIntakeCommand() {
       .ToPtr();
 }
 
+
+
 void RobotContainer::setTeleopDefaults() {
   driveSubsystem.SetDefaultCommand(
       driveSubsystem.driveTeleopCommand(drivegamepad));
@@ -114,8 +117,12 @@ void RobotContainer::setTeleopDefaults() {
   arm.SetDefaultCommand(arm.getTeleopCommand(controller, armgamepad));
   armgamepad.A().WhileTrue(arm.setArmStateCommand(arm.intakePosition));
   armgamepad.X().WhileTrue(arm.setArmStateCommand(arm.stowedPosition));
+  armgamepad.Y().WhileTrue(arm.setArmStateCommand(arm.startAmpPos));
   armgamepad.B().WhileTrue(arm.setArmStateCommand(arm.ampPosition));
-  controller.Button(8).WhileTrue(arm.getSpoolCommand(controller));
+  // drivegamepad.X().WhileTrue(driveSubsystem.reset());
+  
+
+  
 }
 
 void RobotContainer::setAutoDefaults() {

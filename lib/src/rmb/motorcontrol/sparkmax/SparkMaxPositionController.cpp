@@ -146,7 +146,7 @@ void SparkMaxPositionController::setPosition(units::radian_t position,
                                      ((units::turn_t)minPose).value(),
                                      ((units::turn_t)maxPose).value()));
 
-  std::cout << "APPLIED FEEDFORWARD: " << ff << std::endl;
+  // std::cout << "APPLIED FEEDFORWARD: " << ff << std::endl;
   pidController.SetReference(((units::turn_t)targetPosition).value() *
                                  gearRatio,
                              controlType, 0, ff, FeedforwardUnits);

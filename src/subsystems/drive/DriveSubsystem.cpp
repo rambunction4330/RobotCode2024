@@ -196,4 +196,10 @@ void DriveSubsystem::SimulationPeriodic() {
 
 void DriveSubsystem::stop() { drive->stop(); }
 
+frc2::CommandPtr DriveSubsystem::reset(){
+  drive->resetPose();
+}
+
+
+
 #undef SQUARED

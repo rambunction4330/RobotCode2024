@@ -18,9 +18,11 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 
-class ArmSubsystem : public frc2::SubsystemBase {
+class ArmSubsystem : public frc2::SubsystemBase
+{
 public:
-  struct ArmState {
+  struct ArmState
+  {
     units::turn_t elbowPosition;
     units::meter_t armExtensionPosition;
     units::turn_t wristPosition;
@@ -32,7 +34,8 @@ public:
 
   void setElbowPosition(units::turn_t position);
   void resetElbowPosition(units::turn_t position = 0_tr);
-  inline void setElbowPower(double power) {
+  inline void setElbowPower(double power)
+  {
     elbowPositionController.setPower(power);
   }
   units::turn_t getElbowPosition() const;
@@ -41,7 +44,8 @@ public:
   void setArmExtensionPosition(units::meter_t position);
   units::meter_t getArmExtensionPosition() const;
   units::meter_t getTargetArmExtensionPosition() const;
-  inline void resetArmExtensionPosition(units::meter_t position) {
+  inline void resetArmExtensionPosition(units::meter_t position)
+  {
     armExtensionPositionController.setEncoderPosition(
         position / constants::arm::extensionAfterGRLinearToAngularRatio);
   }
@@ -49,7 +53,8 @@ public:
   void setWristPosition(units::turn_t position);
   units::turn_t getWristPosition() const;
   units::turn_t getTargetWristPosition() const;
-  inline void resetWristPosition(units::turn_t position) {
+  inline void resetWristPosition(units::turn_t position)
+  {
     wristPositionController.setEncoderPosition(position);
   }
 
@@ -81,9 +86,11 @@ public:
                                     rmb::LogitechGamepad &gampead);
   const ArmState stowedPosition = {0.0_tr, constants::arm::maxExtension - 1_in,
                                    0.0_tr};
-  const ArmState intakePosition = {0.0_tr, constants::arm::maxExtension - 2_in,
+  const ArmState intakePosition = {0.0_tr, constants::arm::maxExtension - 1_in,
                                    0.465_tr};
   const ArmState ampPosition = {0.21_tr, 0.0_in, 0.53_tr};
+
+  const ArmState startAmpPos = {0.05_tr, constants::arm::maxExtension - 2_in, 0.0_tr};
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be

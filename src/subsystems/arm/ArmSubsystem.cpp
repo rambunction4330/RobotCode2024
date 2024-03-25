@@ -45,7 +45,7 @@ void ArmSubsystem::resetElbowPosition(units::turn_t position) {
 }
 
 void ArmSubsystem::setElbowPosition(units::turn_t position) {
-  std::cout << "setElbowPosition : " << position.value() << std::endl;
+  // std::cout << "setElbowPosition : " << position.value() << std::endl;
   elbowPositionController.setPosition(
       units::turn_t(position.value()),
       (constants::arm::arm_kG +
@@ -86,12 +86,12 @@ units::meter_t ArmSubsystem::getTargetArmExtensionPosition() const {
 }
 
 void ArmSubsystem::setWristPosition(units::turn_t position) {
-  std::cout << "ff = "
-            << constants::arm::wrist_kG *
-                   std::cos(((units::radian_t)getWristPosition() +
-                             (units::radian_t)getElbowPosition())
-                                .value())
-            << std::endl;
+  // std::cout << "ff = "
+  //           << constants::arm::wrist_kG *
+  //                  std::cos(((units::radian_t)getWristPosition() +
+  //                            (units::radian_t)getElbowPosition())
+  //                               .value())
+  //           << std::endl;
   wristPositionController.setPosition(
       position,
       constants::arm::wrist_kG * std::cos(((units::radian_t)getWristPosition() +
@@ -216,17 +216,17 @@ frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
                // armExtensionPositionController.setPosition(0.5_tr);
                setWristPosition(targetWristPosition);
 
-               printf("elbow{target=%f, position=%f}\n", targetElbowPosition(),
-                      elbowPositionController.getPosition()
-                          .convert<units::turns>()());
-               // printf(
+              //  printf("elbow{target=%f, position=%f}\n", targetElbowPosition(),
+              //         elbowPositionController.getPosition()
+              //             .convert<units::turns>()());
+              //  // printf(
                //     "extender{target=%f%%, position=%f}\n",
                //     100.0 * targetPercentageExtended,
                //     ((units::turn_t)armExtensionPositionController.getPosition())
                //         .value());
-               printf("wrist{target=%f, position=%f}\n", targetWristPosition(),
-                      wristPositionController.getPosition()
-                          .convert<units::turns>()());
+              //  printf("wrist{target=%f, position=%f}\n", targetWristPosition(),
+              //         wristPositionController.getPosition()
+              //             .convert<units::turns>()());
                // printf("wrist{target=%f, position=%f}\n",
                // 0.0,
                //        wristPositionController.getPosition()
