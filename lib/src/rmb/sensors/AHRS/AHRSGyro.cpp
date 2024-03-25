@@ -13,7 +13,8 @@ NavXGyro::NavXGyro(frc::SerialPort::Port port)
     : gyro(std::make_unique<AHRS>(port)) {}
 
 frc::Rotation2d NavXGyro::getRotation() const {
-  return -units::math::fmod(gyro->GetRotation2d().Degrees(), 180_deg) + offset.Degrees();
+  return -units::math::fmod(gyro->GetRotation2d().Degrees(), 180_deg) +
+         offset.Degrees();
 }
 
 frc::Rotation2d NavXGyro::getRotationNoOffset() const {

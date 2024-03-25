@@ -98,7 +98,9 @@ public:
    */
   frc::SwerveModulePosition getPosition() const;
 
-  inline frc::Translation2d getTranslation() const { return moduleTranslation; };
+  inline frc::Translation2d getTranslation() const {
+    return moduleTranslation;
+  };
 
   /**
    * @return The target state of the module. This is useful for debugging.
