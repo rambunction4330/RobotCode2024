@@ -10,6 +10,7 @@
 #include "frc/RobotBase.h"
 #include "frc/TimedRobot.h"
 #include "frc/geometry/Pose2d.h"
+#include "frc2/command/InstantCommand.h"
 #include "pathplanner/lib/auto/AutoBuilder.h"
 #include "subsystems/drive/DriveConstants.h"
 
@@ -202,6 +203,8 @@ void DriveSubsystem::SimulationPeriodic() {
 
 void DriveSubsystem::stop() { drive->stop(); }
 
-frc2::CommandPtr DriveSubsystem::reset() { drive->resetPose(); }
+frc2::CommandPtr DriveSubsystem::reset() {
+  return frc2::InstantCommand([this]() { drive->resetPose(); }).ToPtr();
+}
 
 #undef SQUARED
