@@ -98,6 +98,8 @@ public:
 
   virtual ~SwerveDrive() = default;
 
+  frc::Rotation2d getRotation() const { return gyro->getRotation(); }
+
   void driveCartesian(double xSpeed, double ySpeed, double zRotation,
                       bool fieldOriented);
 
@@ -119,6 +121,7 @@ public:
   std::array<frc::SwerveModuleState, NumModules> getModuleStates() const;
 
   std::array<frc::SwerveModulePosition, NumModules> getModulePositions() const;
+  std::array<frc::Translation2d, NumModules> getModuleTranslations() const;
 
   const std::array<rmb::SwerveModule, NumModules> &getModules() const {
     return modules;

@@ -74,9 +74,9 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
           frc::PIDController(1.0f, 0.0f, 0.0f),
           frc::PIDController(1.0f, 0.0f, 0.0f),
           frc::ProfiledPIDController<units::radian>(
-              1, 0, 0,
+              0.3, 0, 0,
               frc::TrapezoidProfile<units::radian>::Constraints(
-                  6.28_rad_per_s, 3.14_rad_per_s / 1_s))),
+                  6.28_rad_per_s, 0.2_tr / 1_s / 1_s))),
       constants::drive::maxModuleSpeed);
 
   odometryThread = std::thread(&DriveSubsystem::odometryThreadMain, this);
@@ -86,8 +86,8 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
       [this](frc::Pose2d pose) { setPoseEstimation(pose); },
       [this]() { return getChassisSpeedsEstimation(); },
       [this](frc::ChassisSpeeds speeds) { // should be robot relative
-        std::cout << getPoseEstimation().X().value() << ", "
-                  << getPoseEstimation().Y().value() << std::endl;
+        std::cout << "TgtVelocity: " << speeds.vx() << ", " << speeds.vy()
+                  << std::endl;
         drive->driveChassisSpeeds(speeds);
       },
       pathplanner::HolonomicPathFollowerConfig{
@@ -104,22 +104,28 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
         return false;
       },
       this);
+  drive->resetPose();
   std::cout << "drive subsystem up" << std::endl;
 }
 
 void DriveSubsystem::odometryThreadMain() {
   while (true) {
     // drive->updateNTDebugInfo(false);
-    frc::ChassisSpeeds newChassisSpeeds = drive->getChassisSpeeds();
     {
       std::lock_guard<std::mutex> lock(currentPoseContainer.poseMutex);
       frc::Pose2d newPose = drive->updatePose();
+      std::cout << "PosEstimation: " << newPose.X().value() << ", "
+                << newPose.Y().value() << " "
+                << drive->getRotation().Degrees()() << "_deg" << std::endl;
       currentPoseContainer._pose = newPose;
     }
 
     {
 
       std::lock_guard<std::mutex> lock(currentPoseContainer.chassisSpeedsMutex);
+      frc::ChassisSpeeds newChassisSpeeds = drive->getChassisSpeeds();
+      std::cout << "CurrentVelocity: " << newChassisSpeeds.vx() << ", "
+                << newChassisSpeeds.vy() << std::endl;
       currentPoseContainer._chassisSpeeds = newChassisSpeeds;
     }
     std::this_thread::yield();
@@ -164,7 +170,7 @@ void DriveSubsystem::driveTeleop(const rmb::LogitechGamepad &gamepad) {
   //           << ", " << gamepad.GetRightX() << "]" << std::endl;
   drive->driveCartesian(-maxSpeed * gamepad.GetLeftY(),
                         maxSpeed * gamepad.GetLeftX(),
-                        -maxRotation * gamepad.GetRightX(), true);
+                        maxRotation * gamepad.GetRightX(), true);
 
   // drive->driveCartesian(-gamepad.GetLeftY(),
   //                       gamepad.GetLeftX(),

@@ -29,7 +29,5 @@ public:
 
 private:
   std::unique_ptr<AHRS> gyro;
-
-  units::turn_t offset = 0.0_tr;
 };
 } // namespace rmb

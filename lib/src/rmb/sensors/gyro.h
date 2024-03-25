@@ -30,7 +30,7 @@ public:
 
   void setZRotationOffset(frc::Rotation2d offset) { this->offset = offset; }
 
-private:
+protected:
   frc::Rotation2d offset = 0_deg;
 };
 } // namespace rmb

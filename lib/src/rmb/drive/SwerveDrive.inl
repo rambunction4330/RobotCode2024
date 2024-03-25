@@ -65,17 +65,13 @@ SwerveDrive<NumModules>::SwerveDrive(
     frc::HolonomicDriveController holonomicController, std::string visionTable,
     units::meters_per_second_t maxModuleSpeed, const frc::Pose2d &initialPose)
     : modules(std::move(modules)), gyro(gyro),
-      kinematics(std::array<frc::Translation2d, NumModules>{}),
+      kinematics(getModuleTranslations()),
       holonomicController(holonomicController),
       poseEstimator(frc::SwerveDrivePoseEstimator<NumModules>(
           kinematics, gyro->getRotation(), getModulePositions(), initialPose)),
       maxModuleSpeed(maxModuleSpeed),
       watchdog(frc::TimedRobot::kDefaultPeriod,
                []() { std::cout << "SwerveDrive<NumModules> loop overrun!"; }) {
-  std::array<frc::Translation2d, NumModules> translations;
-  for (size_t i = 0; i < NumModules; i++) {
-    translations[i] = modules[i].getModuleTranslation();
-  }
   nt::NetworkTableInstance ntInstance = nt::NetworkTableInstance::GetDefault();
   std::shared_ptr<nt::NetworkTable> table = ntInstance.GetTable("swervedrive");
 
@@ -107,8 +103,6 @@ SwerveDrive<NumModules>::SwerveDrive(
   }
 
   largestModuleDistance = maxDistance;
-
-  kinematics = frc::SwerveDriveKinematics<NumModules>(translations);
 }
 
 template <size_t NumModules>
@@ -126,6 +120,17 @@ SwerveDrive<NumModules>::getModulePositions() const {
   std::array<frc::SwerveModulePosition, NumModules> states;
   for (size_t i = 0; i < NumModules; i++) {
     states[i] = modules[i].getPosition();
+  }
+
+  return states;
+}
+
+template <size_t NumModules>
+std::array<frc::Translation2d, NumModules>
+SwerveDrive<NumModules>::getModuleTranslations() const {
+  std::array<frc::Translation2d, NumModules> states;
+  for (size_t i = 0; i < NumModules; i++) {
+    states[i] = modules[i].getTranslation();
   }
 
   return states;
