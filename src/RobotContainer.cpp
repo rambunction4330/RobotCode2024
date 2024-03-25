@@ -108,8 +108,6 @@ frc2::CommandPtr RobotContainer::getIntakeCommand() {
       .ToPtr();
 }
 
-
-
 void RobotContainer::setTeleopDefaults() {
   driveSubsystem.SetDefaultCommand(
       driveSubsystem.driveTeleopCommand(drivegamepad));
@@ -120,9 +118,6 @@ void RobotContainer::setTeleopDefaults() {
   armgamepad.Y().WhileTrue(arm.setArmStateCommand(arm.startAmpPos));
   armgamepad.B().WhileTrue(arm.setArmStateCommand(arm.ampPosition));
   // drivegamepad.X().WhileTrue(driveSubsystem.reset());
-  
-
-  
 }
 
 void RobotContainer::setAutoDefaults() {

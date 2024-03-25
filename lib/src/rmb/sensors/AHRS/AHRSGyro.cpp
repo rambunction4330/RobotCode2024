@@ -18,7 +18,7 @@ frc::Rotation2d NavXGyro::getRotationNoOffset() const {
   return gyro->GetRotation2d().Degrees();
 }
 
-void NavXGyro:: resetZRotation() {
+void NavXGyro::resetZRotation() {
   gyro->ZeroYaw();
   offset = 0_tr;
 }

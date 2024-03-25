@@ -216,17 +216,19 @@ frc2::CommandPtr ArmSubsystem::getTeleopCommand(frc::Joystick &joystick,
                // armExtensionPositionController.setPosition(0.5_tr);
                setWristPosition(targetWristPosition);
 
-              //  printf("elbow{target=%f, position=%f}\n", targetElbowPosition(),
-              //         elbowPositionController.getPosition()
-              //             .convert<units::turns>()());
-              //  // printf(
+               //  printf("elbow{target=%f, position=%f}\n",
+               //  targetElbowPosition(),
+               //         elbowPositionController.getPosition()
+               //             .convert<units::turns>()());
+               //  // printf(
                //     "extender{target=%f%%, position=%f}\n",
                //     100.0 * targetPercentageExtended,
                //     ((units::turn_t)armExtensionPositionController.getPosition())
                //         .value());
-              //  printf("wrist{target=%f, position=%f}\n", targetWristPosition(),
-              //         wristPositionController.getPosition()
-              //             .convert<units::turns>()());
+               //  printf("wrist{target=%f, position=%f}\n",
+               //  targetWristPosition(),
+               //         wristPositionController.getPosition()
+               //             .convert<units::turns>()());
                // printf("wrist{target=%f, position=%f}\n",
                // 0.0,
                //        wristPositionController.getPosition()
