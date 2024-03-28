@@ -21,6 +21,7 @@
 
 #include <pathplanner/lib/path/PathPlannerTrajectory.h>
 
+#include "frc/Watchdog.h"
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Translation2d.h"
 #include "frc2/command/Commands.h"
@@ -36,6 +37,7 @@
 #include <frc2/command/CommandPtr.h>
 
 #include "networktables/DoubleTopic.h"
+#include "units/length.h"
 #include "units/time.h"
 
 #include <rmb/sensors/gyro.h>
@@ -71,7 +73,7 @@ public:
    *
    */
   SwerveDrive(std::array<SwerveModule, NumModules> modules,
-              std::shared_ptr<const rmb::Gyro> gyro,
+              std::shared_ptr<rmb::Gyro> gyro,
               frc::HolonomicDriveController holonomicController,
               std::string visionTable,
               units::meters_per_second_t maxModuleSpeed,
@@ -89,17 +91,27 @@ public:
    * @param initialPose         Starting position of the robot for odometry.
    */
   SwerveDrive(std::array<SwerveModule, NumModules> modules,
-              std::shared_ptr<const rmb::Gyro> gyro,
+              std::shared_ptr<rmb::Gyro> gyro,
               frc::HolonomicDriveController holonomicController,
               units::meters_per_second_t maxModuleSpeed,
               const frc::Pose2d &initialPose = frc::Pose2d());
 
   virtual ~SwerveDrive() = default;
 
+  frc::Rotation2d getRotation() const { return gyro->getRotation(); }
+
   void driveCartesian(double xSpeed, double ySpeed, double zRotation,
                       bool fieldOriented);
 
+  void driveCartesian(units::meters_per_second_t vx,
+                      units::meters_per_second_t vy,
+                      units::turns_per_second_t omega, bool fieldOriented);
+
   void drivePolar(double speed, const frc::Rotation2d &angle, double zRotation,
+                  bool fieldOriented);
+
+  void drivePolar(units::meters_per_second_t speed,
+                  const frc::Rotation2d &angle, units::turns_per_second_t omega,
                   bool fieldOriented);
 
   void driveModulePowers(std::array<SwerveModulePower, NumModules> powers);
@@ -109,17 +121,20 @@ public:
   std::array<frc::SwerveModuleState, NumModules> getModuleStates() const;
 
   std::array<frc::SwerveModulePosition, NumModules> getModulePositions() const;
+  std::array<frc::Translation2d, NumModules> getModuleTranslations() const;
 
   const std::array<rmb::SwerveModule, NumModules> &getModules() const {
     return modules;
   }
 
   /**
-   * Drives the robot via the speeds of the Chassis.
+   * Drives the robot via the speeds of the Chassis. Not field relative
    *
    * @param chassisSpeeds Desired speeds of the robot Chassis.
    */
   void driveChassisSpeeds(frc::ChassisSpeeds chassisSpeeds) override;
+
+  void driveChassisSpeeds(frc::ChassisSpeeds chassisSpeeds, bool fieldRelative);
 
   /**
    * Returns the speeds of the robot chassis.
@@ -227,6 +242,8 @@ public:
       frc::Pose2d targetPose, pathplanner::PathConstraints constraints,
       std::initializer_list<frc2::Subsystem *> driveRequirements);
 
+  inline units::meter_t getMaxDriveRadius() { return largestModuleDistance; }
+
   void updateNTDebugInfo(bool openLoopVelocity = false);
 
   void stop();
@@ -252,6 +269,9 @@ private:
   nt::DoubleArrayPublisher ntTargetPositionTopics;
   nt::DoubleArrayPublisher ntTargetVelocityTopics;
 
+  nt::DoubleArrayPublisher ntVelocityVoltages;
+  nt::DoubleArrayPublisher ntVelocityCurrents;
+
   //-----------------
   // Drive Variables
   //-----------------
@@ -264,7 +284,7 @@ private:
   /**
    * Gyroscope to monitor the heading of the robot.
    */
-  std::shared_ptr<const rmb::Gyro> gyro;
+  std::shared_ptr<rmb::Gyro> gyro;
 
   /**
    * Kinematics to convert from module motion to chassis motion and visa versa.
@@ -294,11 +314,13 @@ private:
   /**
    * Mutex to protect position estimations between vision threads.
    */
-  mutable std::mutex visionThreadMutex;
+  // mutable std::mutex visionThreadMutex;
 
   units::meters_per_second_t maxModuleSpeed;
 
   units::meter_t largestModuleDistance = 1.0_m;
+
+  frc::Watchdog watchdog;
 };
 } // namespace rmb
 

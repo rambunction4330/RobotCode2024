@@ -4,10 +4,11 @@
 
 #pragma once
 
+#include "units/time.h"
 #include <units/velocity.h>
 
-#include <rmb/motorcontrol/Talon/TalonFXPositionController.h>
-#include <rmb/motorcontrol/Talon/TalonFXVelocityController.h>
+// #include <rmb/motorcontrol/Talon/TalonFXPositionController.h>
+// #include <rmb/motorcontrol/Talon/TalonFXVelocityController.h>
 
 #include <frc/SerialPort.h>
 
@@ -22,6 +23,8 @@
  */
 
 namespace constants {
+
+const units::millisecond_t robotLoopTime = 50_ms;
 
 inline constexpr int driverControllerPort = 0;
 

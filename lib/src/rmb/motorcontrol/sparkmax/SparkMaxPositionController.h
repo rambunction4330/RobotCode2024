@@ -9,6 +9,7 @@
 
 #include <rev/CANSparkMax.h>
 
+#include "rev/SparkPIDController.h"
 #include "rmb/motorcontrol/AngularPositionController.h"
 #include "rmb/motorcontrol/feedforward/SimpleFeedforward.h"
 
@@ -44,8 +45,6 @@ struct ProfileConfig {
   units::radians_per_second_t maxVelocity = 0.0_rad_per_s,
                               minVelocity = 0.0_rad_per_s;
   units::radians_per_second_squared_t maxAcceleration = 0.0_rad_per_s_sq;
-  rev::SparkMaxPIDController::AccelStrategy accelStrategy =
-      rev::SparkMaxPIDController::AccelStrategy::kTrapezoidal;
 };
 
 enum EncoderType { HallSensor, Quadrature, Alternate, Absolute };
@@ -99,6 +98,8 @@ public:
    * @param position The target position in radians.
    */
   void setPosition(units::radian_t position) override;
+
+  void setPosition(units::radian_t position, double ff);
 
   /**
    * Gets the target position.
@@ -182,11 +183,13 @@ private:
   std::vector<std::unique_ptr<rev::CANSparkMax>> followers;
   rev::CANSparkMax::ControlType controlType;
 
-  rev::SparkMaxPIDController pidController;
+  rev::SparkPIDController pidController;
   units::radian_t targetPosition;
   units::radian_t tolerance;
 
   const std::shared_ptr<Feedforward<units::radians>> feedforward;
+  rev::SparkMaxPIDController::ArbFFUnits FeedforwardUnits =
+      rev::SparkMaxPIDController::ArbFFUnits::kPercentOut;
 
   units::radian_t minPose;
   units::radian_t maxPose;

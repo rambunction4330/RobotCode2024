@@ -10,12 +10,14 @@
 
 #include <functional>
 #include <iostream>
+#include <iterator>
 
 namespace rmb {
 
 SwerveModulePower SwerveModulePower::Optimize(const SwerveModulePower &desired,
                                               const frc::Rotation2d &current) {
   if (desired.power == 0.0) {
+    // std::cout << "current: " << current.Degrees()() << std::endl;
     return {0.0, current};
   } else if (units::math::abs((desired.angle - current).Degrees()) > 90_deg) {
     return {-desired.power, desired.angle + frc::Rotation2d(180_deg)};
@@ -44,7 +46,11 @@ void SwerveModule::setState(const frc::SwerveModuleState &state) {
   //           << ((units::millisecond_t)frc::Timer::GetFPGATimestamp() -
   //           start)()
   //           << std::endl;
-  velocityController->setVelocity(optomized.speed);
+  if (units::math::abs(state.speed) <= 0.05_mps) {
+    velocityController->setPower(0.0);
+  } else {
+    velocityController->setVelocity(optomized.speed);
+  }
   angularController->setPosition(optomized.angle.Radians());
 }
 

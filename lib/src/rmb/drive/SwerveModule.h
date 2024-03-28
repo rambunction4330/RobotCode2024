@@ -51,6 +51,8 @@ struct SwerveModulePower {
 class SwerveModule : public wpi::Sendable,
                      public wpi::SendableHelper<SwerveModule> {
 public:
+  template <size_t> friend class SwerveDrive;
+
   SwerveModule(const SwerveModule &) = delete;
   SwerveModule(SwerveModule &&) = default;
 
@@ -65,7 +67,7 @@ public:
   SwerveModule(std::unique_ptr<LinearVelocityController> velocityController,
                std::unique_ptr<AngularPositionController> angularController,
                const frc::Translation2d &moduleTranslation,
-               bool breakMode = false);
+               bool brakeMode = false);
 
   /**
    * Sets the desired state of the swerve module.
@@ -95,6 +97,10 @@ public:
    * odometry.
    */
   frc::SwerveModulePosition getPosition() const;
+
+  inline frc::Translation2d getTranslation() const {
+    return moduleTranslation;
+  };
 
   /**
    * @return The target state of the module. This is useful for debugging.

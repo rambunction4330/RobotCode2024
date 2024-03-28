@@ -3,10 +3,13 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "Robot.h"
+#include "RobotContainer.h"
 
 #include <frc2/command/CommandScheduler.h>
+#include <iostream>
+#include <optional>
 
-void Robot::RobotInit() {}
+void Robot::RobotInit() { container.resetMechPos(); }
 
 /**
  * This function is called every 20 ms, no matter the mode. Use
@@ -32,31 +35,29 @@ void Robot::DisabledPeriodic() {}
  * RobotContainer} class.
  */
 void Robot::AutonomousInit() {
-  m_autonomousCommand = container.GetAutonomousCommand();
-
-  if (m_autonomousCommand) {
-    m_autonomousCommand->Schedule();
-  }
-
-  // TODO: Check to see if we need to remove this
-  frc2::CommandScheduler::GetInstance().CancelAll();
+  // frc2::CommandScheduler::GetInstance().Schedule(container.autoDriveCommand());
+  container.RunAutonomousCommand();
+  // container.autoDriveCommand();
 }
 
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
+  // std::cout << "hello world" << std::endl;
   // This makes sure that the autonomous stops running when
   // teleop starts running. If you want the autonomous to
   // continue until interrupted by another command, remove
   // this line or comment it out.
   if (m_autonomousCommand) {
-    m_autonomousCommand->Cancel();
+    m_autonomousCommand.value()->Cancel();
   }
 
   // TODO: Check to see if we need to remove this
   frc2::CommandScheduler::GetInstance().CancelAll();
 
   container.setTeleopDefaults();
+
+  container.getDrive().setPoseEstimation(frc::Pose2d(0.0_m, 0.0_m, 0.0_rad));
 }
 
 /**

@@ -4,9 +4,17 @@
 
 #pragma once
 
+#include "IntakeSubsystem.h"
+#include "frc/Joystick.h"
+#include "frc2/command/button/CommandJoystick.h"
+#include "rmb/controller/LogitechGamepad.h"
+#include "rmb/motorcontrol/LinearPositionController.h"
 #include "rmb/motorcontrol/sparkmax/SparkMaxPositionController.h"
 #include "rmb/motorcontrol/sparkmax/SparkMaxVelocityController.h"
+#include "subsystems/arm/ArmConstants.h"
+#include "units/angle.h"
 #include "units/angular_velocity.h"
+#include "units/length.h"
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 
@@ -23,16 +31,27 @@ public:
   void Periodic() override;
 
   void setElbowPosition(units::turn_t position);
+  void resetElbowPosition(units::turn_t position = 0_tr);
+  inline void setElbowPower(double power) {
+    elbowPositionController.setPower(power);
+  }
   units::turn_t getElbowPosition() const;
   units::turn_t getTargetElbowPosition() const;
 
   void setArmExtensionPosition(units::meter_t position);
   units::meter_t getArmExtensionPosition() const;
   units::meter_t getTargetArmExtensionPosition() const;
+  inline void resetArmExtensionPosition(units::meter_t position) {
+    armExtensionPositionController.setEncoderPosition(
+        position / constants::arm::extensionAfterGRLinearToAngularRatio);
+  }
 
   void setWristPosition(units::turn_t position);
   units::turn_t getWristPosition() const;
   units::turn_t getTargetWristPosition() const;
+  inline void resetWristPosition(units::turn_t position) {
+    wristPositionController.setEncoderPosition(position);
+  }
 
   bool atTarget() const;
   //
@@ -55,6 +74,19 @@ public:
                                       units::meter_t armExtensionPosition,
                                       units::turn_t wristPosition);
   frc2::CommandPtr setArmStateCommand(const ArmState &state);
+
+  frc2::CommandPtr getSpoolCommand(frc::Joystick &controller);
+
+  frc2::CommandPtr getTeleopCommand(frc::Joystick &joystick,
+                                    rmb::LogitechGamepad &gampead);
+  const ArmState stowedPosition = {0.0_tr, constants::arm::maxExtension - 1_in,
+                                   0.0_tr};
+  const ArmState intakePosition = {0.0_tr, constants::arm::maxExtension - 1_in,
+                                   0.465_tr};
+  const ArmState ampPosition = {0.21_tr, 0.0_in, 0.53_tr};
+
+  const ArmState startAmpPos = {0.05_tr, constants::arm::maxExtension - 2_in,
+                                0.0_tr};
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be

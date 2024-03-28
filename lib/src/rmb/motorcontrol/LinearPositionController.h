@@ -31,6 +31,8 @@ public:
    */
   virtual void setPosition(units::meter_t position) = 0;
 
+  // virtual void setPosition(units::meter_t position, double ff) = 0;
+
   /**
    * Common interface for getting the <b>target</b> linear position.
    *
