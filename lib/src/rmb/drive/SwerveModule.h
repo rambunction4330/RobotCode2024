@@ -67,7 +67,7 @@ public:
   SwerveModule(std::unique_ptr<LinearVelocityController> velocityController,
                std::unique_ptr<AngularPositionController> angularController,
                const frc::Translation2d &moduleTranslation,
-               bool breakMode = false);
+               bool brakeMode = false);
 
   /**
    * Sets the desired state of the swerve module.

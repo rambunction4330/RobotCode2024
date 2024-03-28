@@ -2,6 +2,8 @@
 #include "frc/SerialPort.h"
 #include "frc/geometry/Rotation2d.h"
 #include "units/velocity.h"
+#include <cstdint>
+#include <frc/MathUtil.h>
 #include <memory>
 #include <rmb/sensors/AHRS/AHRSGyro.h>
 
@@ -13,12 +15,19 @@ NavXGyro::NavXGyro(frc::SerialPort::Port port)
     : gyro(std::make_unique<AHRS>(port)) {}
 
 frc::Rotation2d NavXGyro::getRotation() const {
-  return -units::math::fmod(gyro->GetRotation2d().Degrees(), 180_deg) +
-         offset.Degrees();
+  auto rot = gyro->GetRotation2d().Degrees()();
+  rot /= 360;
+
+  auto tr = gcem::sgn(rot) * (std::abs(rot) - (float)(int)std::abs(rot));
+
+  tr = (std::abs(tr) > 0.5 ? -1.0 : 1.0) * gcem::sgn(tr) *
+       std::min(std::abs(tr), 1.0 - std::abs(tr));
+
+  return units::turn_t(tr);
 }
 
 frc::Rotation2d NavXGyro::getRotationNoOffset() const {
-  return -gyro->GetRotation2d().Degrees();
+  return gyro->GetRotation2d().Degrees();
 }
 
 void NavXGyro::resetZRotation() {

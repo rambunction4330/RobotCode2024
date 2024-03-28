@@ -2,6 +2,7 @@
 
 #include "frc/geometry/Pose2d.h"
 #include "frc/kinematics/ChassisSpeeds.h"
+#include "networktables/DoubleTopic.h"
 #include "rmb/sensors/gyro.h"
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
@@ -58,4 +59,7 @@ private:
     frc::ChassisSpeeds _chassisSpeeds;
     std::mutex chassisSpeedsMutex;
   } currentPoseContainer;
+
+  nt::DoublePublisher anglePublisher;
+  nt::DoubleArrayPublisher positionPublisher;
 };

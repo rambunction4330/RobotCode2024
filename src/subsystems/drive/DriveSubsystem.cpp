@@ -75,7 +75,7 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
           frc::PIDController(1.0f, 0.0f, 0.0f),
           frc::PIDController(1.0f, 0.0f, 0.0f),
           frc::ProfiledPIDController<units::radian>(
-              0.3, 0, 0,
+              1.0f, 0, 0,
               frc::TrapezoidProfile<units::radian>::Constraints(
                   6.28_rad_per_s, 0.2_tr / 1_s / 1_s))),
       constants::drive::maxModuleSpeed);
@@ -107,6 +107,13 @@ DriveSubsystem::DriveSubsystem(std::shared_ptr<rmb::Gyro> gyro) {
       this);
   drive->resetPose();
   std::cout << "drive subsystem up" << std::endl;
+
+  nt::NetworkTableInstance ntInstance = nt::NetworkTableInstance::GetDefault();
+  std::shared_ptr<nt::NetworkTable> table =
+      ntInstance.GetTable("drivesubsystem");
+
+  anglePublisher = table->GetDoubleTopic("angle").Publish();
+  positionPublisher = table->GetDoubleArrayTopic("position").Publish();
 }
 
 void DriveSubsystem::odometryThreadMain() {
@@ -115,18 +122,21 @@ void DriveSubsystem::odometryThreadMain() {
     {
       std::lock_guard<std::mutex> lock(currentPoseContainer.poseMutex);
       frc::Pose2d newPose = drive->updatePose();
-      std::cout << "PosEstimation: " << newPose.X().value() << ", "
-                << newPose.Y().value() << " "
-                << drive->getRotation().Degrees()() << "_deg" << std::endl;
+      // std::cout << "PosEstimation: " << /*newPose.X().value() << ", "
+      //           << newPose.Y().value() << " "
+      //           <<*/ drive->getRotation().Degrees()() << "_deg" << std::endl;
       currentPoseContainer._pose = newPose;
+      anglePublisher.Set(drive->getRotation().Degrees()());
+      positionPublisher.Set(
+          std::array<double, 2>{newPose.X()(), newPose.Y()()});
     }
 
     {
 
       std::lock_guard<std::mutex> lock(currentPoseContainer.chassisSpeedsMutex);
       frc::ChassisSpeeds newChassisSpeeds = drive->getChassisSpeeds();
-      std::cout << "CurrentVelocity: " << newChassisSpeeds.vx() << ", "
-                << newChassisSpeeds.vy() << std::endl;
+      // std::cout << "CurrentVelocity: " << newChassisSpeeds.vx() << ", "
+      //           << newChassisSpeeds.vy() << std::endl;
       currentPoseContainer._chassisSpeeds = newChassisSpeeds;
     }
     std::this_thread::yield();
